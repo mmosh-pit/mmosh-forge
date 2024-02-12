@@ -1,0 +1,598 @@
+@import 'bootstrap/dist/css/bootstrap.min.css';
+@import '@solana/wallet-adapter-react-ui/styles.css';
+@import './../fonts/avenir/font.css';
+@import './../fonts/avenirstd/font.css';
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Open+Sans:wght@300;400;500;600;700&display=swap');
+
+
+
+body {
+  font-family: 'AvenirNext LT Pro' !important;
+  background-color: rgba(2,1,18,1)  !important;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.root-container {
+  background: url(https://storage.googleapis.com/hellbenders-public-c095b-assets/hellbendersWebAssets/mmosh_bg.png),rgba(0,0,0,.9) url(https://storage.googleapis.com/hellbenders-public-c095b-assets/hellbendersWebAssets/texture.png);
+  background-size: cover,auto;
+  background-repeat: no-repeat,repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+.root-container::before {
+    content: "";
+    display: block;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    filter: blur(100px);
+    background: radial-gradient(circle at 50% 50%,#174aff 0,#030064 100%);
+    mix-blend-mode: soft-light;
+    z-index: -1;
+}
+
+
+.center-container {
+  height: 100vh;
+  text-align: center;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+}
+
+.dashboard-container-group button {
+  margin-right: 15px;
+  margin-bottom: 15px;
+}
+
+.guest-header-container {
+  background: transparent !important;
+}
+
+.header-container {
+  padding: 15px 30px;
+  background: rgba(255, 255, 255, 0.07);
+  display: flex;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+.header-container.active {
+  background-color: rgba(2,1,18,1);
+  z-index: 1;
+}
+.header-container h1 {
+  margin: 0;
+  min-width: 250px;
+}
+.header-container h1 img {
+  width: 48px;
+  height: 48px;
+}
+
+.connect-action-item .setting-btn,.connect-action-item .setting-btn:hover, .connect-action-item .setting-btn:active {
+  background: rgba(58, 52, 136, 0.54);
+  color: #fff;
+  border-radius: 7px;
+  font-size: 14px;
+  border: 0 none;
+  height: 48px;
+  position: relative;
+}
+
+.header-container .wallet-adapter-button {
+  background: linear-gradient(91.35deg, #D858BC -3.59%, #3C00FF 102.16%);
+  mix-blend-mode: normal;
+  border-radius: 7px;
+  font-size: 14px;
+  font-weight: 700;
+  height: 48px;
+  padding: 0 15px;
+  margin-left: 15px;
+}
+
+.setting-btn span {
+  position: absolute;
+  width: 41px;
+  height: 16px;
+  left: -17px;
+  top: -2px;
+  font-family: 'Avenir LT Std';
+  font-style: normal;
+  font-weight: 750;
+  font-size: 12px;
+  line-height: 8px;
+  text-align: center;
+  letter-spacing: -0.5px;
+  background: linear-gradient(119.74deg, #009EFA 8.7%, #4D34F0 67.39%);
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transform: rotate(-28.39deg);
+}
+
+.forge-menu {
+  margin: 0;
+  min-width: 250px;
+}
+
+.forge-menu li {
+  float: left;
+  margin-left: 30px;
+  line-height: 48px;
+}
+.forge-menu li:first-child {
+  margin-left: 0px;
+}
+.forge-menu li a, .forge-menu li a:hover {
+  text-decoration: none;
+  color: #fff;
+}
+.connect-action {
+  display: flex;
+}
+
+.banner-container {
+  display: flex;
+  justify-content: center;
+  padding: 100px 0 30px;
+  background: rgb(2,1,18);
+  background: radial-gradient(circle, rgba(2,1,18,1) 0%, rgba(12,45,79,1) 0%, rgba(2,1,18,1) 36%);
+  text-align: center;
+
+}
+
+.banner-container img {
+  width: 200px;
+  max-width: none;
+}
+
+.connect-page {
+  text-align: center;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle, rgba(2,1,18,0.0) 0%, rgba(12,45,79,1) 0%, rgba(2,1,18,0.0) 36%);
+}
+
+.connect-page h2 {
+  color: #fff;
+  font-size: 16px;
+  margin: 15px 0 10px;
+  font-family: 'Avenir LT Std 65 Medium';
+}
+
+.connect-page-inner {
+  max-width: 500px;
+}
+.connect-page p {
+  color: rgba(189, 188, 188, 1);
+  margin:0 0 10px;
+}
+.connect-page img {
+  width: 250px;
+  margin: 0 auto;
+}
+
+.connect-page button {
+  background: rgba(205, 6, 142, 1);
+  color: #fff;
+  font-size: 16px;
+  font-family: 'Avenir LT Std 65 Medium';
+}
+
+.header-container .menu-button {
+  display: none;
+}
+
+.root-container .MuiDrawer-paper {
+  background-color: rgba(2,1,18,1);
+  color: #fff;
+}
+
+.root-container .MuiDivider-root {
+  border-color: #c2c2c2;
+}
+
+.root-container .MuiIconButton-root, .root-container .MuiListItemIcon-root {
+  color: #fff;
+}
+
+.banner-container-inner {
+  display: flex;
+  max-width: 550px;
+}
+
+.banner-container-inner-item {
+  margin-left: 30px;
+}
+.banner-container-inner-item:first-child {
+  margin: 15px 0 0;
+}
+
+.banner-container-inner p {
+  font-size: 14px;
+  color: #fff;
+}
+
+.banner-container-inner p a {
+  color: #fff;
+}
+
+.banner-container-inner .no-account-banner h2 {
+   font-size: 20px;
+   color: #fff;
+   margin: 0 0 15px;
+}
+.banner-container-inner .no-account-banner p {
+  color: #c3c3c3;
+  margin: 0 0 15px;
+}
+
+.banner-container-inner .btn-primary {
+  background: rgba(205, 6, 142, 1);
+  font-size: 14px;
+  border: 0 none;
+}
+
+.invitation-page {
+  text-align: center;
+}
+.invitation-page h2, .profile-page h2 {
+  color: #fff;
+  font-size: 16px;
+  font-family: 'Avenir LT Std 65 Medium';
+  margin: 30px 0 8px;
+}
+
+.invitation-page-inner {
+  position: relative;
+  background: rgba(3, 0, 7, 0.4);
+  padding: 15px 15px 15px 180px;
+  max-width: 610px;
+  margin: 0 auto;
+  text-align: left;
+  color: #fff;
+}
+.invitation-page-inner h3
+{
+  font-size: 19px;
+  font-family: 'Avenir LT Std 65 Medium';
+  color: rgba(255, 0, 199, 1);
+}
+
+.invitation-page-inner-content p {
+  font-size: 13px;
+}
+
+.invitation-page-inner-image {
+  position: absolute;
+  left: 15px;
+  top: 15px;
+}
+
+.invitation-page-inner-image img {
+  width: 150px;
+}
+
+.invitation-content-container {
+  display: flex;
+}
+
+.invitation-content-left, .invitation-content-right {
+  width: 50%;
+}
+
+.invitation-content-left p {
+  margin: 0;
+  padding: 0;
+  line-height: 25px;
+}
+
+.invitation-content-left span {
+  display: inline-block;
+  margin-left: 10px;
+  color: rgba(190, 190, 190, 1);
+} 
+.invitation-content-left span.amount {
+  background: rgba(199, 199, 199, 0.17);
+  color: rgba(226, 226, 226, 1);
+  width: 25px;
+  height: 25px;
+  text-align: center;
+}
+
+.invitation-action-container {
+  margin: 15px 0 0;
+  display: flex;
+  justify-content: center;
+}
+
+.invitation-action-container button, .invitation-action-container button:hover {
+  font-family: 'Avenir LT Std 65 Medium';
+  background: rgba(255, 0, 199, 1);
+  font-size: 14px;
+  width: 100px;
+  height: 38px;
+  border: 0 none;
+  
+}
+
+.invitation-content-right p {
+  margin: 5px 0 0;
+  font-size: 10px;
+}
+
+.invitation-content-right p:first-child {
+  margin: 0;
+}
+
+.invitation-content-right p.small {
+  font-size: 7px;
+  margin: 0;
+}
+
+.profile-page h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.profile-page h3 {
+  color: #fff;
+  font-size: 14px;
+  font-family: 'Avenir LT Std 65 Medium';
+  margin: 0 0 10px;
+}
+
+.profile-page label, .profile-page span {
+  font-size: 10px;
+  color: #fff;
+  display: block;
+  line-height: 18px;
+}
+
+.profile-page span {
+  color: rgba(255, 255, 255, 0.22);
+}
+
+.profile-page input[type="text"], .profile-page textarea, .profile-page select {
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(32,34, 99, 1);
+  color: #fff;
+  font-size: 11px;
+}
+
+.profile-page input[type="text"]:focus, .profile-page textarea:focus, .profile-page select:focus {
+  box-shadow:none;
+  background: rgba(32,34, 99, 1);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #fff;
+}
+
+.profile-page input[type="text"]::placeholder, .profile-page textarea::placeholder {
+  color: rgba(255, 255, 255, 0.22);
+}
+
+.profile-page input[type="text"], .profile-page select {
+   height: 40px;
+}
+.profile-container {
+  display: flex;
+}
+.profile-container-item {
+  width: 33.33%;
+}
+
+.profile-container-item  img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+}
+
+.profile-container-element {
+  margin: 0 20px 10px 0;
+}
+
+.profile-container-element-group {
+  display: flex;
+}
+
+.profile-container-element-group-item {
+  width: 50%;
+}
+
+.profile-container-element-group-item-left {
+  margin-right: 7px;
+}
+
+.profile-container-element-group-item-right {
+  margin-left: 7px;
+} 
+
+.profile-container-action {
+  text-align: center;
+  margin: 30px 0 0;
+}
+
+.profile-container-action p {
+  color: #fff;
+  font-size: 11px;
+}
+
+.profile-container-action button {
+  font-family: 'Avenir LT Std 65 Medium';
+  background: rgba(255, 0, 199, 1);
+  font-size: 14px;
+  height: 40px;
+  border: 0 none;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+
+.price-details {
+  margin-bottom: 15px;
+}
+
+.price-details p {
+  margin: 5px 0 0;
+}
+
+.price-details label {
+  display: block;
+  font-size: 8px;
+}
+
+.danger-container {
+  background: linear-gradient(270deg, rgba(31, 9, 0, 0.021) 0%, rgba(244, 0, 0, 0.602) 49.43%, rgba(45, 14, 1, 0) 100%);
+}
+
+.warning-container {
+  background: linear-gradient(270deg, rgba(31, 9, 0, 0.021) 0%, rgba(244, 132, 0, 0.602) 49.43%, rgba(45, 14, 1, 0) 100%);
+}
+
+.success-container {
+  background: linear-gradient(270deg, rgba(31, 9, 0, 0.012) 0%, rgba(33, 239, 0, 0.4) 49.43%, rgba(45, 14, 1, 0) 100%);
+}
+
+.message-container {
+  color: #fff;
+  text-align: center;
+  font-size: 12px;
+  padding: 15px 30px;
+}
+
+.invitation-content-qty {
+  display: flex;
+}
+.invitation-content-qty label {
+  font-size: 13px;
+  line-height: 25px;
+  margin-right: 10px;
+}
+.invitation-content-qty input {
+  background: rgba(199, 199, 199, 0.17);
+  color: rgba(226, 226, 226, 1);
+  height: 25px;
+  text-align: center;
+  border: 0 none;
+  font-size: 13px;
+  width: auto;
+  width: 40px;
+  padding: 0px;
+  border-radius: 0;
+}
+
+.invitation-content-qty input:active, .invitation-content-qty input:focus {
+  background: rgba(199, 199, 199, 0.17);
+  color: rgba(226, 226, 226, 1);
+  border: 0 none;
+  box-shadow: none;
+}
+
+.preview-container {
+  position: relative;
+}
+.preview-container .image-close-btn {
+  position: absolute;
+  background-color: black;
+  color: #fff;
+  right: 0;
+  top: 0;
+  border: 0 none;
+  border-radius: 0;
+  text-decoration: none;
+}
+
+.image-close-btn:hover {
+  background-color: black;
+  color: #fff;
+}
+@media (min-width: 576px) { 
+  .header-container {
+    padding: 15px 30px;
+  }
+}
+
+@media (min-width: 768px) { 
+
+}
+
+@media (max-width: 991px) { 
+  .header-container {
+    padding-left: 70px;
+  }
+  .header-container h1 {
+    min-width: auto;
+  }
+  .forge-menu {
+    display: none;
+  }
+  .header-container .menu-button {
+    display: block;
+    color: #fff;
+    position: absolute;
+    left: 10px;
+    top: 12px;
+    z-index: 1;
+  }
+
+  .banner-container-inner {
+    display: block;
+  }
+  .banner-container-inner-item:first-child {
+    margin: 15px 0 30px;
+  }
+
+  .invitation-content-right {
+    margin-top: 15px;
+  }
+
+  .invitation-content-container {
+    display: block;
+  }
+
+  .profile-container {
+    display: block;
+  }
+
+  .profile-container-item {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  .profile-container-element {
+    margin: 0 0px 10px 0;
+  }
+}
+
+@media (min-width: 992px) { 
+
+}
+
+@media (min-width: 1200px) {
+  .header-container {
+    padding: 15px 60px;
+  }
+}
+
