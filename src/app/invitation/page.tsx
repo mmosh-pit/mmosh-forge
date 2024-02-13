@@ -31,7 +31,7 @@ export default function Invitation() {
   const connection = useConnection();
   const wallet:any = useAnchorWallet();
   const [inputValue, setInputValue] = useState(0);
-
+  const [currentGeneration,setCurrentGeneration] = useState<any>("0");
 
   useEffect(()=>{
      if(wallet?.publicKey) {
@@ -50,11 +50,13 @@ export default function Invitation() {
   const getProfileInfo = async () => {
     const env = new anchor.AnchorProvider(connection.connection,wallet,{"preflightCommitment":"processed"})
     let userConn:UserConn = new UserConn(env, web3Consts.programID);
+
     const profileInfo = await userConn.getUserInfo(forgeContext.userData.profile);
     setProfileName(profileInfo.profiles[0].name)
     setSolBalance(profileInfo.solBalance);
     setTokBalance(profileInfo.oposTokenBalance);
     setActBalance(profileInfo.activationTokenBalance)
+    setCurrentGeneration(profileInfo.generation)
     const totalMints = forgeContext.userData.mints ? parseInt(forgeContext.userData.mints) : 0;
     const totalChilds = totalMints - profileInfo.activationTokenBalance;
     if(totalChilds < 3 ) {
@@ -104,13 +106,13 @@ export default function Invitation() {
 
       const symbol = "INVITE"
       const uri = shdwHash
-      const res:any = await userConn.initSubscriptionBadge({ name:"Invitation from "+name, symbol, uri, amount:inputValue,profile: forgeContext.userData.profile })
+      const res:any = await userConn.initSubscriptionBadge({ name:"Invitation", symbol, uri, amount:inputValue,profile: forgeContext.userData.profile })
       console.log("res ", res);
       if(res.Ok) {
         isSuccess = true
       } 
     } else {
-      const res = await userConn.initSubscriptionBadge({ name:"Invitation from "+name, amount:inputValue,profile: forgeContext.userData.profile })
+      const res = await userConn.initSubscriptionBadge({ name:"Invitation", amount:inputValue,profile: forgeContext.userData.profile })
       const res1 = await userConn.mintSubscriptionToken({amount: inputValue,subscriptionToken: res.Ok.info.subscriptionToken});
       if(res1.Ok) {
         isSuccess = true
@@ -118,7 +120,6 @@ export default function Invitation() {
     }
     if(isSuccess) {
       totalMints = totalMints + parseInt(inputValue.toString());
-      alert(totalMints)
       let params:any = {
         username: forgeContext.userData.username,
         bio: forgeContext.userData.bio,
@@ -168,7 +169,7 @@ export default function Invitation() {
 
         const symbol = "INVITE"
         const uri = shdwHash
-        const res:any = await userConn.initActivationToken({ name:"Invitation from "+name, symbol, uri, amount:inputValue })
+        const res:any = await userConn.initActivationToken({ name:"Invitation", symbol, uri, amount:inputValue })
         console.log("res ", res);
         if(res.Ok) {
           isSuccess = true
@@ -219,22 +220,22 @@ export default function Invitation() {
   const transferAction = async () => {
     const env = new anchor.AnchorProvider(connection.connection,wallet,{"preflightCommitment":"processed"})
     anchor.setProvider(env);
-    let userConn:UserConn = new UserConn(env, web3Consts.programID);
-
+    let userConn:AdConn = new AdConn(env, web3Consts.programID);
+    // let userConn:UserConn = new UserConn(env, web3Consts.programID);
     const symbol = "INVITE"
     const uri = '';
-    // const res:any = await userConn.initActivationToken({ name:"Invitation from "+name, symbol, uri, amount:inputValue })
-    const res:any = await userConn.initSubscriptionBadge({ name:"Invitation from "+name, symbol, uri, amount:inputValue,profile: forgeContext.userData.profile})
+    const res:any = await userConn.initActivationToken({ name:"Invitation from "+name, symbol, uri, amount:inputValue })
+    // const res:any = await userConn.initSubscriptionBadge({ name:"Invitation from "+name, symbol, uri, amount:inputValue,profile: forgeContext.userData.profile})
     
     // transfer activation token
-    await userConn.baseSpl.transfer_token({ mint: new anchor.web3.PublicKey(res.Ok.info.subscriptionToken), sender: wallet.publicKey, receiver: new anchor.web3.PublicKey("8mPADLUyDdqEsDQdFteynUA9zW5eQLZztjvaDHhgeBNi"), init_if_needed: true }, userConn.ixCallBack)
+    await userConn.baseSpl.transfer_token({ mint: new anchor.web3.PublicKey(res.Ok.info.activationToken), sender: wallet.publicKey, receiver: new anchor.web3.PublicKey("EMmc2SSJJC7NJRMjrpsBYJnA6t8PFCmo1GAo2AQgmKEm"), init_if_needed: true }, userConn.ixCallBack)
     const tx = await new anchor.web3.Transaction().add(...userConn.txis)
     userConn.txis = []
     const res2 = await userConn.provider.sendAndConfirm(tx)
     console.log("res2 ", res2);
 
     // transfer mmosh token
-    await userConn.baseSpl.transfer_token({ mint: web3Consts.oposToken, sender: wallet.publicKey, receiver: new anchor.web3.PublicKey("8mPADLUyDdqEsDQdFteynUA9zW5eQLZztjvaDHhgeBNi"), init_if_needed: true, amount:calcNonDecimalValue(20000,6)}, userConn.ixCallBack)
+    await userConn.baseSpl.transfer_token({ mint: web3Consts.oposToken, sender: wallet.publicKey, receiver: new anchor.web3.PublicKey("EMmc2SSJJC7NJRMjrpsBYJnA6t8PFCmo1GAo2AQgmKEm"), init_if_needed: true, amount:calcNonDecimalValue(20000,6)}, userConn.ixCallBack)
     const tx1 = await new anchor.web3.Transaction().add(...userConn.txis)
     userConn.txis = []
     const res3 = await userConn.provider.sendAndConfirm(tx1)
@@ -388,7 +389,9 @@ const pinFileToShadowDrive = async (jsonData:any) => {
                 </div>
               </div>
               <div className="invitation-action-container">
-                 <Button variant="primary" size='sm' onClick={mintInvitationAction}>{buttonText}</Button>
+                {parseInt(currentGeneration) < 4 &&
+                  <Button variant="primary" size='sm' onClick={mintInvitationAction}>{buttonText}</Button>
+                }
                  <Button variant="primary" size='sm' onClick={transferAction}>Tranfer</Button>
               </div>
              

@@ -32,7 +32,7 @@ const WalletConnector = ({ children }: { children: React.ReactNode }) => {
 
       return (
         <ForgeProvider>    
-          <ConnectionProvider endpoint={"http://127.0.0.1:8899"}>
+          <ConnectionProvider endpoint={"http://localhost:8899"}>
           <WalletProvider wallets={wallets}>
             <WalletModalProvider>
             <div className='root-container'>

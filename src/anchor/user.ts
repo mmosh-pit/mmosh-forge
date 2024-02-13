@@ -470,30 +470,32 @@ export class Connectivity {
         const tokenAccount = unpackAccount(userOposAta, infoes[1])
         oposTokenBalance = (parseInt(tokenAccount?.amount?.toString()) ?? 0) / LAMPORTS_PER_OPOS;
       }
+
+      try {
   
       const mainStateInfo = await this.program.account.mainState.fetch(this.mainState)
       console.log("mainStateInfo ",mainStateInfo)
       const profileCollection = mainStateInfo.profileCollection;
       const profileCollectionState = await this.program.account.collectionState.fetch(this.__getCollectionStateAccount(profileCollection))
-      console.log("profileCollectionState ",profileCollectionState)
       const genesisProfile = profile ? new anchor.web3.PublicKey(profile) : profileCollectionState.genesisProfile;
+
+      console.log("genesisProfile ",genesisProfile.toBase58());
       const profileState = this.__getProfileStateAccount(genesisProfile)
       const profileStateInfo = await this.program.account.profileState.fetch(profileState)
       console.log("profileStateInfo ",profileStateInfo)
+
       let activationTokenBalance:any = 0;
 
       
       
       console.log("test1 ")
-      try {
+
         if(profileStateInfo.activationToken) {
           const userActivationAta = getAssociatedTokenAddressSync(profileStateInfo.activationToken, user);
           const infoes = await this.connection.getTokenAccountBalance(userActivationAta);
           activationTokenBalance = infoes.value.amount;
         }
-      } catch (error) {
-
-      }
+      
  
       const _userNfts = await this.metaplex.nfts().findAllByOwner({ owner: user });
       
@@ -517,10 +519,24 @@ export class Connectivity {
         activationTokens,
         activationTokenBalance,
         totalChild: profileStateInfo.lineage.totalChild.toNumber(),
+        generation: profileStateInfo.lineage.generation.toString()
       }
   
       console.log("profileInfo", profileInfo)
       return profileInfo;
+      } catch (error) {
+        const profiles:any = []
+        const profileInfo =  {
+          solBalance,
+          oposTokenBalance,
+          profiles:profiles,
+          activationTokens:profiles,
+          activationTokenBalance:0,
+          totalChild: 0,
+          generation: 1
+        }
+        return profileInfo;
+      }
 
   }
 

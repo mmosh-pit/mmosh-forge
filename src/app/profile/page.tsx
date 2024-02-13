@@ -207,13 +207,13 @@ const fileFormData = async () => {
             profile:res.Ok.info.profile,
             mints:"0"
          }
-         const profileResult = await updateUserData(params,res.Ok.info.profile);
+         const profileResult = await updateUserData(params);
          params.wallet = wallet.publickey;
          params._id = forgeContext.userData._id;
          forgeContext.setUserData(params);
          navigate.push("/invitation")
        } else {
-         createMessage(res.Err,"danger-container");
+         createMessage("We’re sorry, there was an error while trying to mint your profile. Check your wallet and try again.","danger-container")
        }
        setIsSubmit(false);
     } catch (error) {
@@ -316,7 +316,7 @@ const fileFormData = async () => {
               {msgText}
          </div>
       }
-      <h2>Welcome to the Forge, Frank!</h2>
+      <h2>Welcome to the Forge, {forgeContext.userData.name}!</h2>
       <h3>About You</h3>
       <div className="profile-container">
          <div className="profile-container-item">
