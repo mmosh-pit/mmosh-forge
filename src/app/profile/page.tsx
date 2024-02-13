@@ -203,8 +203,7 @@ const fileFormData = async () => {
             name: firstName + " " + lastName,
             image: imageUri,
             descriptor: descriptor,
-            nouns: descriptor,
-            mints:"0"
+            nouns: descriptor
          }
          const profileResult = await updateUserData(params);
          params.wallet = wallet.publickey;

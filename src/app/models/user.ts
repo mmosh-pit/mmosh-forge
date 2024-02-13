@@ -12,7 +12,6 @@ type Profile = {
   image: string;
   descriptor: string;
   noun: string;
-  mints: string;
 };
 
 type Telegram = {

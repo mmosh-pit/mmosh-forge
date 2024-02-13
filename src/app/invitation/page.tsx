@@ -32,6 +32,7 @@ export default function Invitation() {
   const connection = useConnection();
   const wallet:any = useAnchorWallet();
   const [inputValue, setInputValue] = useState(0);
+  const [firstTime, setFirstTime] = useState(true);
 
   useEffect(()=>{
      if(wallet?.publicKey) {
@@ -57,7 +58,10 @@ export default function Invitation() {
     setSolBalance(profileInfo.solBalance);
     setTokBalance(profileInfo.oposTokenBalance);
     setActBalance(profileInfo.activationTokenBalance)
-    const totalMints = forgeContext.userData.mints ? parseInt(forgeContext.userData.mints) : 0;
+    const totalMints = profileInfo.totalChild;
+    if(totalMints > 0 || profileInfo.activationTokenBalance > 0) {
+      setFirstTime(false)
+    }
     const totalChilds = totalMints - profileInfo.activationTokenBalance;
     if(totalChilds < 3 ) {
       setQuota(10)
@@ -85,10 +89,9 @@ export default function Invitation() {
     const env = new anchor.AnchorProvider(connection.connection,wallet,{"preflightCommitment":"processed"})
     anchor.setProvider(env);
     let userConn:UserConn = new UserConn(env, web3Consts.programID);
-    let totalMints = forgeContext.userData.mints ? parseInt(forgeContext.userData.mints) : 0;
 
     let isSuccess = false;
-    if(totalMints === 0) {
+    if(firstTime) {
       const body = {
         name: name != "" ? "Invitation from "+ name : "Invitation",
         symbol:  "INVITE",
@@ -119,21 +122,6 @@ export default function Invitation() {
       } 
     }
     if(isSuccess) {
-      totalMints = totalMints + parseInt(inputValue.toString());
-      let params:any = {
-        username: forgeContext.userData.username,
-        bio: forgeContext.userData.bio,
-        pronouns: forgeContext.userData.pronouns,
-        name: forgeContext.userData.name,
-        image: forgeContext.userData.image,
-        descriptor: forgeContext.userData.descriptor,
-        nouns: forgeContext.userData.nouns,
-        mints:totalMints.toString()
-      }
-      updateUserData(params)
-      let userData = forgeContext.userData;
-      userData.mints = totalMints.toString();
-      forgeContext.setUserData(userData);
       createMessage("Congrats! You have minted your Invitation(s) successfully.","success-container")
     } else {
       createMessage("We’re sorry, there was an error while trying to mint your Invitation Badge(s). Check your wallet and try again.","danger-container")
@@ -147,10 +135,9 @@ export default function Invitation() {
       const env = new anchor.AnchorProvider(connection.connection,wallet,{"preflightCommitment":"processed"})
       anchor.setProvider(env);
       let userConn:AdConn = new AdConn(env, web3Consts.programID);
-      let totalMints = forgeContext.userData.mints ? parseInt(forgeContext.userData.mints) : 0;
 
       let isSuccess = false;
-      if(totalMints === 0) {
+      if(firstTime) {
         const body = {
           name: name != "" ? "Invitation from "+ name : "Invitation",
           symbol:  "INVITE",
@@ -181,21 +168,6 @@ export default function Invitation() {
         } 
       }
       if(isSuccess) {
-        totalMints = totalMints + inputValue;
-        let params:any = {
-          username: forgeContext.userData.username,
-          bio: forgeContext.userData.bio,
-          pronouns: forgeContext.userData.pronouns,
-          name: forgeContext.userData.name,
-          image: forgeContext.userData.image,
-          descriptor: forgeContext.userData.descriptor,
-          nouns: forgeContext.userData.nouns,
-          mints:totalMints.toString()
-        }
-        updateUserData(params)
-        let userData = forgeContext.userData;
-        userData.mints = totalMints.toString();
-        forgeContext.setUserData(userData);
         createMessage("Congrats! You have minted your Invitation(s) successfully.","success-container")
       } else {
         createMessage("We’re sorry, there was an error while trying to mint your Invitation Badge(s). Check your wallet and try again.","danger-container")

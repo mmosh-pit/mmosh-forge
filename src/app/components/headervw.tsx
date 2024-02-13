@@ -65,8 +65,7 @@ export default function HeaderVW() {
                 name:"",
                 image:"",
                 descriptor:"",
-                nouns:"",
-                mints:"0"
+                nouns:""
            })
            setName("");
            navigate.push("/")
