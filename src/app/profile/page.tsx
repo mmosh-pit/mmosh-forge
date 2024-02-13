@@ -204,7 +204,6 @@ const fileFormData = async () => {
             image: imageUri,
             descriptor: descriptor,
             nouns: descriptor,
-            profile:res.Ok.info.profile,
             mints:"0"
          }
          const profileResult = await updateUserData(params);
@@ -291,9 +290,8 @@ const fileFormData = async () => {
   const getProfileInfo = async () => {
       const env = new anchor.AnchorProvider(connection.connection,wallet,{"preflightCommitment":"processed"})
       let userConn:UserConn = new UserConn(env, web3Consts.programID);
-      let gensis = query.get("invitation") ?  query.get("invitation")  : null
 
-      const profileInfo = await userConn.getUserInfo(gensis);
+      const profileInfo = await userConn.getUserInfo();
       console.log("profileInfo from profile", profileInfo);
       setSolBalance(profileInfo.solBalance);
       setTokBalance(profileInfo.oposTokenBalance);

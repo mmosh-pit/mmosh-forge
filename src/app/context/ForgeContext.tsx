@@ -11,7 +11,6 @@ type UserData = {
     image: string,
     descriptor: string,
     nouns: string,
-    profile: string,
     mints: string
 }
 
@@ -36,7 +35,6 @@ export const ForgeProvider = (props: any) => {
     image:"",
     descriptor:"",
     nouns:"",
-    profile:"",
     mints:"0"
   })
 

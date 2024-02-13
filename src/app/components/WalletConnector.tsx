@@ -12,12 +12,7 @@ import { ForgeProvider } from '../context/ForgeContext';
 
 const WalletConnector = ({ children }: { children: React.ReactNode }) => {
     const getNetwork = () => {
-        if(process.env.CHAIN == "devnet") {
-           return WalletAdapterNetwork.Devnet;
-        } else if(process.env.CHAIN == "testnet") {
-           return WalletAdapterNetwork.Testnet;
-        }
-        return WalletAdapterNetwork.Mainnet;
+        return WalletAdapterNetwork.Devnet;
      }
     
       const solNetwork = getNetwork();
@@ -32,7 +27,7 @@ const WalletConnector = ({ children }: { children: React.ReactNode }) => {
 
       return (
         <ForgeProvider>    
-          <ConnectionProvider endpoint={"http://localhost:8899"}>
+          <ConnectionProvider endpoint={endpoint}>
           <WalletProvider wallets={wallets}>
             <WalletModalProvider>
             <div className='root-container'>

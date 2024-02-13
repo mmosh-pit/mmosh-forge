@@ -66,7 +66,6 @@ export default function HeaderVW() {
                 image:"",
                 descriptor:"",
                 nouns:"",
-                profile:"",
                 mints:"0"
            })
            setName("");
@@ -158,17 +157,11 @@ export default function HeaderVW() {
         try {
             const env = new anchor.AnchorProvider(connection.connection,wallet,{"preflightCommitment":"processed"})
             let userConn:UserConn = new UserConn(env, web3Consts.programID);
-            let gensis = query.get("invitation") ?  query.get("invitation")  : null
-            const profileInfo = await userConn.getUserInfo(gensis);    
+            const profileInfo = await userConn.getUserInfo();    
             if(profileInfo.profiles.length > 0) {
                 navigate.push("/invitation");
             } else if(profileInfo.activationTokens.length > 0 && profileInfo.profiles.length == 0){
-                if(gensis) {
-                    navigate.push("/profile?invitation="+gensis);
-                } else {
-                    navigate.push("/profile");
-                }
-                
+                navigate.push("/profile");
             } else {
                 navigate.push("/dashboard");
             }

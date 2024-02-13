@@ -637,10 +637,6 @@ export type Sop = {
         {
           "name": "uri",
           "type": "string"
-        },
-        {
-          "name": "amount",
-          "type": "u64"
         }
       ]
     },
@@ -690,6 +686,131 @@ export type Sop = {
         {
           "name": "tokenProgram",
           "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "parentProfile",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "grandParentProfile",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "greatGrandParentProfile",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "ggreateGrandParentProfile",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "genesisProfile",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "parentProfileState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "oposToken",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentParentProfileHolderAta",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentGrandParentProfileHolderAta",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentGreatGrandParentProfileHolderAta",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentGgreatGrandParentProfileHolderAta",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentGenesisProfileHolderAta",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentParentProfileHolder",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentGrandParentProfileHolder",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentGreatGrandParentProfileHolder",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentGgreatGrandParentProfileHolder",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentGenesisProfileHolder",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "userOposAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentProfileHolderOposAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "grandParentProfileHolderOposAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "greatGrandParentProfileHolderOposAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "ggreatGrandParentProfileHolderOposAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "genesisProfileHolderOposAta",
+          "isMut": true,
           "isSigner": false
         }
       ],
@@ -816,6 +937,10 @@ export type Sop = {
           },
           {
             "name": "profileMintingCost",
+            "type": "u64"
+          },
+          {
+            "name": "invitationMintingCost",
             "type": "u64"
           },
           {
@@ -952,6 +1077,10 @@ export type Sop = {
         "fields": [
           {
             "name": "profileMintingCost",
+            "type": "u64"
+          },
+          {
+            "name": "invitationMintingCost",
             "type": "u64"
           },
           {
@@ -1818,10 +1947,6 @@ export const IDL: Sop = {
         {
           "name": "uri",
           "type": "string"
-        },
-        {
-          "name": "amount",
-          "type": "u64"
         }
       ]
     },
@@ -1871,6 +1996,131 @@ export const IDL: Sop = {
         {
           "name": "tokenProgram",
           "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "parentProfile",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "grandParentProfile",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "greatGrandParentProfile",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "ggreateGrandParentProfile",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "genesisProfile",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "parentProfileState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "oposToken",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentParentProfileHolderAta",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentGrandParentProfileHolderAta",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentGreatGrandParentProfileHolderAta",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentGgreatGrandParentProfileHolderAta",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentGenesisProfileHolderAta",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentParentProfileHolder",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentGrandParentProfileHolder",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentGreatGrandParentProfileHolder",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentGgreatGrandParentProfileHolder",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentGenesisProfileHolder",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "userOposAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentProfileHolderOposAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "grandParentProfileHolderOposAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "greatGrandParentProfileHolderOposAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "ggreatGrandParentProfileHolderOposAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "genesisProfileHolderOposAta",
+          "isMut": true,
           "isSigner": false
         }
       ],
@@ -1997,6 +2247,10 @@ export const IDL: Sop = {
           },
           {
             "name": "profileMintingCost",
+            "type": "u64"
+          },
+          {
+            "name": "invitationMintingCost",
             "type": "u64"
           },
           {
@@ -2133,6 +2387,10 @@ export const IDL: Sop = {
         "fields": [
           {
             "name": "profileMintingCost",
+            "type": "u64"
+          },
+          {
+            "name": "invitationMintingCost",
             "type": "u64"
           },
           {
