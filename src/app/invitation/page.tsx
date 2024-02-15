@@ -320,7 +320,7 @@ const pinFileToShadowDrive = async (jsonData:any) => {
 
         <div className="invitation-page-inner">
             <div className="invitation-page-inner-image">
-              <img src="/images/invite.png" />
+              <img src="/images/invite.png" key={"Invite"} />
             </div>
             <div className="invitation-page-inner-content">
               { name != "" && 

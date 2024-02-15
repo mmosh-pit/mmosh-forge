@@ -20,14 +20,13 @@ import WebIcon from '@mui/icons-material/Web';
 import HomeIcon from '@mui/icons-material/Home';
 import { styled, useTheme } from "@mui/material";
 import axios from 'axios';
-import { useRouter,usePathname, useSearchParams } from 'next/navigation'
+import { useRouter,usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { ForgeContext } from "../context/ForgeContext";
 import { Connectivity as UserConn } from "../../anchor/user";
 import { web3Consts } from "@/anchor/web3Consts";
 
 export default function HeaderVW() {
-    const query = useSearchParams()
     const forgeContext = React.useContext(ForgeContext);
     const theme = useTheme();
     const navigate = useRouter();
@@ -181,11 +180,11 @@ export default function HeaderVW() {
                 <IconButton onClick={handleDrawerOpen} className="menu-button">
                     <MenuIcon />
                 </IconButton>
-                <h1><Link href="/"><img src="/images/logo.png" alt="Forge MMOSH" /></Link></h1>
+                <h1><Link href="/"><img src="/images/logo.png" alt="Forge MMOSH" key={"Forge MMOSH"} /></Link></h1>
                 <div className="forge-menu">
                     <ul>
                         {menuData.map((menuDataItem:any, index:any) => (
-                           <li><a href={menuDataItem.link} target="_blank">{menuDataItem.name}</a></li>
+                           <li key={index}><a href={menuDataItem.link} target="_blank">{menuDataItem.name}</a></li>
                         ))}
                     </ul>
                 </div>
@@ -224,7 +223,7 @@ export default function HeaderVW() {
                         }
 
                         <div className="banner-container-inner-item">
-                        <img src={location.pathname == "/dashboard" ? "/images/headerlogo.png" : "/images/headerlogo1.png" }  alt="banner" />
+                        <img src={location.pathname == "/dashboard" ? "/images/headerlogo.png" : "/images/headerlogo1.png" }  alt="banner" key={"banner"} />
                         </div>
                     </div>
                 </div>
@@ -271,7 +270,7 @@ export default function HeaderVW() {
         {!forgeContext.connected &&
              <div className="header">
                 <div className="guest-header-container header-container">
-                    <h1><a href="/"><img src="/images/logo.png" alt="Forge MMOSH" /></a></h1>
+                    <h1><a href="/"><img src="/images/logo.png" alt="Forge MMOSH"  key={"Forge MMOSH"}/></a></h1>
                 </div>
              </div>
         }

@@ -559,9 +559,10 @@ export class Connectivity {
       let generation = "1";
 
       for (let i of _userNfts) {
+        const nftInfo:any = i;
         const collectionInfo = i?.collection;
         if (collectionInfo?.address.toBase58() == profileCollection.toBase58()) {
-           profiles.push({ name: i.name, address: i?.mintAddress.toBase58()});
+           profiles.push({ name: i.name, address: nftInfo.mintAddress.toBase58()});
         } 
         if(profiles.length > 0) {
           break;
@@ -595,11 +596,12 @@ export class Connectivity {
         for (let i of _userNfts) {
           if (i.symbol == "INVITE") {
               try {
-                console.log("token address ",i?.mintAddress.toBase58())
-                const activationTokenState = this.__getActivationTokenStateAccount(i?.mintAddress)
+                const nftInfo:any = i;
+                console.log("token address ",nftInfo.mintAddress.toBase58())
+                const activationTokenState = this.__getActivationTokenStateAccount(nftInfo.mintAddress)
                 const activationTokenStateInfo = await this.program.account.activationTokenState.fetch(activationTokenState)
                 const parentProfile = activationTokenStateInfo.parentProfile;
-                activationTokens.push({ name: i.name, genesis: parentProfile.toBase58(),activation:i?.mintAddress.toBase58()})
+                activationTokens.push({ name: i.name, genesis: parentProfile.toBase58(),activation:nftInfo.mintAddress.toBase58()})
               } catch (error) {
                 console.log("error invite ",error)
               }

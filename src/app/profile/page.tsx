@@ -10,7 +10,7 @@ import { web3Consts } from '../../anchor/web3Consts';
 import { Connectivity as AdConn } from "../../anchor/admin";
 import { Connectivity as UserConn } from "../../anchor/user";
 import {useDropzone} from 'react-dropzone';
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { v4 as uuidv4 } from 'uuid';
 import bs58 from "bs58";
 import { ShdwDrive } from "@shadow-drive/sdk";
@@ -20,7 +20,6 @@ import axios from 'axios';
 import { ForgeContext } from '../context/ForgeContext';
 
 export default function Profile() {
-   const query = useSearchParams()
    const forgeContext = React.useContext(ForgeContext);
    const navigate = useRouter()
    const [solBalance, setSolBalance] = useState(0)
@@ -322,13 +321,13 @@ const fileFormData = async () => {
               {imageFile.length == 0 &&
                   <div {...getRootProps({className: 'dropzone'})}>
                      <input {...getInputProps()} />
-                     <img src="/images/upload.png" />
+                     <img src="/images/upload.png" key={"Forge Upload"}/>
                   </div>
                }
               {imageFile.length > 0 &&
                 <div className='preview-container'>
                   <Button variant="link" onClick={closeImageAction} className='image-close-btn'>Close</Button>
-                  <img src={imageFile[0].preview} />
+                  <img src={imageFile[0].preview} key={"Preview"}/>
                 </div>
               }
             </div>
