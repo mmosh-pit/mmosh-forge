@@ -64,31 +64,36 @@ export default function Profile() {
   }, [wallet?.publicKey]);
 
   const fillFormData = async () => {
-    const fullname = forgeContext.userData.name.split(" ");
-    setUserName(forgeContext.userData.username);
-    setDesc(forgeContext.userData.bio);
-    setGender(forgeContext.userData.pronouns);
-    setFirstName(fullname[0]);
-    setLastName(fullname[1]);
+    try {
+      const fullname = forgeContext.userData.name.split(" ");
+      setUserName(forgeContext.userData.username);
+      setDesc(forgeContext.userData.bio);
+      setGender(forgeContext.userData.pronouns);
+      
+      setFirstName(fullname[0]);
+      setLastName(fullname[1]);
 
-    const response = await fetch(forgeContext.userData.image);
-    const data = await response.blob();
-    const metadata = {
-      type: "image/jpeg",
-    };
-    const file = new File(
-      [data],
-      `${forgeContext.userData.username}-${new Date().getDate()}.jpg`,
-      metadata,
-    );
-
-    setImageFile([
-      {
-        preview: URL.createObjectURL(file),
-        file: file,
-      },
-    ]);
-    setIsLoading(false);
+      const response = await fetch(forgeContext.userData.image);
+      const data = await response.blob();
+      const metadata = {
+        type: "image/jpeg",
+      };
+      const file = new File(
+        [data],
+        `${forgeContext.userData.username}-${new Date().getDate()}.jpg`,
+        metadata,
+      );
+      setImageFile([
+        {
+          preview: URL.createObjectURL(file),
+          file: file,
+        },
+      ]);
+      setIsLoading(false);
+    } catch (error) {
+      setImageFile([]);
+      setIsLoading(false);
+    }
   };
 
   const updateUserData = async (params: any) => {
