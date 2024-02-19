@@ -54,6 +54,7 @@ export default function HeaderVW() {
             }
 
         } else {
+           forgeContext.setLoading(false)
            forgeContext.setConnected(false)
            forgeContext.setUserData({
                 _id:"",
@@ -132,6 +133,7 @@ export default function HeaderVW() {
                userData._id = result.data._id;
                forgeContext.setUserData(userData)
                if(result.data.profile.profile) {
+                    forgeContext.setLoading(false)
                     forgeContext.setConnected(true)
                     navigate.push("/invitation");
                } else {
@@ -163,8 +165,10 @@ export default function HeaderVW() {
             } else {
                 navigate.push("/dashboard");
             }
+            forgeContext.setLoading(false)
             forgeContext.setConnected(true)
         } catch (error) {
+            forgeContext.setLoading(false)
             forgeContext.setConnected(true)
             console.log("error is ",error)
         }
@@ -180,7 +184,7 @@ export default function HeaderVW() {
                 <IconButton onClick={handleDrawerOpen} className="menu-button">
                     <MenuIcon />
                 </IconButton>
-                <h1><Link href="/"><img src="/images/logo.png" alt="Forge MMOSH" key={"Forge MMOSH"} /></Link></h1>
+                <h1><Link href="javascript:void(0)"><img src="/images/logo.png" alt="Forge MMOSH" key={"Forge MMOSH"} /></Link></h1>
                 <div className="forge-menu">
                     <ul>
                         {menuData.map((menuDataItem:any, index:any) => (
@@ -202,35 +206,33 @@ export default function HeaderVW() {
                     </div>
                 </div>
             </div>
-           {forgeContext.connected &&
-                <div className="banner-container">
-                    <div className="banner-container-inner">
-                        {(name !== "" && currentLocation == "/dashboard") &&
-                            <div className="banner-container-inner-item">
-                                <p>Hey {capitalizeString(name)}, you’ll need an invitation to mint your Profile and become a MMOSH DAO member</p>
-                                <p>You can get an invitation from a current member. <Link href={mainUrl}>Find one in the Membership Directory</Link> or ask in our main telegram group for guests</p>
-                                <Button variant="primary" size='lg' href={mainUrl}>Go to Telegram Group</Button>
-                            </div>
-                        }
 
-                        {(name === "" && currentLocation == "/dashboard") &&
-                            <div className="banner-container-inner-item no-account-banner">
-                                <h2>Howdy Stranger</h2>
-                                <p>The Forge is only for MMOSH Members and their Guests.</p>
-                                <p>Please connect the wallet you used to register, create a new account for this wallet address.</p>
-                                <Button variant="primary" size='lg' href={mainUrl}>Create an Account</Button>
-                            </div>
-                        }
-
+            <div className="banner-container">
+                <div className="banner-container-inner">
+                    {(name !== "" && currentLocation == "/dashboard") &&
                         <div className="banner-container-inner-item">
-                        <img src={location.pathname == "/dashboard" ? "/images/headerlogo.png" : "/images/headerlogo1.png" }  alt="banner" key={"banner"} />
+                            <p>Hey {capitalizeString(name)}, you’ll need an invitation to mint your Profile and become a MMOSH DAO member</p>
+                            <p>You can get an invitation from a current member. <Link href={mainUrl}>Find one in the Membership Directory</Link> or ask in our main telegram group for guests</p>
+                            <Button variant="primary" size='lg' href={mainUrl}>Go to Telegram Group</Button>
                         </div>
+                    }
+
+                    {(name === "" && currentLocation == "/dashboard") &&
+                        <div className="banner-container-inner-item no-account-banner">
+                            <h2>Howdy Stranger</h2>
+                            <p>The Forge is only for MMOSH Members and their Guests.</p>
+                            <p>Please connect the wallet you used to register, create a new account for this wallet address.</p>
+                            <Button variant="primary" size='lg' href={mainUrl}>Create an Account</Button>
+                        </div>
+                    }
+
+                    <div className="banner-container-inner-item">
+                    <img src={location.pathname == "/dashboard" ? "/images/headerlogo.png" : "/images/headerlogo1.png" }  alt="banner" key={"banner"} />
                     </div>
                 </div>
+            </div>
         
-           }
-
-
+           
             </div>
             <Drawer
                 sx={{
@@ -270,7 +272,7 @@ export default function HeaderVW() {
         {!forgeContext.connected &&
              <div className="header">
                 <div className="guest-header-container header-container">
-                    <h1><a href="/"><img src="/images/logo.png" alt="Forge MMOSH"  key={"Forge MMOSH"}/></a></h1>
+                    <h1><a href="javascript:void(0)"><img src="/images/logo.png" alt="Forge MMOSH"  key={"Forge MMOSH"}/></a></h1>
                 </div>
              </div>
         }

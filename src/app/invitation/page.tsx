@@ -28,7 +28,6 @@ export default function Invitation() {
   const [msgClass, setMsgClass] = useState("");
   const [showMsg, setShowMsg] = useState(false);
   const [msgText, setMsgText] = useState("");
-  const [isGensis, setIsGensis] = useState(false);
   const connection = useConnection();
   const wallet:any = useAnchorWallet();
   const [inputValue, setInputValue] = useState(0);
@@ -36,7 +35,6 @@ export default function Invitation() {
 
   useEffect(()=>{
      if(wallet?.publicKey) {
-         setIsGensis(wallet.publicKey.toBase58() == web3Consts.rootProfile.toBase58())
          const env = new anchor.AnchorProvider(connection.connection,wallet,{"preflightCommitment":"processed"})
          anchor.setProvider(env);
          setName(forgeContext.userData.name);
@@ -247,7 +245,7 @@ export default function Invitation() {
       return
     }
     setButtonText("Minting...")
-    if(wallet.publicKey.toBase58() == "85YaBFhbwuqPiRVNrXdMJwdt1qjdxbtypGcFBc6Tp7qA") {
+    if(profile == web3Consts.genesisProfile.toBase58()) {
        createGensisInvitation();
     } else {
       createSubscriptionInvitation()
