@@ -78,7 +78,7 @@ export default function Profile() {
     };
     const file = new File(
       [data],
-      `${forgeContext.userData.username}-${new Date()}.jpg`,
+      `${forgeContext.userData.username}-${new Date().getDate()}.jpg`,
       metadata,
     );
 
