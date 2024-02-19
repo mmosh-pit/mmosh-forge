@@ -373,7 +373,6 @@ const pinFileToShadowDrive = async (jsonData:any) => {
               </div>
               <div className="invitation-action-container">
                  <Button variant="primary" size='sm' onClick={mintInvitationAction}>{buttonText}</Button>
-                 <Button variant="primary" size='sm' onClick={transferAction}>Tranfer</Button>
               </div>
 
             </div>
