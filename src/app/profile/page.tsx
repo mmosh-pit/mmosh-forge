@@ -359,21 +359,19 @@ export default function Profile() {
   };
 
   const checkForUsername = React.useCallback(async () => {
-    if (userName === forgeContext.userData.username) return;
+    if (userName === forgeContext.userData.username) {
+      setDoesUsernameExists(false);
+      return;
+    }
 
-    const result = await axios.get(
-      `${process.env.NEXT_PUBLIC_MAIN_APP_URL}/api/check-username?username=${userName}`,
-    );
+    const result = await axios.get(`/api/check-username?username=${userName}`);
 
     if (result.data) {
       setDoesUsernameExists(true);
+      return;
     }
 
     setDoesUsernameExists(false);
-  }, [userName]);
-
-  React.useEffect(() => {
-    checkForUsername();
   }, [userName]);
 
   return (
@@ -438,8 +436,13 @@ export default function Profile() {
               maxLength={15}
               onChange={(event) => setUserName(event.target.value)}
               value={userName}
+              onBlur={checkForUsername}
             />
-            <span>15 characters</span>
+            {doesUsernameExists ? (
+              <span className="text-danger">Username already exists!</span>
+            ) : (
+              <span>15 characters</span>
+            )}
           </div>
           <div className="profile-container-element">
             <label>Pronouns*</label>
