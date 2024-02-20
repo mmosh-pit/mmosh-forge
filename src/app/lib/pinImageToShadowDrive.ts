@@ -22,7 +22,6 @@ export const pinImageToShadowDrive = async (file: any) => {
     const acc = accounts[0].publicKey;
 
     const upload = await drive.uploadFile(acc, file);
-    console.log("Shadow drive upload result: ", upload);
     return upload.finalized_locations[0];
   } catch (error) {
     console.log("shadow drive upload error: ", error);

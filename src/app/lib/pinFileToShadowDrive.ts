@@ -29,7 +29,6 @@ export const pinFileToShadowDrive = async (jsonData: any) => {
     const file = new File([blobData], fileName, { type: "application/json" });
 
     const upload = await drive.uploadFile(acc, file);
-    console.log(upload);
     return upload.finalized_locations[0];
   } catch (error) {
     console.log("error", error);
