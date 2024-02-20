@@ -16,6 +16,7 @@ import { pinImageToShadowDrive } from "../lib/pinImageToShadowDrive";
 export default function Profile() {
   const forgeContext = React.useContext(ForgeContext);
   const navigate = useRouter();
+  const [doesUsernameExists, setDoesUsernameExists] = useState(false);
   const [solBalance, setSolBalance] = useState(0);
   const [tokBalance, setTokBalance] = useState(0);
   const [totalChild, setTotalChild] = useState(0);
@@ -23,7 +24,7 @@ export default function Profile() {
     promoter: "",
     scout: "",
     recruiter: "",
-    originator:""
+    originator: "",
   });
   const connection = useConnection();
   const wallet: any = useAnchorWallet();
@@ -76,10 +77,10 @@ export default function Profile() {
       setUserName(forgeContext.userData.username);
       setDesc(forgeContext.userData.bio);
       setGender(forgeContext.userData.pronouns);
-      
+
       setFirstName(fullname[0]);
       setLastName(fullname[1]);
-      
+
       setImageFile([
         {
           preview: forgeContext.userData.image,
@@ -209,51 +210,51 @@ export default function Profile() {
         {
           trait_type: "Pronoun",
           value: gender,
-        }
+        },
       ],
     };
 
     // get promoter name
-    if(profileLineage.promoter.length > 0) {
-        let promoter:any = await getUserName(profileLineage.promoter);
-        if(promoter != "") {
-          body.attributes.push({
-            trait_type: "Promoter",
-            value: promoter
-          })
-        }
+    if (profileLineage.promoter.length > 0) {
+      let promoter: any = await getUserName(profileLineage.promoter);
+      if (promoter != "") {
+        body.attributes.push({
+          trait_type: "Promoter",
+          value: promoter,
+        });
+      }
     }
 
     // get scout name
-    if(profileLineage.scout.length > 0) {
-        let scout:any = await getUserName(profileLineage.scout);
-        if(scout != "") {
-          body.attributes.push({
-            trait_type: "Scout",
-            value: scout
-          })
-        }
+    if (profileLineage.scout.length > 0) {
+      let scout: any = await getUserName(profileLineage.scout);
+      if (scout != "") {
+        body.attributes.push({
+          trait_type: "Scout",
+          value: scout,
+        });
+      }
     }
 
     // get recruiter name
-    if(profileLineage.recruiter.length > 0) {
-      let recruiter:any = await getUserName(profileLineage.recruiter);
-      if(recruiter != "") {
+    if (profileLineage.recruiter.length > 0) {
+      let recruiter: any = await getUserName(profileLineage.recruiter);
+      if (recruiter != "") {
         body.attributes.push({
           trait_type: "Recruiter",
-          value: recruiter
-        })
+          value: recruiter,
+        });
       }
     }
 
     // get originator name
-    if(profileLineage.originator.length > 0) {
-      let originator:any = await getUserName(profileLineage.originator);
-      if(originator != "") {
+    if (profileLineage.originator.length > 0) {
+      let originator: any = await getUserName(profileLineage.originator);
+      if (originator != "") {
         body.attributes.push({
           trait_type: "Originator",
-          value: originator
-        })
+          value: originator,
+        });
       }
     }
 
@@ -320,29 +321,21 @@ export default function Profile() {
     }
   };
 
-  const getUserName = async (pubKey:any) => {
+  const getUserName = async (pubKey: any) => {
     try {
-      const result = await axios.get(
-        `/api/get-wallet-data?wallet=${pubKey}`,
-       );
-       console.log("userdata ", result)
-       let hasProfile = false
-       if(result) {
-         if(result.data) {
-           if(result.data.profile) {
-              return result.data.profile.name;
-           }
-         }
-       }
-       return "";
+      const result = await axios.get(`/api/get-wallet-data?wallet=${pubKey}`);
+      if (result) {
+        if (result.data) {
+          if (result.data.profile) {
+            return result.data.profile.name;
+          }
+        }
+      }
+      return "";
     } catch (error) {
       return "";
     }
   };
-
-  const capitalizeString = (str:any) => {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-}
 
   const getProfileInfo = async () => {
     const env = new anchor.AnchorProvider(connection.connection, wallet, {
@@ -356,14 +349,32 @@ export default function Profile() {
     if (profileInfo.activationTokens.length > 0) {
       setGensis(profileInfo.activationTokens[0].genesis);
       setSubToken(profileInfo.activationTokens[0].activation);
-      setTotalChild(profileInfo.totalChild)
-      setProfileLineage(profileInfo.profilelineage)
+      setTotalChild(profileInfo.totalChild);
+      setProfileLineage(profileInfo.profilelineage);
     }
   };
 
   const closeImageAction = () => {
     setImageFile([]);
   };
+
+  const checkForUsername = React.useCallback(async () => {
+    if (userName === forgeContext.userData.username) return;
+
+    const result = await axios.get(
+      `${process.env.NEXT_PUBLIC_MAIN_APP_URL}/api/check-username?username=${userName}`,
+    );
+
+    if (result.data) {
+      setDoesUsernameExists(true);
+    }
+
+    setDoesUsernameExists(false);
+  }, [userName]);
+
+  React.useEffect(() => {
+    checkForUsername();
+  }, [userName]);
 
   return (
     <div className="profile-page container">
@@ -427,7 +438,6 @@ export default function Profile() {
               maxLength={15}
               onChange={(event) => setUserName(event.target.value)}
               value={userName}
-              disabled
             />
             <span>15 characters</span>
           </div>
@@ -449,7 +459,7 @@ export default function Profile() {
             <label>Description</label>
             <Form.Control
               as="textarea"
-              rows={13}
+              rows={12}
               placeholder="Tell us about yourself in up to 160 characters."
               onChange={(event) => setDesc(event.target.value)}
               value={desc}
@@ -457,7 +467,9 @@ export default function Profile() {
           </div>
           <div className="profile-container-element">
             <label>Superhero Identity</label>
+            <span>Example: Frank the Amazing Elf</span>
             <div className="profile-container-element-group">
+              <p className="profile-container-element-group-start-item">The</p>
               <div className="profile-container-element-group-item">
                 <div className="profile-container-element-group-item-left">
                   <Form.Control
