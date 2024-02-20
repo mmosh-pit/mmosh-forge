@@ -32,6 +32,12 @@ export default function Invitation() {
   const wallet: any = useAnchorWallet();
   const [inputValue, setInputValue] = useState(0);
   const [firstTime, setFirstTime] = useState(true);
+  const [profileLineage, setProfileLineage] = useState({
+    promoter: "",
+    scout: "",
+    recruiter: "",
+    originator:""
+  });
 
   useEffect(() => {
     if (wallet?.publicKey) {
@@ -60,6 +66,7 @@ export default function Invitation() {
     setSolBalance(profileInfo.solBalance);
     setTokBalance(profileInfo.oposTokenBalance);
     setActBalance(profileInfo.activationTokenBalance);
+    setProfileLineage(profileInfo.profilelineage);
     const totalMints = profileInfo.totalChild;
     if (totalMints > 0 || profileInfo.activationTokenBalance > 0) {
       setFirstTime(false);
@@ -93,6 +100,56 @@ export default function Invitation() {
 
     let isSuccess = false;
     if (firstTime) {
+      let attributes = []
+      // get promoter name
+      if(profileLineage.promoter.length > 0) {
+        let promoter:any = await getUserName(profileLineage.promoter);
+        if(promoter != "") {
+          attributes.push({
+            trait_type: "Promoter",
+            value: promoter
+          })
+        }
+      }
+
+      // get scout name
+      if(profileLineage.scout.length > 0) {
+          let scout:any = await getUserName(profileLineage.scout);
+          if(scout != "") {
+            attributes.push({
+              trait_type: "Scout",
+              value: scout
+            })
+          }
+      }
+
+      // get recruiter name
+      if(profileLineage.recruiter.length > 0) {
+        let recruiter:any = await getUserName(profileLineage.recruiter);
+        if(recruiter != "") {
+          attributes.push({
+            trait_type: "Recruiter",
+            value: recruiter
+          })
+        }
+      }
+
+      // get originator name
+      if(profileLineage.originator.length > 0) {
+        let originator:any = await getUserName(profileLineage.originator);
+        if(originator != "") {
+          attributes.push({
+            trait_type: "Originator",
+            value: originator
+          })
+        }
+      }
+
+      attributes.push({
+        trait_type: "MMOSH",
+        value: "Sally the Clubhouse Wallet"
+      })
+
       const body = {
         name: name != "" ? "Invitation from " + name : "Invitation",
         symbol: "INVITE",
@@ -102,7 +159,11 @@ export default function Invitation() {
           "https://shdw-drive.genesysgo.net/FuBjTTmQuqM7pGR2gFsaiBxDmdj8ExP5fzNwnZyE2PgC/invite.png",
         external_url: process.env.REACT_APP_MAIN_URL,
         minter: name,
+        attributes: attributes
       };
+       
+
+
       const shdwHash: any = await pinFileToShadowDrive(body);
 
       if (shdwHash === "") {
@@ -155,6 +216,26 @@ export default function Invitation() {
 
     setButtonText("Mint");
     getProfileInfo();
+  };
+
+  const getUserName = async (pubKey:any) => {
+    try {
+      const result = await axios.get(
+        `/api/get-wallet-data?wallet=${pubKey}`,
+       );
+       console.log("userdata ", result)
+       let hasProfile = false
+       if(result) {
+         if(result.data) {
+           if(result.data.profile) {
+              return result.data.profile.name;
+           }
+         }
+       }
+       return "";
+    } catch (error) {
+      return "";
+    }
   };
 
   const createGensisInvitation = async () => {
@@ -226,13 +307,6 @@ export default function Invitation() {
     getProfileInfo();
   };
 
-  const updateUserData = async (params: any) => {
-    await axios.put("/api/update-wallet-data", {
-      field: "profile",
-      value: params,
-      wallet: wallet.publicKey,
-    });
-  };
 
   const calcNonDecimalValue = (value: number, decimals: number) => {
     return Math.trunc(value * Math.pow(10, decimals));
@@ -343,7 +417,7 @@ export default function Invitation() {
     }
     if (quota <= actBalance) {
       createMessage(
-        "Hey! We checked your quote reached maximum count, try again later!",
+        "Hey! You don’t have any more invitations available in your quota. Please come back when it’s refreshed.",
         "warning-container",
       );
       return;
@@ -351,7 +425,7 @@ export default function Invitation() {
 
     if (inputValue > quota - actBalance) {
       createMessage(
-        "Hey! We checked your quote reached maximum count, try again later!",
+        "Hey! You don’t have any more invitations available in your quota. Please come back when it’s refreshed.",
         "warning-container",
       );
       return;
@@ -482,6 +556,9 @@ export default function Invitation() {
             <Button variant="primary" size="sm" onClick={mintInvitationAction}>
               {buttonText}
             </Button>
+            {/* <Button variant="primary" size="sm" onClick={transferAction}>
+              Transfer
+            </Button> */}
           </div>
         </div>
       </div>

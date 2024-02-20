@@ -18,6 +18,13 @@ export default function Profile() {
   const navigate = useRouter();
   const [solBalance, setSolBalance] = useState(0);
   const [tokBalance, setTokBalance] = useState(0);
+  const [totalChild, setTotalChild] = useState(0);
+  const [profileLineage, setProfileLineage] = useState({
+    promoter: "",
+    scout: "",
+    recruiter: "",
+    originator:""
+  });
   const connection = useConnection();
   const wallet: any = useAnchorWallet();
   const [msgClass, setMsgClass] = useState("");
@@ -72,21 +79,11 @@ export default function Profile() {
       
       setFirstName(fullname[0]);
       setLastName(fullname[1]);
-
-      const response = await fetch(forgeContext.userData.image);
-      const data = await response.blob();
-      const metadata = {
-        type: "image/jpeg",
-      };
-      const file = new File(
-        [data],
-        `${forgeContext.userData.username}-${new Date().getDate()}.jpg`,
-        metadata,
-      );
+      
       setImageFile([
         {
-          preview: URL.createObjectURL(file),
-          file: file,
+          preview: forgeContext.userData.image,
+          file: null,
         },
       ]);
       setIsLoading(false);
@@ -177,7 +174,7 @@ export default function Profile() {
       symbol: userName,
       description: desc,
       image: "",
-      enternal_url: process.env.NEXT_PUBLIC_MAIN_APP_URL + "/" + userName,
+      enternal_url: process.env.NEXT_PUBLIC_APP_MAIN_URL + "/" + userName,
       family: "MMOSH Pit",
       collection: "Moral Panic",
       attributes: [
@@ -189,8 +186,76 @@ export default function Profile() {
           trait_type: "MMOSH",
           value: "Moral Panic",
         },
+        {
+          trait_type: "Seniority",
+          value: totalChild + 1,
+        },
+        {
+          trait_type: "Full Name",
+          value: firstName + " " + lastName,
+        },
+        {
+          trait_type: "Username",
+          value: userName,
+        },
+        {
+          trait_type: "Adjective",
+          value: descriptor,
+        },
+        {
+          trait_type: "Noun",
+          value: nouns,
+        },
+        {
+          trait_type: "Pronoun",
+          value: gender,
+        }
       ],
     };
+
+    // get promoter name
+    if(profileLineage.promoter.length > 0) {
+        let promoter:any = await getUserName(profileLineage.promoter);
+        if(promoter != "") {
+          body.attributes.push({
+            trait_type: "Promoter",
+            value: promoter
+          })
+        }
+    }
+
+    // get scout name
+    if(profileLineage.scout.length > 0) {
+        let scout:any = await getUserName(profileLineage.scout);
+        if(scout != "") {
+          body.attributes.push({
+            trait_type: "Scout",
+            value: scout
+          })
+        }
+    }
+
+    // get recruiter name
+    if(profileLineage.recruiter.length > 0) {
+      let recruiter:any = await getUserName(profileLineage.recruiter);
+      if(recruiter != "") {
+        body.attributes.push({
+          trait_type: "Recruiter",
+          value: recruiter
+        })
+      }
+    }
+
+    // get originator name
+    if(profileLineage.originator.length > 0) {
+      let originator:any = await getUserName(profileLineage.originator);
+      if(originator != "") {
+        body.attributes.push({
+          trait_type: "Originator",
+          value: originator
+        })
+      }
+    }
 
     if (imageFile[0].file != null) {
       const imageUri = await pinImageToShadowDrive(imageFile[0].file);
@@ -203,6 +268,8 @@ export default function Profile() {
         );
         return;
       }
+    } else {
+      body.image = imageFile[0].preview;
     }
 
     const shadowHash: any = await pinFileToShadowDrive(body);
@@ -233,7 +300,7 @@ export default function Profile() {
           name: firstName + " " + lastName,
           image: body.image,
           descriptor: descriptor,
-          nouns: descriptor,
+          nouns: nouns,
         };
         await updateUserData(params);
         params.wallet = wallet.publickey;
@@ -253,6 +320,30 @@ export default function Profile() {
     }
   };
 
+  const getUserName = async (pubKey:any) => {
+    try {
+      const result = await axios.get(
+        `/api/get-wallet-data?wallet=${pubKey}`,
+       );
+       console.log("userdata ", result)
+       let hasProfile = false
+       if(result) {
+         if(result.data) {
+           if(result.data.profile) {
+              return result.data.profile.name;
+           }
+         }
+       }
+       return "";
+    } catch (error) {
+      return "";
+    }
+  };
+
+  const capitalizeString = (str:any) => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
   const getProfileInfo = async () => {
     const env = new anchor.AnchorProvider(connection.connection, wallet, {
       preflightCommitment: "processed",
@@ -265,6 +356,8 @@ export default function Profile() {
     if (profileInfo.activationTokens.length > 0) {
       setGensis(profileInfo.activationTokens[0].genesis);
       setSubToken(profileInfo.activationTokens[0].activation);
+      setTotalChild(profileInfo.totalChild)
+      setProfileLineage(profileInfo.profilelineage)
     }
   };
 

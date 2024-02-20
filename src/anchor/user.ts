@@ -324,20 +324,15 @@ export class Connectivity {
     uri?: string;
   }): Promise<Result<TxPassType<{ subscriptionToken: string }>, any>> {
     try {
-      console.log("test1");
       const user = this.provider.publicKey;
       this.reinit();
       let { profile, name, symbol, uri } = input;
       symbol = symbol ?? "";
       uri = uri ?? "";
-      console.log("test2");
       if (typeof profile == "string") profile = new web3.PublicKey(profile);
-      console.log("test21");
       const profileState = this.__getProfileStateAccount(profile);
-      console.log("test22");
       const profileStateInfo =
         await this.program.account.profileState.fetch(profileState);
-      console.log("test23");
       if (profileStateInfo.activationToken)
         return {
           Ok: {
@@ -366,7 +361,6 @@ export class Connectivity {
         activationToken,
         user,
       );
-      console.log("test3");
       const ix = await this.program.methods
         .initActivationToken(name, symbol, uri)
         .accounts({
@@ -390,7 +384,6 @@ export class Connectivity {
         })
         .instruction();
       this.txis.push(ix);
-      console.log("test4");
       const tx = new web3.Transaction().add(...this.txis);
       this.txis = [];
       const signature = await this.provider.sendAndConfirm(tx, [
@@ -403,7 +396,6 @@ export class Connectivity {
         },
       };
 
-      console.log("test6");
     } catch (e) {
       log({ error: e });
       return { Err: e };
@@ -660,6 +652,12 @@ export class Connectivity {
       oposTokenBalance =
         (parseInt(tokenAccount?.amount?.toString()) ?? 0) / LAMPORTS_PER_OPOS;
     }
+    let profilelineage = {
+      promoter: "",
+      scout: "",
+      recruiter: "",
+      originator:""
+    }
 
     try {
       const mainStateInfo = await this.program.account.mainState.fetch(
@@ -682,6 +680,7 @@ export class Connectivity {
       let totalChild = 0;
       let generation = "1";
 
+
       for (let i of _userNfts) {
         const nftInfo: any = i;
         const collectionInfo = i?.collection;
@@ -697,8 +696,6 @@ export class Connectivity {
           break;
         }
       }
-
-      console.log("profile ", profiles);
 
       if (profiles.length > 0) {
         const genesisProfile = new anchor.web3.PublicKey(profiles[0].address);
@@ -730,6 +727,28 @@ export class Connectivity {
             });
           }
         }
+
+        if(this.getAddressString(profileState) != "") {
+            const {
+                currentGreatGrandParentProfileHolder,
+                currentGgreatGrandParentProfileHolder,
+                currentGrandParentProfileHolder,
+                currentParentProfileHolder,
+            } = await this.__getProfileHoldersInfo(
+              profileStateInfo.lineage,
+              genesisProfile,
+              web3Consts.genesisProfile,
+            );
+            profilelineage = {
+              promoter: this.getAddressString(currentParentProfileHolder),
+              scout: this.getAddressString(currentGrandParentProfileHolder),
+              recruiter: this.getAddressString(currentGgreatGrandParentProfileHolder),
+              originator: this.getAddressString(currentGreatGrandParentProfileHolder),
+            }
+        }
+
+
+
       } else {
         for (let i of _userNfts) {
           if (i.symbol == "INVITE") {
@@ -742,12 +761,16 @@ export class Connectivity {
                 await this.program.account.activationTokenState.fetch(
                   activationTokenState,
                 );
+              console.log("activationTokenStateInfo " ,activationTokenStateInfo)
               const parentProfile = activationTokenStateInfo.parentProfile;
+              
               activationTokens.push({
                 name: i.name,
                 genesis: parentProfile.toBase58(),
                 activation: nftInfo.mintAddress.toBase58(),
               });
+              totalChild = await this.getProfileChilds(parentProfile);
+              profilelineage = await this.getProfileLineage(parentProfile);
             } catch (error) {
               console.log("error invite ", error);
             }
@@ -764,6 +787,7 @@ export class Connectivity {
         activationTokens,
         activationTokenBalance,
         totalChild: totalChild,
+        profilelineage
       };
 
       console.log("profileInfo", profileInfo);
@@ -778,10 +802,64 @@ export class Connectivity {
         activationTokens: profiles,
         activationTokenBalance: 0,
         totalChild: 0,
+        profilelineage
       };
       return profileInfo;
     }
   }
+
+  getAddressString(pubKey:web3.PublicKey) {
+    try {
+      return pubKey.toBase58()
+    } catch (error) {
+      return ""
+    }
+  }
+
+  async getProfileLineage(
+    parentProfile: web3.PublicKey
+    ) {
+    try {
+      const profileStateInfo = await this.program.account.profileState.fetch(this.__getProfileStateAccount(parentProfile));
+      console.log("getProfileLineage ",profileStateInfo);
+      const {
+        currentGreatGrandParentProfileHolder,
+        currentGgreatGrandParentProfileHolder,
+        currentGrandParentProfileHolder,
+        currentParentProfileHolder,
+      } = await this.__getProfileHoldersInfo(
+        profileStateInfo.lineage,
+        parentProfile,
+        web3Consts.genesisProfile,
+      );
+
+      return {
+        promoter: this.getAddressString(currentParentProfileHolder),
+        scout: this.getAddressString(currentGrandParentProfileHolder),
+        recruiter: this.getAddressString(currentGgreatGrandParentProfileHolder),
+        originator: this.getAddressString(currentGreatGrandParentProfileHolder),
+      }
+    } catch (error:any) {
+      return {
+        promoter: "",
+        scout: "",
+        recruiter: "",
+        originator:""
+      }
+    }
+  }
+
+  async getProfileChilds(
+    parentProfile: web3.PublicKey
+    ) {
+    try {
+      const profileStateInfo = await this.program.account.profileState.fetch(this.__getProfileStateAccount(parentProfile));
+      return profileStateInfo.lineage.totalChild.toNumber();
+    } catch (error:any) {
+      return 0
+    }
+  }
+
 
   async __getProfileHoldersInfo(
     input: LineageInfo,
