@@ -79,7 +79,9 @@ export default function Profile() {
       setGender(forgeContext.userData.pronouns);
 
       setFirstName(fullname[0]);
-      setLastName(fullname[1]);
+      if(fullname.length>1) {
+        setLastName(fullname[1]);
+      }
 
       setImageFile([
         {
@@ -231,8 +233,13 @@ export default function Profile() {
           trait_type: "Promoter",
           value: promoter,
         });
+      } else {
+        body.attributes.push({
+          trait_type: "Promoter",
+          value: profileLineage.promoter,
+        });
       }
-    }
+    } 
 
     // get scout name
     if (profileLineage.scout.length > 0) {
@@ -242,8 +249,13 @@ export default function Profile() {
           trait_type: "Scout",
           value: scout,
         });
+      } else {
+        body.attributes.push({
+          trait_type: "Scout",
+          value: profileLineage.scout,
+        });
       }
-    }
+    } 
 
     // get recruiter name
     if (profileLineage.recruiter.length > 0) {
@@ -253,8 +265,13 @@ export default function Profile() {
           trait_type: "Recruiter",
           value: recruiter,
         });
+      } else {
+        body.attributes.push({
+          trait_type: "Recruiter",
+          value: profileLineage.recruiter,
+        });
       }
-    }
+    } 
 
     // get originator name
     if (profileLineage.originator.length > 0) {
@@ -263,6 +280,11 @@ export default function Profile() {
         body.attributes.push({
           trait_type: "Originator",
           value: originator,
+        });
+      } else {
+        body.attributes.push({
+          trait_type: "Originator",
+          value: profileLineage.originator,
         });
       }
     }
