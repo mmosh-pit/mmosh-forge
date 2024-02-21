@@ -177,10 +177,12 @@ export default function Invitation() {
         value: generation,
       });
 
-      let desc = "Cordially invites you to join on Moral Panic, the Genesis MMOSH. The favor of a reply is requested."
-      if(name!="") {
-        desc = capitalizeString(name) + " cordially invites you to join on Moral Panic, the Genesis MMOSH. The favor of a reply is requested."
-
+      let desc =
+        "Cordially invites you to join on Moral Panic, the Genesis MMOSH. The favor of a reply is requested.";
+      if (name != "") {
+        desc =
+          capitalizeString(name) +
+          " cordially invites you to join on Moral Panic, the Genesis MMOSH. The favor of a reply is requested.";
       }
 
       const body = {
@@ -275,9 +277,12 @@ export default function Invitation() {
 
     let isSuccess = false;
     if (firstTime) {
-      let desc = "Cordially invites you to join on Moral Panic, the Genesis MMOSH. The favor of a reply is requested."
-      if(name!="") {
-        desc = capitalizeString(name) + " cordially invites you to join on Moral Panic, the Genesis MMOSH. The favor of a reply is requested."
+      let desc =
+        "Cordially invites you to join on Moral Panic, the Genesis MMOSH. The favor of a reply is requested.";
+      if (name != "") {
+        desc =
+          capitalizeString(name) +
+          " cordially invites you to join on Moral Panic, the Genesis MMOSH. The favor of a reply is requested.";
       }
       const body = {
         name: name != "" ? "Invitation from " + name : "Invitation",
@@ -379,7 +384,6 @@ export default function Invitation() {
     userConn.txis = [];
     const res2 = await userConn.provider.sendAndConfirm(tx);
 
-    // transfer mmosh token
     // await userConn.baseSpl.transfer_token(
     //   {
     //     mint: web3Consts.oposToken,
