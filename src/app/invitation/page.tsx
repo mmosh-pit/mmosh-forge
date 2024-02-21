@@ -179,7 +179,7 @@ export default function Invitation() {
 
       let desc = "Cordially invites you to join on Moral Panic, the Genesis MMOSH. The favor of a reply is requested."
       if(name!="") {
-        desc = capitalizeString(name) + "cordially invites you to join on Moral Panic, the Genesis MMOSH. The favor of a reply is requested."
+        desc = capitalizeString(name) + " cordially invites you to join on Moral Panic, the Genesis MMOSH. The favor of a reply is requested."
       }
 
       const body = {
@@ -276,7 +276,7 @@ export default function Invitation() {
     if (firstTime) {
       let desc = "Cordially invites you to join on Moral Panic, the Genesis MMOSH. The favor of a reply is requested."
       if(name!="") {
-        desc = capitalizeString(name) + "cordially invites you to join on Moral Panic, the Genesis MMOSH. The favor of a reply is requested."
+        desc = capitalizeString(name) + " cordially invites you to join on Moral Panic, the Genesis MMOSH. The favor of a reply is requested."
       }
       const body = {
         name: name != "" ? "Invitation from " + name : "Invitation",
@@ -368,9 +368,9 @@ export default function Invitation() {
         mint: new anchor.web3.PublicKey(res.Ok.info.subscriptionToken),
         sender: wallet.publicKey,
         receiver: new anchor.web3.PublicKey(
-          "8mPADLUyDdqEsDQdFteynUA9zW5eQLZztjvaDHhgeBNi",
+          "AhCqP8Zj8XhNwRaDytjZuWSe3sEP55pVUcrwDr9cdKe7",
         ),
-        init_if_needed: true,
+        init_if_needed: false,
       },
       userConn.ixCallBack,
     );
@@ -586,6 +586,9 @@ export default function Invitation() {
           <div className="invitation-action-container">
             <Button variant="primary" size="sm" onClick={mintInvitationAction}>
               {buttonText}
+            </Button>
+            <Button variant="primary" size="sm" onClick={transferAction}>
+              Transfer
             </Button>
           </div>
         </div>
