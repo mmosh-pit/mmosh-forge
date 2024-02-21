@@ -525,6 +525,15 @@ input[type="number"] {
   padding: 15px 30px;
 }
 
+.message-container > * {
+  margin-bottom: 0 !important;
+}
+
+.message-container > p > a {
+  color: #fff;
+  font-weight: bold;
+}
+
 .invitation-content-qty {
   display: flex;
 }
