@@ -316,7 +316,13 @@ export default function Profile() {
         params.wallet = wallet.publickey;
         params._id = forgeContext.userData._id;
         forgeContext.setUserData(params);
-        navigate.push("/invitation");
+        createMessage(
+          "Congrats! Your profile has been minted, granting you full membership in MMOSH DAO.",
+          "success-container",
+        );
+        setTimeout(() => {
+          navigate.push("/invitation");
+        }, 4000);
       } else {
         createMessage(
           "We’re sorry, there was an error while trying to mint your profile. Check your wallet and try again.",
