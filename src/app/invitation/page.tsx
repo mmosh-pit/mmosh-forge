@@ -36,7 +36,7 @@ export default function Invitation() {
     promoter: "",
     scout: "",
     recruiter: "",
-    originator:""
+    originator: "",
   });
 
   useEffect(() => {
@@ -100,55 +100,55 @@ export default function Invitation() {
 
     let isSuccess = false;
     if (firstTime) {
-      let attributes = []
+      let attributes = [];
       // get promoter name
-      if(profileLineage.promoter.length > 0) {
-        let promoter:any = await getUserName(profileLineage.promoter);
-        if(promoter != "") {
+      if (profileLineage.promoter.length > 0) {
+        let promoter: any = await getUserName(profileLineage.promoter);
+        if (promoter != "") {
           attributes.push({
             trait_type: "Promoter",
-            value: promoter
-          })
+            value: promoter,
+          });
         }
       }
 
       // get scout name
-      if(profileLineage.scout.length > 0) {
-          let scout:any = await getUserName(profileLineage.scout);
-          if(scout != "") {
-            attributes.push({
-              trait_type: "Scout",
-              value: scout
-            })
-          }
+      if (profileLineage.scout.length > 0) {
+        let scout: any = await getUserName(profileLineage.scout);
+        if (scout != "") {
+          attributes.push({
+            trait_type: "Scout",
+            value: scout,
+          });
+        }
       }
 
       // get recruiter name
-      if(profileLineage.recruiter.length > 0) {
-        let recruiter:any = await getUserName(profileLineage.recruiter);
-        if(recruiter != "") {
+      if (profileLineage.recruiter.length > 0) {
+        let recruiter: any = await getUserName(profileLineage.recruiter);
+        if (recruiter != "") {
           attributes.push({
             trait_type: "Recruiter",
-            value: recruiter
-          })
+            value: recruiter,
+          });
         }
       }
 
       // get originator name
-      if(profileLineage.originator.length > 0) {
-        let originator:any = await getUserName(profileLineage.originator);
-        if(originator != "") {
+      if (profileLineage.originator.length > 0) {
+        let originator: any = await getUserName(profileLineage.originator);
+        if (originator != "") {
           attributes.push({
             trait_type: "Originator",
-            value: originator
-          })
+            value: originator,
+          });
         }
       }
 
       attributes.push({
         trait_type: "MMOSH",
-        value: "Sally the Clubhouse Wallet"
-      })
+        value: "Sally the Clubhouse Wallet",
+      });
 
       const body = {
         name: name != "" ? "Invitation from " + name : "Invitation",
@@ -159,10 +159,8 @@ export default function Invitation() {
           "https://shdw-drive.genesysgo.net/FuBjTTmQuqM7pGR2gFsaiBxDmdj8ExP5fzNwnZyE2PgC/invite.png",
         external_url: process.env.REACT_APP_MAIN_URL,
         minter: name,
-        attributes: attributes
+        attributes: attributes,
       };
-       
-
 
       const shdwHash: any = await pinFileToShadowDrive(body);
 
@@ -218,21 +216,19 @@ export default function Invitation() {
     getProfileInfo();
   };
 
-  const getUserName = async (pubKey:any) => {
+  const getUserName = async (pubKey: any) => {
     try {
-      const result = await axios.get(
-        `/api/get-wallet-data?wallet=${pubKey}`,
-       );
-       console.log("userdata ", result)
-       let hasProfile = false
-       if(result) {
-         if(result.data) {
-           if(result.data.profile) {
-              return result.data.profile.name;
-           }
-         }
-       }
-       return "";
+      const result = await axios.get(`/api/get-wallet-data?wallet=${pubKey}`);
+      console.log("userdata ", result);
+      let hasProfile = false;
+      if (result) {
+        if (result.data) {
+          if (result.data.profile) {
+            return result.data.profile.name;
+          }
+        }
+      }
+      return "";
     } catch (error) {
       return "";
     }
@@ -307,7 +303,6 @@ export default function Invitation() {
     getProfileInfo();
   };
 
-
   const calcNonDecimalValue = (value: number, decimals: number) => {
     return Math.trunc(value * Math.pow(10, decimals));
   };
@@ -318,7 +313,7 @@ export default function Invitation() {
     });
     anchor.setProvider(env);
     // let userConn: AdConn = new AdConn(env, web3Consts.programID);
-    let userConn:UserConn = new UserConn(env, web3Consts.programID);
+    let userConn: UserConn = new UserConn(env, web3Consts.programID);
     const symbol = "INVITE";
     const uri = "";
     // const res: any = await userConn.initActivationToken({
@@ -326,7 +321,12 @@ export default function Invitation() {
     //   symbol,
     //   uri,
     // });
-    const res:any = await userConn.initSubscriptionBadge({ name:"Invitation from "+name, symbol, uri,profile: profile})
+    const res: any = await userConn.initSubscriptionBadge({
+      name: "Invitation from " + name,
+      symbol,
+      uri,
+      profile: profile,
+    });
 
     // transfer activation token
     await userConn.baseSpl.transfer_token(
@@ -360,7 +360,6 @@ export default function Invitation() {
     // const tx1 = await new anchor.web3.Transaction().add(...userConn.txis);
     // userConn.txis = [];
     // const res3 = await userConn.provider.sendAndConfirm(tx1);
-    // console.log("res3 ", res3);
 
     // transfer mmosh token
     // await userConn.baseSpl.transfer_token(
