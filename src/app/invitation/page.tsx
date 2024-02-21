@@ -32,6 +32,7 @@ export default function Invitation() {
   const wallet: any = useAnchorWallet();
   const [inputValue, setInputValue] = useState(0);
   const [firstTime, setFirstTime] = useState(true);
+  const [generation, setGeneration] = useState("0");
   const [profileLineage, setProfileLineage] = useState({
     promoter: "",
     scout: "",
@@ -67,6 +68,7 @@ export default function Invitation() {
     setTokBalance(profileInfo.oposTokenBalance);
     setActBalance(profileInfo.activationTokenBalance);
     setProfileLineage(profileInfo.profilelineage);
+    setGeneration(profileInfo.generation);
     const totalMints = profileInfo.totalChild;
     if (totalMints > 0 || profileInfo.activationTokenBalance > 0) {
       setFirstTime(false);
@@ -109,6 +111,11 @@ export default function Invitation() {
             trait_type: "Promoter",
             value: promoter,
           });
+        } else {
+          attributes.push({
+            trait_type: "Promoter",
+            value: profileLineage.promoter,
+          });
         }
       }
 
@@ -119,6 +126,11 @@ export default function Invitation() {
           attributes.push({
             trait_type: "Scout",
             value: scout,
+          });
+        } else {
+          attributes.push({
+            trait_type: "Scout",
+            value: profileLineage.scout,
           });
         }
       }
@@ -131,6 +143,11 @@ export default function Invitation() {
             trait_type: "Recruiter",
             value: recruiter,
           });
+        } else {
+          attributes.push({
+            trait_type: "Recruiter",
+            value: profileLineage.recruiter,
+          });
         }
       }
 
@@ -142,22 +159,36 @@ export default function Invitation() {
             trait_type: "Originator",
             value: originator,
           });
+        } else {
+          attributes.push({
+            trait_type: "Originator",
+            value: profileLineage.originator,
+          });
         }
       }
 
       attributes.push({
         trait_type: "MMOSH",
-        value: "Sally the Clubhouse Wallet",
+        value: "Charlie the Cybernatural Owl #0",
       });
+
+      attributes.push({
+        trait_type: "Seniority",
+        value: generation,
+      });
+
+      let desc = "Cordially invites you to join on Moral Panic, the Genesis MMOSH. The favor of a reply is requested."
+      if(name!="") {
+        desc = capitalizeString(name) + "cordially invites you to join on Moral Panic, the Genesis MMOSH. The favor of a reply is requested."
+      }
 
       const body = {
         name: name != "" ? "Invitation from " + name : "Invitation",
         symbol: "INVITE",
-        description:
-          "Cordially invites you to join on Moral Panic, the Genesis MMOSH. The favor of a reply is requested.",
+        description:desc,
         image:
           "https://shdw-drive.genesysgo.net/FuBjTTmQuqM7pGR2gFsaiBxDmdj8ExP5fzNwnZyE2PgC/invite.png",
-        external_url: process.env.REACT_APP_MAIN_URL,
+        external_url: process.env.NEXT_PUBLIC_APP_MAIN_URL,
         minter: name,
         attributes: attributes,
       };
@@ -243,14 +274,17 @@ export default function Invitation() {
 
     let isSuccess = false;
     if (firstTime) {
+      let desc = "Cordially invites you to join on Moral Panic, the Genesis MMOSH. The favor of a reply is requested."
+      if(name!="") {
+        desc = capitalizeString(name) + "cordially invites you to join on Moral Panic, the Genesis MMOSH. The favor of a reply is requested."
+      }
       const body = {
         name: name != "" ? "Invitation from " + name : "Invitation",
         symbol: "INVITE",
-        description:
-          "Cordially invites you to join on Moral Panic, the Genesis MMOSH. The favor of a reply is requested.",
+        description: desc,
         image:
           "https://shdw-drive.genesysgo.net/FuBjTTmQuqM7pGR2gFsaiBxDmdj8ExP5fzNwnZyE2PgC/invite.png",
-        external_url: process.env.REACT_APP_MAIN_URL,
+        external_url: process.env.NEXT_PUBLIC_APP_MAIN_URL,
         minter: name,
       };
       const shdwHash: any = await pinFileToShadowDrive(body);

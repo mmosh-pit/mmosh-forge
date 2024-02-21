@@ -658,6 +658,7 @@ export class Connectivity {
       recruiter: "",
       originator:""
     }
+    let generation = "0";
 
     try {
       const mainStateInfo = await this.program.account.mainState.fetch(
@@ -678,8 +679,6 @@ export class Connectivity {
       const profiles = [];
       const activationTokens = [];
       let totalChild = 0;
-      let generation = "1";
-
 
       for (let i of _userNfts) {
         const nftInfo: any = i;
@@ -767,7 +766,9 @@ export class Connectivity {
                 genesis: parentProfile.toBase58(),
                 activation: nftInfo.mintAddress.toBase58(),
               });
-              totalChild = await this.getProfileChilds(parentProfile);
+              const generationData = await this.getProfileChilds(parentProfile);
+              totalChild = generationData.totalChild;
+              generation = generationData.generation;
               profilelineage = await this.getProfileLineage(parentProfile);
             } catch (error) {
               console.log("error invite ", error);
@@ -785,7 +786,8 @@ export class Connectivity {
         activationTokens,
         activationTokenBalance,
         totalChild: totalChild,
-        profilelineage
+        profilelineage,
+        generation
       };
 
       console.log("profileInfo", profileInfo);
@@ -800,7 +802,8 @@ export class Connectivity {
         activationTokens: profiles,
         activationTokenBalance: 0,
         totalChild: 0,
-        profilelineage
+        profilelineage,
+        generation
       };
       return profileInfo;
     }
@@ -820,6 +823,8 @@ export class Connectivity {
     try {
       const profileStateInfo = await this.program.account.profileState.fetch(this.__getProfileStateAccount(parentProfile));
       console.log("getProfileLineage ",profileStateInfo);
+
+      
       const {
         currentGreatGrandParentProfileHolder,
         currentGgreatGrandParentProfileHolder,
@@ -863,9 +868,15 @@ export class Connectivity {
     ) {
     try {
       const profileStateInfo = await this.program.account.profileState.fetch(this.__getProfileStateAccount(parentProfile));
-      return profileStateInfo.lineage.totalChild.toNumber();
+      return {
+        totalChild: profileStateInfo.lineage.totalChild.toNumber(),
+        generation: profileStateInfo.lineage.generation.toString(),
+      };
     } catch (error:any) {
-      return 0
+      return {
+        totalChild: 0,
+        generation: "0",
+      };
     }
   }
 

@@ -19,7 +19,7 @@ export default function Profile() {
   const [doesUsernameExists, setDoesUsernameExists] = useState(false);
   const [solBalance, setSolBalance] = useState(0);
   const [tokBalance, setTokBalance] = useState(0);
-  const [totalChild, setTotalChild] = useState(0);
+  const [generation, setGeneration] = useState("0");
   const [profileLineage, setProfileLineage] = useState({
     promoter: "",
     scout: "",
@@ -200,7 +200,7 @@ export default function Profile() {
         },
         {
           trait_type: "Seniority",
-          value: totalChild + 1,
+          value: generation,
         },
         {
           trait_type: "Full Name",
@@ -386,7 +386,7 @@ export default function Profile() {
     if (profileInfo.activationTokens.length > 0) {
       setGensis(profileInfo.activationTokens[0].genesis);
       setSubToken(profileInfo.activationTokens[0].activation);
-      setTotalChild(profileInfo.totalChild);
+      setGeneration(profileInfo.generation);
       setProfileLineage(profileInfo.profilelineage);
     }
   };
