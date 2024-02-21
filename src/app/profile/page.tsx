@@ -109,7 +109,7 @@ export default function Profile() {
     setShowMsg(true);
     setTimeout(() => {
       setShowMsg(false);
-    }, 4000);
+    }, 5000);
   };
 
   const validateFields = () => {
@@ -125,7 +125,10 @@ export default function Profile() {
 
     if (solBalance == 0) {
       createMessage(
-        "Hey! We checked your wallet and you don’t have enough SOL for the gas fees. Get some Solana and try again!",
+        <p>
+          Hey! We checked your wallet and you don’t have enough SOL for the gas
+          fees. Get some Solana and try again!
+        </p>,
         "warning-container",
       );
       return false;
@@ -133,7 +136,13 @@ export default function Profile() {
 
     if (tokBalance < 20000) {
       createMessage(
-        "Hey! We checked your wallet and you don’t have enough MMOSH to mint. Get some MMOSH here and try again!",
+        <p>
+          Hey! We checked your wallet and you don’t have enough MMOSH to mint.{" "}
+          <a href="https://jup.ag/swap/SOL-MMOSH" target="_blank">
+            Get some MMOSH here
+          </a>{" "}
+          and try again!
+        </p>,
         "warning-container",
       );
       return false;
@@ -307,7 +316,13 @@ export default function Profile() {
         params.wallet = wallet.publickey;
         params._id = forgeContext.userData._id;
         forgeContext.setUserData(params);
-        navigate.push("/invitation");
+        createMessage(
+          "Congrats! Your profile has been minted, granting you full membership in MMOSH DAO.",
+          "success-container",
+        );
+        setTimeout(() => {
+          navigate.push("/invitation");
+        }, 4000);
       } else {
         createMessage(
           "We’re sorry, there was an error while trying to mint your profile. Check your wallet and try again.",
@@ -375,124 +390,128 @@ export default function Profile() {
   }, [userName]);
 
   return (
-    <div className="profile-page container">
+    <div className="profile-page">
       {showMsg && (
         <div className={"message-container " + msgClass}>{msgText}</div>
       )}
       <h2>Welcome to the Forge, {forgeContext.userData.name}!</h2>
-      <h3>About You</h3>
-      <div className="profile-container">
-        <div className="profile-container-item">
-          <div className="profile-container-element">
-            <label>Avatar*</label>
-            {imageFile.length == 0 && (
-              <div {...getRootProps({ className: "dropzone" })}>
-                <input {...getInputProps()} />
-                <img src="/images/upload.png" key={"Forge Upload"} />
-              </div>
-            )}
-            {imageFile.length > 0 && (
-              <div className="preview-container">
-                <Button
-                  variant="link"
-                  onClick={closeImageAction}
-                  className="image-close-btn"
-                >
-                  Close
-                </Button>
-                <img src={imageFile[0].preview} key={"Preview"} />
-              </div>
-            )}
-          </div>
-        </div>
-        <div className="profile-container-item">
-          <div className="profile-container-element">
-            <label>First Name or Alias*</label>
-            <Form.Control
-              type="text"
-              placeholder="Enter First Name or Alias"
-              maxLength={50}
-              onChange={(event) => setFirstName(event.target.value)}
-              value={firstName}
-            />
-            <span>Up to 50 characters, can have spaces.</span>
-          </div>
-          <div className="profile-container-element">
-            <label>Last Name</label>
-            <Form.Control
-              type="text"
-              placeholder="Enter Last Name"
-              maxLength={15}
-              onChange={(event) => setLastName(event.target.value)}
-              value={lastName}
-            />
-            <span>15 characters</span>
-          </div>
-          <div className="profile-container-element">
-            <label>Username*</label>
-            <Form.Control
-              type="text"
-              placeholder="Enter Username"
-              maxLength={15}
-              onChange={(event) => setUserName(event.target.value)}
-              value={userName}
-              onBlur={checkForUsername}
-            />
-            {doesUsernameExists ? (
-              <span className="text-danger">Username already exists!</span>
-            ) : (
-              <span>15 characters</span>
-            )}
-          </div>
-          <div className="profile-container-element">
-            <label>Pronouns*</label>
-            <Form.Select
-              onChange={(event) => setGender(event.target.value)}
-              value={gender}
-            >
-              <option value="they/them">They/them</option>
-              <option value="he/him">He/him</option>
-              <option value="she/her">She/her</option>
-            </Form.Select>
-            <span>15 characters</span>
-          </div>
-        </div>
-        <div className="profile-container-item">
-          <div className="profile-container-element">
-            <label>Description</label>
-            <Form.Control
-              as="textarea"
-              rows={12}
-              placeholder="Tell us about yourself in up to 160 characters."
-              onChange={(event) => setDesc(event.target.value)}
-              value={desc}
-            />
-          </div>
-          <div className="profile-container-element">
-            <label>Superhero Identity</label>
-            <span>Example: Frank the Amazing Elf</span>
-            <div className="profile-container-element-group">
-              <p className="profile-container-element-group-start-item">The</p>
-              <div className="profile-container-element-group-item">
-                <div className="profile-container-element-group-item-left">
-                  <Form.Control
-                    type="text"
-                    placeholder="Descriptor"
-                    onChange={(event) => setDescriptor(event.target.value)}
-                    value={descriptor}
-                  />
-                  <span>Example: Amazing</span>
+      <div className="container">
+        <h3>About You</h3>
+        <div className="profile-container">
+          <div className="profile-container-item">
+            <div className="profile-container-element">
+              <label>Avatar*</label>
+              {imageFile.length == 0 && (
+                <div {...getRootProps({ className: "dropzone" })}>
+                  <input {...getInputProps()} />
+                  <img src="/images/upload.png" key={"Forge Upload"} />
                 </div>
-              </div>
-              <div className="profile-container-element-group-item">
-                <div className="profile-container-element-group-item-right">
-                  <Form.Control
-                    type="text"
-                    placeholder="Noun"
-                    onChange={(event) => setNouns(event.target.value)}
-                    value={nouns}
-                  />
-                  <span>Example: Elf</span>
+              )}
+              {imageFile.length > 0 && (
+                <div className="preview-container">
+                  <Button
+                    variant="link"
+                    onClick={closeImageAction}
+                    className="image-close-btn"
+                  >
+                    Close
+                  </Button>
+                  <img src={imageFile[0].preview} key={"Preview"} />
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="profile-container-item">
+            <div className="profile-container-element">
+              <label>First Name or Alias*</label>
+              <Form.Control
+                type="text"
+                placeholder="Enter First Name or Alias"
+                maxLength={50}
+                onChange={(event) => setFirstName(event.target.value)}
+                value={firstName}
+              />
+              <span>Up to 50 characters, can have spaces.</span>
+            </div>
+            <div className="profile-container-element">
+              <label>Last Name</label>
+              <Form.Control
+                type="text"
+                placeholder="Enter Last Name"
+                maxLength={15}
+                onChange={(event) => setLastName(event.target.value)}
+                value={lastName}
+              />
+              <span>15 characters</span>
+            </div>
+            <div className="profile-container-element">
+              <label>Username*</label>
+              <Form.Control
+                type="text"
+                placeholder="Enter Username"
+                maxLength={15}
+                onChange={(event) => setUserName(event.target.value)}
+                value={userName}
+                onBlur={checkForUsername}
+              />
+              {doesUsernameExists ? (
+                <span className="text-danger">Username already exists!</span>
+              ) : (
+                <span>15 characters</span>
+              )}
+            </div>
+            <div className="profile-container-element">
+              <label>Pronouns*</label>
+              <Form.Select
+                onChange={(event) => setGender(event.target.value)}
+                value={gender}
+              >
+                <option value="they/them">They/them</option>
+                <option value="he/him">He/him</option>
+                <option value="she/her">She/her</option>
+              </Form.Select>
+              <span>15 characters</span>
+            </div>
+          </div>
+          <div className="profile-container-item">
+            <div className="profile-container-element">
+              <label>Description</label>
+              <Form.Control
+                as="textarea"
+                rows={12}
+                placeholder="Tell us about yourself in up to 160 characters."
+                onChange={(event) => setDesc(event.target.value)}
+                value={desc}
+              />
+            </div>
+            <div className="profile-container-element">
+              <label>Superhero Identity</label>
+              <span>Example: Frank the Amazing Elf</span>
+              <div className="profile-container-element-group">
+                <p className="profile-container-element-group-start-item">
+                  The
+                </p>
+                <div className="profile-container-element-group-item">
+                  <div className="profile-container-element-group-item-left">
+                    <Form.Control
+                      type="text"
+                      placeholder="Descriptor"
+                      onChange={(event) => setDescriptor(event.target.value)}
+                      value={descriptor}
+                    />
+                    <span>Example: Amazing</span>
+                  </div>
+                </div>
+                <div className="profile-container-element-group-item">
+                  <div className="profile-container-element-group-item-right">
+                    <Form.Control
+                      type="text"
+                      placeholder="Noun"
+                      onChange={(event) => setNouns(event.target.value)}
+                      value={nouns}
+                    />
+                    <span>Example: Elf</span>
+                  </div>
                 </div>
               </div>
             </div>
