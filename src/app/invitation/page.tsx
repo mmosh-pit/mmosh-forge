@@ -395,7 +395,6 @@ export default function Invitation() {
     // const tx3 = await new anchor.web3.Transaction().add(...userConn.txis);
     // userConn.txis = [];
     // const res5 = await userConn.provider.sendAndConfirm(tx3);
-    // console.log("res3 ", res5);
   };
 
   const mintInvitationAction = () => {
