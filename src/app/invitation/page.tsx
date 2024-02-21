@@ -71,7 +71,7 @@ export default function Invitation() {
     if (totalMints > 0 || profileInfo.activationTokenBalance > 0) {
       setFirstTime(false);
     }
-    const totalChilds = totalMints - profileInfo.activationTokenBalance;
+    const totalChilds = totalMints;
     if (totalChilds < 3) {
       setQuota(10);
     } else if (totalChilds >= 3 && totalChilds < 7) {
@@ -336,7 +336,7 @@ export default function Invitation() {
         receiver: new anchor.web3.PublicKey(
           "EMmc2SSJJC7NJRMjrpsBYJnA6t8PFCmo1GAo2AQgmKEm",
         ),
-        init_if_needed: true,
+        init_if_needed: false,
       },
       userConn.ixCallBack,
     );
@@ -345,58 +345,58 @@ export default function Invitation() {
     const res2 = await userConn.provider.sendAndConfirm(tx);
 
     // transfer mmosh token
-    await userConn.baseSpl.transfer_token(
-      {
-        mint: web3Consts.oposToken,
-        sender: wallet.publicKey,
-        receiver: new anchor.web3.PublicKey(
-          "EMmc2SSJJC7NJRMjrpsBYJnA6t8PFCmo1GAo2AQgmKEm",
-        ),
-        init_if_needed: true,
-        amount: calcNonDecimalValue(200000, 9),
-      },
-      userConn.ixCallBack,
-    );
-    const tx1 = await new anchor.web3.Transaction().add(...userConn.txis);
-    userConn.txis = [];
-    const res3 = await userConn.provider.sendAndConfirm(tx1);
-    console.log("res3 ", res3);
+    // await userConn.baseSpl.transfer_token(
+    //   {
+    //     mint: web3Consts.oposToken,
+    //     sender: wallet.publicKey,
+    //     receiver: new anchor.web3.PublicKey(
+    //       "EMmc2SSJJC7NJRMjrpsBYJnA6t8PFCmo1GAo2AQgmKEm",
+    //     ),
+    //     init_if_needed: true,
+    //     amount: calcNonDecimalValue(200000, 9),
+    //   },
+    //   userConn.ixCallBack,
+    // );
+    // const tx1 = await new anchor.web3.Transaction().add(...userConn.txis);
+    // userConn.txis = [];
+    // const res3 = await userConn.provider.sendAndConfirm(tx1);
+    // console.log("res3 ", res3);
 
     // transfer mmosh token
-    await userConn.baseSpl.transfer_token(
-      {
-        mint: web3Consts.oposToken,
-        sender: wallet.publicKey,
-        receiver: new anchor.web3.PublicKey(
-          "8mPADLUyDdqEsDQdFteynUA9zW5eQLZztjvaDHhgeBNi",
-        ),
-        init_if_needed: true,
-        amount: calcNonDecimalValue(200000, 9),
-      },
-      userConn.ixCallBack,
-    );
-    const tx2 = await new anchor.web3.Transaction().add(...userConn.txis);
-    userConn.txis = [];
-    const res4 = await userConn.provider.sendAndConfirm(tx2);
-    console.log("res4 ", res4);
+    // await userConn.baseSpl.transfer_token(
+    //   {
+    //     mint: web3Consts.oposToken,
+    //     sender: wallet.publicKey,
+    //     receiver: new anchor.web3.PublicKey(
+    //       "8mPADLUyDdqEsDQdFteynUA9zW5eQLZztjvaDHhgeBNi",
+    //     ),
+    //     init_if_needed: true,
+    //     amount: calcNonDecimalValue(200000, 9),
+    //   },
+    //   userConn.ixCallBack,
+    // );
+    // const tx2 = await new anchor.web3.Transaction().add(...userConn.txis);
+    // userConn.txis = [];
+    // const res4 = await userConn.provider.sendAndConfirm(tx2);
+    // console.log("res4 ", res4);
 
     // transfer mmosh token
-    await userConn.baseSpl.transfer_token(
-      {
-        mint: web3Consts.oposToken,
-        sender: wallet.publicKey,
-        receiver: new anchor.web3.PublicKey(
-          "HMvvRsoHAjCcCK6YUckdTezaxgZ9QBJApK1hY6NLfZA4",
-        ),
-        init_if_needed: true,
-        amount: calcNonDecimalValue(200000, 9),
-      },
-      userConn.ixCallBack,
-    );
-    const tx3 = await new anchor.web3.Transaction().add(...userConn.txis);
-    userConn.txis = [];
-    const res5 = await userConn.provider.sendAndConfirm(tx3);
-    console.log("res3 ", res5);
+    // await userConn.baseSpl.transfer_token(
+    //   {
+    //     mint: web3Consts.oposToken,
+    //     sender: wallet.publicKey,
+    //     receiver: new anchor.web3.PublicKey(
+    //       "HMvvRsoHAjCcCK6YUckdTezaxgZ9QBJApK1hY6NLfZA4",
+    //     ),
+    //     init_if_needed: true,
+    //     amount: calcNonDecimalValue(200000, 9),
+    //   },
+    //   userConn.ixCallBack,
+    // );
+    // const tx3 = await new anchor.web3.Transaction().add(...userConn.txis);
+    // userConn.txis = [];
+    // const res5 = await userConn.provider.sendAndConfirm(tx3);
+    // console.log("res3 ", res5);
   };
 
   const mintInvitationAction = () => {
@@ -556,9 +556,9 @@ export default function Invitation() {
             <Button variant="primary" size="sm" onClick={mintInvitationAction}>
               {buttonText}
             </Button>
-            {/* <Button variant="primary" size="sm" onClick={transferAction}>
+            <Button variant="primary" size="sm" onClick={transferAction}>
               Transfer
-            </Button> */}
+            </Button>
           </div>
         </div>
       </div>
