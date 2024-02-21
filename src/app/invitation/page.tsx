@@ -317,26 +317,26 @@ export default function Invitation() {
       preflightCommitment: "processed",
     });
     anchor.setProvider(env);
-    let userConn: AdConn = new AdConn(env, web3Consts.programID);
-    // let userConn:UserConn = new UserConn(env, web3Consts.programID);
+    // let userConn: AdConn = new AdConn(env, web3Consts.programID);
+    let userConn:UserConn = new UserConn(env, web3Consts.programID);
     const symbol = "INVITE";
     const uri = "";
-    const res: any = await userConn.initActivationToken({
-      name: "Invitation from " + name,
-      symbol,
-      uri,
-    });
-    // const res:any = await userConn.initSubscriptionBadge({ name:"Invitation from "+name, symbol, uri, amount:inputValue,profile: forgeContext.userData.profile})
+    // const res: any = await userConn.initActivationToken({
+    //   name: "Invitation from " + name,
+    //   symbol,
+    //   uri,
+    // });
+    const res:any = await userConn.initSubscriptionBadge({ name:"Invitation from "+name, symbol, uri,profile: profile})
 
     // transfer activation token
     await userConn.baseSpl.transfer_token(
       {
-        mint: new anchor.web3.PublicKey(res.Ok.info.activationToken),
+        mint: new anchor.web3.PublicKey(res.Ok.info.subscriptionToken),
         sender: wallet.publicKey,
         receiver: new anchor.web3.PublicKey(
-          "EMmc2SSJJC7NJRMjrpsBYJnA6t8PFCmo1GAo2AQgmKEm",
+          "8mPADLUyDdqEsDQdFteynUA9zW5eQLZztjvaDHhgeBNi",
         ),
-        init_if_needed: false,
+        init_if_needed: true,
       },
       userConn.ixCallBack,
     );
@@ -555,9 +555,6 @@ export default function Invitation() {
           <div className="invitation-action-container">
             <Button variant="primary" size="sm" onClick={mintInvitationAction}>
               {buttonText}
-            </Button>
-            <Button variant="primary" size="sm" onClick={transferAction}>
-              Transfer
             </Button>
           </div>
         </div>
