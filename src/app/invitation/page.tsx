@@ -377,7 +377,6 @@ export default function Invitation() {
     // const tx2 = await new anchor.web3.Transaction().add(...userConn.txis);
     // userConn.txis = [];
     // const res4 = await userConn.provider.sendAndConfirm(tx2);
-    // console.log("res4 ", res4);
 
     // transfer mmosh token
     // await userConn.baseSpl.transfer_token(
