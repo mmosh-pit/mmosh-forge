@@ -708,9 +708,7 @@ export class Connectivity {
             profileStateInfo.activationToken,
             user,
           );
-          const infoes =
-            await this.connection.getTokenAccountBalance(userActivationAta);
-          activationTokenBalance = infoes.value.amount;
+          activationTokenBalance = await this.getActivationTokenBalance(userActivationAta);
         }
         totalChild = profileStateInfo.lineage.totalChild.toNumber();
         generation = profileStateInfo.lineage.generation.toString();
@@ -847,6 +845,17 @@ export class Connectivity {
         originator:""
       }
     }
+  }
+
+  async getActivationTokenBalance(userActivationAta: web3.PublicKey) {
+    try {
+      const infoes =
+      await this.connection.getTokenAccountBalance(userActivationAta);
+      return infoes.value.amount;
+    } catch (error) {
+      return 0
+    }
+
   }
 
   async getProfileChilds(
