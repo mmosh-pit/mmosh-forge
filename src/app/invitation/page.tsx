@@ -180,12 +180,13 @@ export default function Invitation() {
       let desc = "Cordially invites you to join on Moral Panic, the Genesis MMOSH. The favor of a reply is requested."
       if(name!="") {
         desc = capitalizeString(name) + " cordially invites you to join on Moral Panic, the Genesis MMOSH. The favor of a reply is requested."
+
       }
 
       const body = {
         name: name != "" ? "Invitation from " + name : "Invitation",
         symbol: "INVITE",
-        description:desc,
+        description: desc,
         image:
           "https://shdw-drive.genesysgo.net/FuBjTTmQuqM7pGR2gFsaiBxDmdj8ExP5fzNwnZyE2PgC/invite.png",
         external_url: process.env.NEXT_PUBLIC_APP_MAIN_URL,
@@ -427,7 +428,6 @@ export default function Invitation() {
     // );
     // const tx3 = await new anchor.web3.Transaction().add(...userConn.txis);
     // userConn.txis = [];
-    // const res5 = await userConn.provider.sendAndConfirm(tx3);
   };
 
   const mintInvitationAction = () => {
