@@ -312,6 +312,26 @@ export type Sop = {
           "isSigner": true
         },
         {
+          "name": "mplProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "oposToken",
           "isMut": false,
           "isSigner": false
@@ -389,6 +409,54 @@ export type Sop = {
         {
           "name": "sysvarInstructions",
           "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "parentProfile",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "symbol",
+          "type": "string"
+        },
+        {
+          "name": "uriHash",
+          "type": "string"
+        },
+        {
+          "name": "recentSlot",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "mintProfileDistribution",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "oposToken",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mainState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentProfileState",
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -517,24 +585,7 @@ export type Sop = {
           "isSigner": false
         }
       ],
-      "args": [
-        {
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "name": "symbol",
-          "type": "string"
-        },
-        {
-          "name": "uriHash",
-          "type": "string"
-        },
-        {
-          "name": "recentSlot",
-          "type": "u64"
-        }
-      ]
+      "args": []
     },
     {
       "name": "initActivationToken",
@@ -1622,6 +1673,26 @@ export const IDL: Sop = {
           "isSigner": true
         },
         {
+          "name": "mplProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "oposToken",
           "isMut": false,
           "isSigner": false
@@ -1699,6 +1770,54 @@ export const IDL: Sop = {
         {
           "name": "sysvarInstructions",
           "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "parentProfile",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "symbol",
+          "type": "string"
+        },
+        {
+          "name": "uriHash",
+          "type": "string"
+        },
+        {
+          "name": "recentSlot",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "mintProfileDistribution",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "oposToken",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mainState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentProfileState",
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -1827,24 +1946,7 @@ export const IDL: Sop = {
           "isSigner": false
         }
       ],
-      "args": [
-        {
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "name": "symbol",
-          "type": "string"
-        },
-        {
-          "name": "uriHash",
-          "type": "string"
-        },
-        {
-          "name": "recentSlot",
-          "type": "u64"
-        }
-      ]
+      "args": []
     },
     {
       "name": "initActivationToken",

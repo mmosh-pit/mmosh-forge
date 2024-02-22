@@ -316,8 +316,8 @@ export default function Profile() {
     try {
       let userConn: UserConn = new UserConn(env, web3Consts.programID);
       const res = await userConn.mintProfileByActivationToken({
-        name: forgeContext.userData.name,
-        symbol: forgeContext.userData.username.substring(0, 5).toUpperCase(),
+        name: userName.substring(0, 15),
+        symbol: userName.substring(0, 5).toUpperCase(),
         uriHash: shadowHash,
         activationToken,
         genesisProfile,
