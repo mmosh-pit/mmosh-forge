@@ -591,9 +591,6 @@ export default function Invitation() {
             <Button variant="primary" size="sm" onClick={mintInvitationAction}>
               {buttonText}
             </Button>
-            <Button variant="primary" size="sm" onClick={transferAction}>
-              Transfer
-            </Button>
           </div>
         </div>
       </div>
