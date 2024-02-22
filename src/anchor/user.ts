@@ -631,11 +631,46 @@ export class Connectivity {
     }
   }
 
+  async getUserNFTs(userKey:any) {
+    
+
+    const filters = [
+      {
+        dataSize: 165,
+      },
+      {
+        memcmp: {
+          offset: 32,
+          bytes: userKey, //wallet address string
+        },
+      },
+    ];
+
+    const accounts:any = await this.connection.getParsedProgramAccounts( 
+      TOKEN_PROGRAM_ID, //importing from solana spl-token library
+      { filters }
+    );
+    let mintKeys = [];
+    let mintList:any  = [];
+    for (let i in accounts) {
+      let details = accounts[i].account?.data?.parsed?.info;
+      console.log(accounts[i])
+      if (parseInt(details.tokenAmount.decimals) == 0 && parseInt(details.tokenAmount.amount) > 0) {
+         const mintKey = new anchor.web3.PublicKey(details?.mint);
+         mintKeys.push(mintKey);
+      }
+    }
+
+    if(mintKeys.length > 0) {
+      mintList = await this.metaplex.nfts().findAllByMintList({mints: mintKeys})
+      console.log(mintList)
+    }
+    return mintList
+  }
   async getUserInfo() {
     const user = this.provider.publicKey;
     if (!user) throw "Wallet not found";
     const userOposAta = getAssociatedTokenAddressSync(oposToken, user);
-
     const infoes = await this.connection.getMultipleAccountsInfo([
       new anchor.web3.PublicKey(user.toBase58()),
       new anchor.web3.PublicKey(userOposAta.toBase58()),
@@ -670,10 +705,8 @@ export class Connectivity {
         await this.program.account.collectionState.fetch(
           this.__getCollectionStateAccount(profileCollection),
         );
-
-      const _userNfts = await this.metaplex
-        .nfts()
-        .findAllByOwner({ owner: user });
+   
+      const _userNfts = await this.getUserNFTs(user.toBase58());
 
       let activationTokenBalance: any = 0;
       const profiles = [];
