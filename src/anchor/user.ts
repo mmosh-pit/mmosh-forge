@@ -220,62 +220,65 @@ export class Connectivity {
         units: 8000_00,
       });
       this.txis.push(cuBudgetIncIx);
-      const ix = await this.program.methods
-        .mintProfileByAt(name, symbol, uriHash, new BN(recentSlot))
-        .accounts({
-          profile,
-          user,
-          oposToken,
-          userProfileAta,
-          mainState: this.mainState,
-          collection,
-          mplProgram,
-          profileState,
-          tokenProgram,
-          systemProgram,
-          addressLookupTableProgram,
-          profileEdition,
-          activationToken,
-          profileMetadata,
-          collectionEdition,
-          collectionMetadata,
-          newLut,
-          parentProfileState,
-          sysvarInstructions,
-          userActivationTokenAta,
-          associatedTokenProgram,
-          //NOTE: Profile minting cost distributaion account
-          userOposAta,
-
-          //Profiles
-          parentProfile,
-          genesisProfile,
-          grandParentProfile,
-          greatGrandParentProfile,
-          ggreateGrandParentProfile,
-
-          //verification ata
-          currentParentProfileHolderAta,
-          currentGrandParentProfileHolderAta,
-          currentGreatGrandParentProfileHolderAta,
-          currentGgreatGrandParentProfileHolderAta,
-          currentGenesisProfileHolderAta,
-          // profile owners
-          currentParentProfileHolder,
-          currentGrandParentProfileHolder,
-          currentGreatGrandParentProfileHolder,
-          currentGgreatGrandParentProfileHolder,
-          currentGenesisProfileHolder,
-
-          // holder opos ata
-          parentProfileHolderOposAta,
-          grandParentProfileHolderOposAta,
-          greatGrandParentProfileHolderOposAta,
-          ggreatGrandParentProfileHolderOposAta,
-          genesisProfileHolderOposAta,
-        })
-        .instruction();
-      this.txis.push(ix);
+      const ix_share = await this.program.methods.mintProfileDistribution().accounts({
+        user,
+        oposToken,
+        userOposAta,
+        mainState: this.mainState,
+        parentProfileState,
+        mplProgram,
+        tokenProgram,
+        systemProgram,
+        associatedTokenProgram,
+        parentProfile,
+        genesisProfile,
+        grandParentProfile,
+        greatGrandParentProfile,
+        ggreateGrandParentProfile,
+        currentParentProfileHolderAta,
+        currentGrandParentProfileHolderAta,
+        currentGreatGrandParentProfileHolderAta,
+        currentGgreatGrandParentProfileHolderAta,
+        currentGenesisProfileHolderAta,
+        currentParentProfileHolder,
+        currentGrandParentProfileHolder,
+        currentGreatGrandParentProfileHolder,
+        currentGgreatGrandParentProfileHolder,
+        currentGenesisProfileHolder,
+        parentProfileHolderOposAta,
+        grandParentProfileHolderOposAta,
+        greatGrandParentProfileHolderOposAta,
+        ggreatGrandParentProfileHolderOposAta,
+        genesisProfileHolderOposAta,
+      }).instruction()
+     
+      const ix = await this.program.methods.mintProfileByAt(
+        name, symbol, uriHash, new BN(recentSlot)
+      ).accounts({
+        profile,
+        user,
+        oposToken,
+        userProfileAta,
+        mainState: this.mainState,
+        collection,
+        mplProgram,
+        profileState,
+        tokenProgram,
+        systemProgram,
+        addressLookupTableProgram,
+        profileEdition,
+        activationToken,
+        profileMetadata,
+        collectionEdition,
+        collectionMetadata,
+        newLut,
+        parentProfileState,
+        sysvarInstructions,
+        userActivationTokenAta,
+        associatedTokenProgram,
+        parentProfile,
+      }).instruction()
+      this.txis.push(ix)
 
       const commonLutInfo = await (
         await this.connection.getAddressLookupTable(commonLut)
@@ -298,11 +301,16 @@ export class Connectivity {
       const tx = new web3.VersionedTransaction(message);
       tx.sign([mintKp]);
       this.txis = [];
-      tx.sign([mintKp]);
 
-      const signedTx = await this.provider.wallet.signTransaction(tx as any);
-      const txLen = signedTx.serialize().length;
-      log({ txLen, luts: lutsInfo.length });
+      const share_tx = new web3.Transaction().add(ix_share)
+      const sharesignature = await this.provider.sendAndConfirm(share_tx)
+
+      console.log("sharesignature", sharesignature)
+
+      // const signedTx = await this.provider.wallet.signTransaction(tx as any);
+      // const txLen = signedTx.serialize().length;
+      // log({ txLen, luts: lutsInfo.length });
+
       const signature = await this.provider.sendAndConfirm(tx as any);
 
       return {
@@ -631,11 +639,46 @@ export class Connectivity {
     }
   }
 
+  async getUserNFTs(userKey:any) {
+    
+
+    const filters = [
+      {
+        dataSize: 165,
+      },
+      {
+        memcmp: {
+          offset: 32,
+          bytes: userKey, //wallet address string
+        },
+      },
+    ];
+
+    const accounts:any = await this.connection.getParsedProgramAccounts( 
+      TOKEN_PROGRAM_ID, //importing from solana spl-token library
+      { filters }
+    );
+    let mintKeys = [];
+    let mintList:any  = [];
+    for (let i in accounts) {
+      let details = accounts[i].account?.data?.parsed?.info;
+      console.log(accounts[i])
+      if (parseInt(details.tokenAmount.decimals) == 0 && parseInt(details.tokenAmount.amount) > 0) {
+         const mintKey = new anchor.web3.PublicKey(details?.mint);
+         mintKeys.push(mintKey);
+      }
+    }
+
+    if(mintKeys.length > 0) {
+      mintList = await this.metaplex.nfts().findAllByMintList({mints: mintKeys})
+      console.log(mintList)
+    }
+    return mintList
+  }
   async getUserInfo() {
     const user = this.provider.publicKey;
     if (!user) throw "Wallet not found";
     const userOposAta = getAssociatedTokenAddressSync(oposToken, user);
-
     const infoes = await this.connection.getMultipleAccountsInfo([
       new anchor.web3.PublicKey(user.toBase58()),
       new anchor.web3.PublicKey(userOposAta.toBase58()),
@@ -670,10 +713,8 @@ export class Connectivity {
         await this.program.account.collectionState.fetch(
           this.__getCollectionStateAccount(profileCollection),
         );
-
-      const _userNfts = await this.metaplex
-        .nfts()
-        .findAllByOwner({ owner: user });
+   
+      const _userNfts = await this.getUserNFTs(user.toBase58());
 
       let activationTokenBalance: any = 0;
       const profiles = [];
