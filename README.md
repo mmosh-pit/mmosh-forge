@@ -41,7 +41,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ```ini
 # This line is ignored since it's a comment
 MONGO_URI=<- Mongo db connection string
-NEXT_PUBLIC_APP_MAIN_URL=https://mmosh:app <- mmosh app main urol
+NEXT_PUBLIC_APP_MAIN_URL=https://mmosh:app <- mmosh app main url
 NEXT_PUBLIC_SHDW_PRIVATE= <- shadow storage private key
 ```
 
