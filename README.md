@@ -52,7 +52,6 @@ NEXT_PUBLIC_SHDW_PRIVATE= <- shadow storage private key
 
 For Mainnet
 ```ini
-# This line is ignored since it's a comment
     const getNetwork = () => {
         return WalletAdapterNetwork.Mainnet;
      }
@@ -60,7 +59,6 @@ For Mainnet
 
 For Devnet
 ```ini
-# This line is ignored since it's a comment
     const getNetwork = () => {
         return WalletAdapterNetwork.Devnet;
      }
@@ -70,13 +68,11 @@ For Devnet
 
 For Mainnet
 ```ini
-# This line is ignored since it's a comment
 "rpcURL": "https://api.mainnet-beta.solana.com"
 ```
 
 For Devnet
 ```ini
-# This line is ignored since it's a comment
 "rpcURL": "https://api.devnet.solana.com"
 ```
 
@@ -85,7 +81,6 @@ For Devnet
 
 go to src/anchor/web3Consts.ts and update variable with given value
 ```ini
-# This line is ignored since it's a comment
   oposToken: new web3.PublicKey("6vgT7gxtF8Jdu7foPDZzdHxkwYFX9Y1jvgpxP8vH2Apw"),
   rootProfile: new web3.PublicKey(
     "85YaBFhbwuqPiRVNrXdMJwdt1qjdxbtypGcFBc6Tp7qA",
@@ -102,7 +97,6 @@ go to src/anchor/web3Consts.ts and update variable with given value
 
 Go to src/anchor/web3Consts.ts and update variable with given value
 ```ini
-# This line is ignored since it's a comment
   oposToken: new web3.PublicKey("FwfrwnNVLGyS8ucVjWvyoRdFDpTY8w6ACMAxJ4rqGUSS"),
   rootProfile: new web3.PublicKey(
     "85YaBFhbwuqPiRVNrXdMJwdt1qjdxbtypGcFBc6Tp7qA",
