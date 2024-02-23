@@ -1,46 +1,40 @@
 "use client";
-import { clusterApiUrl } from '@solana/web3.js';
-import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
+import { clusterApiUrl } from "@solana/web3.js";
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
+import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
 import {
-  PhantomWalletAdapter,
-} from '@solana/wallet-adapter-wallets';
-import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
-import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
+  ConnectionProvider,
+  WalletProvider,
+} from "@solana/wallet-adapter-react";
+import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import { useMemo } from "react";
-import HeaderVW from './headervw';
-import { ForgeProvider } from '../context/ForgeContext';
+import HeaderVW from "./headervw";
+import { ForgeProvider } from "../context/ForgeContext";
 
 const WalletConnector = ({ children }: { children: React.ReactNode }) => {
-    const getNetwork = () => {
-        return WalletAdapterNetwork.Devnet;
-     }
-    
-      const solNetwork = getNetwork();
-      const endpoint = useMemo(() => clusterApiUrl(solNetwork), [solNetwork]);
-    
-      const wallets = useMemo(
-        () => [
-            new PhantomWalletAdapter(),
-        ],
-        [solNetwork]
-      );
+  const getNetwork = () => {
+    return WalletAdapterNetwork.Mainnet;
+  };
 
-      return (
-        <ForgeProvider>    
-          <ConnectionProvider endpoint={endpoint}>
-          <WalletProvider wallets={wallets}>
-            <WalletModalProvider>
-            <div className='root-container'>
+  const solNetwork = getNetwork();
+  const endpoint = useMemo(() => clusterApiUrl(solNetwork), [solNetwork]);
+
+  const wallets = useMemo(() => [new PhantomWalletAdapter()], [solNetwork]);
+
+  return (
+    <ForgeProvider>
+      <ConnectionProvider endpoint={endpoint}>
+        <WalletProvider wallets={wallets}>
+          <WalletModalProvider>
+            <div className="root-container">
               <HeaderVW />
-                  <div className='content-container'>
-                  {children}
-                  </div>
-              </div>
-            </WalletModalProvider>
-          </WalletProvider>
-          </ConnectionProvider>
-        </ForgeProvider>
-      );
+              <div className="content-container">{children}</div>
+            </div>
+          </WalletModalProvider>
+        </WalletProvider>
+      </ConnectionProvider>
+    </ForgeProvider>
+  );
 };
 
 export default WalletConnector;
