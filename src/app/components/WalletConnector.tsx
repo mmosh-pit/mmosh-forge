@@ -1,6 +1,5 @@
 "use client";
-import { clusterApiUrl } from "@solana/web3.js";
-import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
+import Config from "../../anchor/web3Config.json";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
 import {
   ConnectionProvider,
@@ -12,12 +11,8 @@ import HeaderVW from "./headervw";
 import { ForgeProvider } from "../context/ForgeContext";
 
 const WalletConnector = ({ children }: { children: React.ReactNode }) => {
-  const getNetwork = () => {
-    return WalletAdapterNetwork.Mainnet;
-  };
-
-  const solNetwork = getNetwork();
-  const endpoint = useMemo(() => clusterApiUrl(solNetwork), [solNetwork]);
+  const solNetwork = Config.rpcURL;
+  const endpoint = useMemo(() => solNetwork, [solNetwork]);
 
   const wallets = useMemo(() => [new PhantomWalletAdapter()], [solNetwork]);
 
