@@ -96,6 +96,27 @@ export default function Profile() {
     }
   };
 
+  const getTotalMints = async () => {
+    try {
+      const result = await axios.get(`/api/get-option?name=totalmints`);
+      return result.data != "" ? parseInt(result.data) : 0;
+    } catch (error) {
+      return 0
+    }
+  };
+
+  const updateTotalMints = async (totalMints:any) => {
+    try {
+      await axios.post("/api/set-option", {
+        name: "totalmints",
+        value: totalMints
+      });
+    } catch (error) {
+      console.log("error updating total mints ", error)
+    }
+  };
+  
+
   const updateUserData = async (params: any) => {
     await axios.put("/api/update-wallet-data", {
       field: "profile",
@@ -157,10 +178,7 @@ export default function Profile() {
       createMessage("First name is required", "danger-container");
       return false;
     }
-    if (lastName.length == 0) {
-      createMessage("Last name is required", "danger-container");
-      return false;
-    }
+
     if (userName.length == 0) {
       createMessage("Username is required", "danger-container");
       return false;
@@ -174,6 +192,7 @@ export default function Profile() {
       return;
     }
     setIsSubmit(true);
+    const seniority = await getTotalMints() + 1;
     const genesisProfile = web3Consts.genesisProfile;
     const activationToken = new anchor.web3.PublicKey(subToken);
     const commonLut = web3Consts.commonLut;
@@ -181,8 +200,13 @@ export default function Profile() {
       preflightCommitment: "processed",
     });
 
+    let fullname = firstName;
+    if(lastName.length > 0) {
+      fullname = fullname + " " + lastName;
+    }
+
     const body = {
-      name: firstName + " " + lastName,
+      name: fullname,
       symbol: userName,
       description: desc,
       image: "",
@@ -199,12 +223,16 @@ export default function Profile() {
           value: "Moral Panic",
         },
         {
-          trait_type: "Seniority",
+          trait_type: "Gen",
           value: generation,
         },
         {
+          trait_type: "Seniority",
+          value: seniority,
+        },
+        {
           trait_type: "Full Name",
-          value: firstName + " " + lastName,
+          value: fullname,
         },
         {
           trait_type: "Username",
@@ -329,12 +357,14 @@ export default function Profile() {
           username: userName,
           bio: desc,
           pronouns: gender,
-          name: firstName + " " + lastName,
+          name: fullname,
           image: body.image,
           descriptor: descriptor,
           nouns: nouns,
+          seniority: seniority
         };
         await updateUserData(params);
+        await updateTotalMints(seniority);
         params.wallet = wallet.publickey;
         params._id = forgeContext.userData._id;
         forgeContext.setUserData(params);

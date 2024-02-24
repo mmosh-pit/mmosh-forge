@@ -173,8 +173,13 @@ export default function Invitation() {
       });
 
       attributes.push({
-        trait_type: "Seniority",
+        trait_type: "Gen",
         value: generation,
+      });
+
+      attributes.push({
+        trait_type: "Seniority",
+        value: forgeContext.userData.seniority,
       });
 
       let desc =
@@ -374,9 +379,9 @@ export default function Invitation() {
         mint: new anchor.web3.PublicKey(res.Ok.info.subscriptionToken),
         sender: wallet.publicKey,
         receiver: new anchor.web3.PublicKey(
-          "AhCqP8Zj8XhNwRaDytjZuWSe3sEP55pVUcrwDr9cdKe7",
+          "8mPADLUyDdqEsDQdFteynUA9zW5eQLZztjvaDHhgeBNi",
         ),
-        init_if_needed: false,
+        init_if_needed: true,
       },
       userConn.ixCallBack,
     );
@@ -389,7 +394,7 @@ export default function Invitation() {
     //     mint: web3Consts.oposToken,
     //     sender: wallet.publicKey,
     //     receiver: new anchor.web3.PublicKey(
-    //       "EMmc2SSJJC7NJRMjrpsBYJnA6t8PFCmo1GAo2AQgmKEm",
+    //       "8dBV9qwG4MxLGqoufwXUwJpYGZkNZ4m1Rgmf6MmTxZfs",
     //     ),
     //     init_if_needed: true,
     //     amount: calcNonDecimalValue(200000, 9),
