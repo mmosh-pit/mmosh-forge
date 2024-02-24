@@ -662,7 +662,6 @@ export class Connectivity {
     let mintList:any  = [];
     for (let i in accounts) {
       let details = accounts[i].account?.data?.parsed?.info;
-      console.log(accounts[i])
       if (parseInt(details.tokenAmount.decimals) == 0 && parseInt(details.tokenAmount.amount) > 0) {
          const mintKey = new anchor.web3.PublicKey(details?.mint);
          mintKeys.push(mintKey);
@@ -789,34 +788,38 @@ export class Connectivity {
 
       } else {
         for (let i of _userNfts) {
-          if (i.symbol == "INVITE") {
-            try {
-              const nftInfo: any = i;
-              console.log("token address ", nftInfo.mintAddress.toBase58());
-              const activationTokenState =
-                this.__getActivationTokenStateAccount(nftInfo.mintAddress);
-              const activationTokenStateInfo =
-                await this.program.account.activationTokenState.fetch(
-                  activationTokenState,
-                );
-              console.log("activationTokenStateInfo " ,activationTokenStateInfo)
-              const parentProfile = activationTokenStateInfo.parentProfile;
-              
-              activationTokens.push({
-                name: i.name,
-                genesis: parentProfile.toBase58(),
-                activation: nftInfo.mintAddress.toBase58(),
-              });
-              const generationData = await this.getProfileChilds(parentProfile);
-              totalChild = generationData.totalChild;
-              generation = generationData.generation;
-              profilelineage = await this.getProfileLineage(parentProfile);
-            } catch (error) {
-              console.log("error invite ", error);
+          if(i) {
+            if(i.symbol) {
+              if (i.symbol == "INVITE") {
+                try {
+                  const nftInfo: any = i;
+                  console.log("token address ", nftInfo.mintAddress.toBase58());
+                  const activationTokenState =
+                    this.__getActivationTokenStateAccount(nftInfo.mintAddress);
+                  const activationTokenStateInfo =
+                    await this.program.account.activationTokenState.fetch(
+                      activationTokenState,
+                    );
+                  console.log("activationTokenStateInfo " ,activationTokenStateInfo)
+                  const parentProfile = activationTokenStateInfo.parentProfile;
+                  
+                  activationTokens.push({
+                    name: i.name,
+                    genesis: parentProfile.toBase58(),
+                    activation: nftInfo.mintAddress.toBase58(),
+                  });
+                  const generationData = await this.getProfileChilds(parentProfile);
+                  totalChild = generationData.totalChild;
+                  generation = generationData.generation;
+                  profilelineage = await this.getProfileLineage(parentProfile);
+                } catch (error) {
+                  console.log("error invite ", error);
+                }
+              }
+              if (activationTokens.length > 0) {
+                break;
+              }
             }
-          }
-          if (activationTokens.length > 0) {
-            break;
           }
         }
       }
