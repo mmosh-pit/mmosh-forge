@@ -39,13 +39,13 @@ export class BaseMpl {
 
   constructor(wallet: any) {
     // super(connection);
-    this.connection = new web3.Connection(Config.rpcURL,"processed");
+    this.connection = new web3.Connection(Config.rpcURL, "processed");
     this.metaplex = new Metaplex(this.connection);
   }
 
   setUpCallBack = (
     ixs: web3.TransactionInstruction[],
-    signs: web3.Keypair[]
+    signs: web3.Keypair[],
   ) => {
     if (ixs) {
       this.mplIxs.push(...ixs);
@@ -79,27 +79,30 @@ export class BaseMpl {
         tokenId.toBuffer(),
         utf8.encode("edition"),
       ],
-      MPL_ID
+      MPL_ID,
     )[0];
   }
 
   static getMetadataAccount(tokenId: web3.PublicKey) {
     return web3.PublicKey.findProgramAddressSync(
       [utf8.encode("metadata"), MPL_ID.toBuffer(), tokenId.toBuffer()],
-      MPL_ID
+      MPL_ID,
     )[0];
   }
 
-  static getCollectionAuthorityRecordAccount(collection: web3.PublicKey, authority: web3.PublicKey): web3.PublicKey {
+  static getCollectionAuthorityRecordAccount(
+    collection: web3.PublicKey,
+    authority: web3.PublicKey,
+  ): web3.PublicKey {
     return web3.PublicKey.findProgramAddressSync(
       [
         utf8.encode("metadata"),
         MPL_ID.toBuffer(),
         collection.toBuffer(),
         utf8.encode("collection_authority"),
-        authority.toBuffer()
+        authority.toBuffer(),
       ],
-      MPL_ID
+      MPL_ID,
     )[0];
   }
 
@@ -107,7 +110,6 @@ export class BaseMpl {
   //   input: CreateNftBuilderParams,
   //   collectionVerifictionInfo: { collectionId: web3.PublicKey } = null
   // ) {
-  //   this.reinit();
   //   const nftKeypair = web3.Keypair.generate();
   //   input.useNewMint = nftKeypair;
   //
