@@ -122,6 +122,51 @@ export class Connectivity {
     }
   };
 
+  async getProfileMetadata(uri:string) {
+    try {
+      const result = await axios.get(uri);
+      if(result.data) {
+        let userData:any = {
+          _id:"",
+          wallet:"",
+          username:"",
+          bio:"",
+          pronouns:"",
+          name:"",
+          image:"",
+          descriptor:"",
+          nouns:"",
+          seniority: ""
+        };
+        for (let index = 0; index < result.data.attributes.length; index++) {
+          const element = result.data.attributes[index];
+          if(element.trait_type == "Seniority") {
+            console.log(element.value);
+            userData.seniority = element.value;
+          } else if(element.trait_type == "Username") { 
+            userData.username = element.value;
+          } else if(element.trait_type == "Full Name") { 
+            userData.name = element.value;
+          } else if(element.trait_type == "Adjective") { 
+            userData.descriptor = element.value;
+          } else if(element.trait_type == "Noun") { 
+            userData.nouns = element.value;
+          } else if(element.trait_type == "Pronoun") { 
+            userData.seniority = element.value;
+          } 
+        }
+        return userData;
+      } else {
+        return null
+      }
+      return result.data;
+    } catch (error) {
+      console.log("metadata error", error)
+      return null
+    }
+  };
+
+
   async updateProfileMintingStatus (address: String, is_available: boolean) {
     try {
       await axios.post("/api/update-whitelist", {
@@ -742,23 +787,27 @@ export class Connectivity {
       const _userNfts = await this.getUserNFTs(user.toBase58());
 
       let activationTokenBalance: any = 0;
-      const profiles = [];
+      let profiles:any = [];
       const activationTokens = [];
       let totalChild = 0;
-
+      let seniority = 0
       for (let i of _userNfts) {
         const nftInfo: any = i;
         const collectionInfo = i?.collection;
         if (
           collectionInfo?.address.toBase58() == profileCollection.toBase58()
         ) {
-          profiles.push({
-            name: i.name,
-            address: nftInfo.mintAddress.toBase58(),
-          });
-        }
-        if (profiles.length > 0) {
-          break;
+          const metadata = await this.getProfileMetadata(i?.uri);
+          if(metadata) {
+            if (seniority == 0 || seniority > metadata.seniority) {
+              profiles = [{
+                name: i.name,
+                address: nftInfo.mintAddress.toBase58(),
+                userinfo: metadata
+              }];
+              seniority = metadata.seniority;
+            }
+          }
         }
       }
 

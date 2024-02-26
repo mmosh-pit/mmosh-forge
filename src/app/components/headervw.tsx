@@ -51,7 +51,7 @@ export default function HeaderVW() {
   useEffect(() => {
     if (wallet?.publicKey) {
       if (name == "") {
-        getUserData();
+        getProfileInfo();
       }
     } else {
       forgeContext.setLoading(false);
@@ -117,13 +117,11 @@ export default function HeaderVW() {
     justifyContent: "flex-end",
   }));
 
-  const getUserData = async () => {
+  const getUserData = async (hasInvitation:any) => {
     setIsLoading(true);
     const result = await axios.get(
       `/api/get-wallet-data?wallet=${wallet?.publicKey}`,
     );
-    console.log("userdata ", result);
-    let hasProfile = false;
     if (result) {
       if (result.data) {
         if (result.data.profile) {
@@ -134,12 +132,12 @@ export default function HeaderVW() {
             userData.seniority = "";
           }
           forgeContext.setUserData(userData);
-          if (result.data.profile.profile) {
-            forgeContext.setLoading(false);
-            forgeContext.setConnected(true);
-            navigate.push("/invitation");
+          forgeContext.setLoading(false);
+          forgeContext.setConnected(true);
+          if (hasInvitation) {
+            navigate.push("/profile");
           } else {
-            getProfileInfo();
+            navigate.push("/dashboard");
           }
           setIsLoading(false);
           return;
@@ -156,7 +154,9 @@ export default function HeaderVW() {
   };
 
   const getProfileInfo = async () => {
+    
     try {
+      setIsLoading(true);
       const env = new anchor.AnchorProvider(connection.connection, wallet, {
         preflightCommitment: "processed",
       });
@@ -164,19 +164,19 @@ export default function HeaderVW() {
       const profileInfo = await userConn.getUserInfo();
       if (profileInfo.profiles.length > 0) {
         navigate.push("/invitation");
+        forgeContext.setUserData(profileInfo.profiles[0].userinfo)
+        forgeContext.setLoading(false);
+        forgeContext.setConnected(true);
       } else if (
         profileInfo.activationTokens.length > 0 &&
         profileInfo.profiles.length == 0
       ) {
-        navigate.push("/profile");
+        getUserData(true);
       } else {
-        navigate.push("/dashboard");
+        getUserData(false);
       }
-      forgeContext.setLoading(false);
-      forgeContext.setConnected(true);
     } catch (error) {
-      forgeContext.setLoading(false);
-      forgeContext.setConnected(true);
+      getUserData(false);
       console.log("error is ", error);
     }
   };
