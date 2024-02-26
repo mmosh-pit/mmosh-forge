@@ -593,9 +593,18 @@ export default function Invitation() {
             </div>
           </div>
           <div className="invitation-action-container">
-            <Button variant="primary" size="sm" onClick={mintInvitationAction}>
-              {buttonText}
-            </Button>
+            {buttonText === "Mint" &&
+              <Button variant="primary" size="sm" onClick={mintInvitationAction}>
+                {buttonText}
+              </Button>
+            }
+
+            {buttonText !== "Mint" &&
+              <Button variant="primary" size="sm">
+                {buttonText}
+              </Button>
+            }
+
           </div>
         </div>
       </div>
