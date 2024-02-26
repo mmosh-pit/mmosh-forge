@@ -141,7 +141,7 @@ export class Connectivity {
       this.baseSpl.__reinit();
       const user = this.provider.publicKey;
       if (!user) throw "Wallet not found";
-      const mintingStatus = this.getProfileMintingStatus(user.toBase58());
+      const mintingStatus = await this.getProfileMintingStatus(user.toBase58());
       let {
         name,
         symbol,
@@ -335,7 +335,7 @@ export class Connectivity {
       // const signedTx = await this.provider.wallet.signTransaction(tx as any);
       // const txLen = signedTx.serialize().length;
       // log({ txLen, luts: lutsInfo.length });
-
+  
       const signature = await this.provider.sendAndConfirm(tx as any);
       const updatewhitelist1 = await this.updateProfileMintingStatus(user.toBase58(), false);
       return {
@@ -699,6 +699,7 @@ export class Connectivity {
     }
     return mintList
   }
+
   async getUserInfo() {
     const user = this.provider.publicKey;
     if (!user) throw "Wallet not found";
@@ -772,7 +773,7 @@ export class Connectivity {
             profileStateInfo.activationToken,
             user,
           );
-          activationTokenBalance = await this.getActivationTokenBalance(userActivationAta);
+          activationTokenBalance = await this.getActivationTokenBalance(profileStateInfo.activationToken);
         }
         totalChild = profileStateInfo.lineage.totalChild.toNumber();
         generation = profileStateInfo.lineage.generation.toString();
@@ -924,7 +925,7 @@ export class Connectivity {
   async getActivationTokenBalance(userActivationAta: web3.PublicKey) {
     try {
       const infoes =
-      await this.connection.getTokenAccountBalance(userActivationAta);
+      await this.connection.getTokenSupply(userActivationAta);
       return infoes.value.amount;
     } catch (error) {
       return 0

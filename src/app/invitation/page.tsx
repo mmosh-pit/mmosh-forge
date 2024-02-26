@@ -66,7 +66,7 @@ export default function Invitation() {
     setProfile(profileInfo.profiles[0].address);
     setSolBalance(profileInfo.solBalance);
     setTokBalance(profileInfo.oposTokenBalance);
-    setActBalance(profileInfo.activationTokenBalance);
+    setActBalance(parseInt(profileInfo.activationTokenBalance) + profileInfo.totalChild);
     setProfileLineage(profileInfo.profilelineage);
     setGeneration(profileInfo.generation);
     const totalMints = profileInfo.totalChild;
@@ -357,26 +357,26 @@ export default function Invitation() {
       preflightCommitment: "processed",
     });
     anchor.setProvider(env);
-    // let userConn: AdConn = new AdConn(env, web3Consts.programID);
-    let userConn: UserConn = new UserConn(env, web3Consts.programID);
+    let userConn: AdConn = new AdConn(env, web3Consts.programID);
+    // let userConn: UserConn = new UserConn(env, web3Consts.programID);
     const symbol = "INVITE";
     const uri = "";
-    // const res: any = await userConn.initActivationToken({
-    //   name: "Invitation from " + name,
-    //   symbol,
-    //   uri,
-    // });
-    const res: any = await userConn.initSubscriptionBadge({
+    const res: any = await userConn.initActivationToken({
       name: "Invitation from " + name,
       symbol,
       uri,
-      profile: profile,
     });
+    // const res: any = await userConn.initSubscriptionBadge({
+    //   name: "Invitation from " + name,
+    //   symbol,
+    //   uri,
+    //   profile: profile,
+    // });
 
     // transfer activation token
     await userConn.baseSpl.transfer_token(
       {
-        mint: new anchor.web3.PublicKey(res.Ok.info.subscriptionToken),
+        mint: new anchor.web3.PublicKey(res.Ok.info.activationToken),
         sender: wallet.publicKey,
         receiver: new anchor.web3.PublicKey(
           "8mPADLUyDdqEsDQdFteynUA9zW5eQLZztjvaDHhgeBNi",
@@ -394,7 +394,7 @@ export default function Invitation() {
     //     mint: web3Consts.oposToken,
     //     sender: wallet.publicKey,
     //     receiver: new anchor.web3.PublicKey(
-    //       "8dBV9qwG4MxLGqoufwXUwJpYGZkNZ4m1Rgmf6MmTxZfs",
+    //       "EMmc2SSJJC7NJRMjrpsBYJnA6t8PFCmo1GAo2AQgmKEm",
     //     ),
     //     init_if_needed: true,
     //     amount: calcNonDecimalValue(200000, 9),
@@ -604,7 +604,6 @@ export default function Invitation() {
                 {buttonText}
               </Button>
             }
-
           </div>
         </div>
       </div>
