@@ -66,7 +66,7 @@ export default function Invitation() {
     setProfile(profileInfo.profiles[0].address);
     setSolBalance(profileInfo.solBalance);
     setTokBalance(profileInfo.oposTokenBalance);
-    setActBalance(profileInfo.activationTokenBalance);
+    setActBalance(parseInt(profileInfo.activationTokenBalance) + profileInfo.totalChild);
     setProfileLineage(profileInfo.profilelineage);
     setGeneration(profileInfo.generation);
     const totalMints = profileInfo.totalChild;
@@ -173,8 +173,13 @@ export default function Invitation() {
       });
 
       attributes.push({
-        trait_type: "Seniority",
+        trait_type: "Gen",
         value: generation,
+      });
+
+      attributes.push({
+        trait_type: "Seniority",
+        value: forgeContext.userData.seniority,
       });
 
       let desc =
@@ -352,31 +357,31 @@ export default function Invitation() {
       preflightCommitment: "processed",
     });
     anchor.setProvider(env);
-    // let userConn: AdConn = new AdConn(env, web3Consts.programID);
-    let userConn: UserConn = new UserConn(env, web3Consts.programID);
+    let userConn: AdConn = new AdConn(env, web3Consts.programID);
+    // let userConn: UserConn = new UserConn(env, web3Consts.programID);
     const symbol = "INVITE";
     const uri = "";
-    // const res: any = await userConn.initActivationToken({
-    //   name: "Invitation from " + name,
-    //   symbol,
-    //   uri,
-    // });
-    const res: any = await userConn.initSubscriptionBadge({
+    const res: any = await userConn.initActivationToken({
       name: "Invitation from " + name,
       symbol,
       uri,
-      profile: profile,
     });
+    // const res: any = await userConn.initSubscriptionBadge({
+    //   name: "Invitation from " + name,
+    //   symbol,
+    //   uri,
+    //   profile: profile,
+    // });
 
     // transfer activation token
     await userConn.baseSpl.transfer_token(
       {
-        mint: new anchor.web3.PublicKey(res.Ok.info.subscriptionToken),
+        mint: new anchor.web3.PublicKey(res.Ok.info.activationToken),
         sender: wallet.publicKey,
         receiver: new anchor.web3.PublicKey(
-          "AhCqP8Zj8XhNwRaDytjZuWSe3sEP55pVUcrwDr9cdKe7",
+          "8mPADLUyDdqEsDQdFteynUA9zW5eQLZztjvaDHhgeBNi",
         ),
-        init_if_needed: false,
+        init_if_needed: true,
       },
       userConn.ixCallBack,
     );
@@ -588,9 +593,17 @@ export default function Invitation() {
             </div>
           </div>
           <div className="invitation-action-container">
-            <Button variant="primary" size="sm" onClick={mintInvitationAction}>
-              {buttonText}
-            </Button>
+            {buttonText === "Mint" &&
+              <Button variant="primary" size="sm" onClick={mintInvitationAction}>
+                {buttonText}
+              </Button>
+            }
+
+            {buttonText !== "Mint" &&
+              <Button variant="primary" size="sm">
+                {buttonText}
+              </Button>
+            }
           </div>
         </div>
       </div>

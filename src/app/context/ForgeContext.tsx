@@ -10,7 +10,8 @@ type UserData = {
     name: string,
     image: string,
     descriptor: string,
-    nouns: string
+    nouns: string,
+    seniority: string
 }
 
 type ForgeContextType = {
@@ -37,7 +38,8 @@ export const ForgeProvider = (props: any) => {
     name:"",
     image:"",
     descriptor:"",
-    nouns:""
+    nouns:"",
+    seniority: ""
   })
 
   const updateUserData = (data: UserData): void => {

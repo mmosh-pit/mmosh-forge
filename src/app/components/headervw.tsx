@@ -66,6 +66,7 @@ export default function HeaderVW() {
         image: "",
         descriptor: "",
         nouns: "",
+        seniority: ""
       });
       setName("");
       navigate.push("/");
@@ -129,6 +130,9 @@ export default function HeaderVW() {
           let userData = result.data.profile;
           userData.wallet = wallet.publicKey;
           userData._id = result.data._id;
+          if(!userData.seniority) {
+            userData.seniority = "";
+          }
           forgeContext.setUserData(userData);
           if (result.data.profile.profile) {
             forgeContext.setLoading(false);

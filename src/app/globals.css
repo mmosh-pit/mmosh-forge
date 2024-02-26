@@ -32,7 +32,7 @@ input[type="number"] {
   background-size: cover, auto;
   background-repeat: no-repeat, repeat;
   background-attachment: fixed;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 .root-container > * {
@@ -272,6 +272,7 @@ input[type="number"] {
 
 .invitation-page {
   text-align: center;
+  padding-bottom: 120px;
 }
 .invitation-page h2,
 .profile-page h2 {

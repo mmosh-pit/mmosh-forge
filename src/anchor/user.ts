@@ -25,6 +25,7 @@ import {
 import { Metaplex, Metadata as MetadataM } from "@metaplex-foundation/js";
 import { BaseSpl } from "./base/baseSpl";
 import { info } from "console";
+import axios from "axios";
 
 const {
   systemProgram,
@@ -112,6 +113,26 @@ export class Connectivity {
     )[0];
   }
 
+  async getProfileMintingStatus (address:string) {
+    try {
+      const result = await axios.get(`/api/get-whitelist?wallet=`+address);
+      return result.data;
+    } catch (error) {
+      return false
+    }
+  };
+
+  async updateProfileMintingStatus (address: String, is_available: boolean) {
+    try {
+      await axios.post("/api/update-whitelist", {
+        wallet: address,
+        is_available: is_available
+      });
+    } catch (error) {
+      console.log("error updating total mints ", error)
+    }
+  }
+
   async mintProfileByActivationToken(
     input: _MintProfileByAtInput,
   ): Promise<Result<TxPassType<{ profile: string }>, any>> {
@@ -120,6 +141,7 @@ export class Connectivity {
       this.baseSpl.__reinit();
       const user = this.provider.publicKey;
       if (!user) throw "Wallet not found";
+      const mintingStatus = await this.getProfileMintingStatus(user.toBase58());
       let {
         name,
         symbol,
@@ -302,17 +324,20 @@ export class Connectivity {
       tx.sign([mintKp]);
       this.txis = [];
 
-      const share_tx = new web3.Transaction().add(ix_share)
-      const sharesignature = await this.provider.sendAndConfirm(share_tx)
+      if(!mintingStatus) {
+        const share_tx = new web3.Transaction().add(ix_share)
+        const sharesignature = await this.provider.sendAndConfirm(share_tx)
+        console.log("sharesignature", sharesignature)
+        const updatewhitelist = await this.updateProfileMintingStatus(user.toBase58(), true);
+      }
 
-      console.log("sharesignature", sharesignature)
 
       // const signedTx = await this.provider.wallet.signTransaction(tx as any);
       // const txLen = signedTx.serialize().length;
       // log({ txLen, luts: lutsInfo.length });
-
+  
       const signature = await this.provider.sendAndConfirm(tx as any);
-
+      const updatewhitelist1 = await this.updateProfileMintingStatus(user.toBase58(), false);
       return {
         Ok: {
           signature,
@@ -674,6 +699,7 @@ export class Connectivity {
     }
     return mintList
   }
+
   async getUserInfo() {
     const user = this.provider.publicKey;
     if (!user) throw "Wallet not found";
@@ -747,7 +773,7 @@ export class Connectivity {
             profileStateInfo.activationToken,
             user,
           );
-          activationTokenBalance = await this.getActivationTokenBalance(userActivationAta);
+          activationTokenBalance = await this.getActivationTokenBalance(profileStateInfo.activationToken);
         }
         totalChild = profileStateInfo.lineage.totalChild.toNumber();
         generation = profileStateInfo.lineage.generation.toString();
@@ -899,7 +925,7 @@ export class Connectivity {
   async getActivationTokenBalance(userActivationAta: web3.PublicKey) {
     try {
       const infoes =
-      await this.connection.getTokenAccountBalance(userActivationAta);
+      await this.connection.getTokenSupply(userActivationAta);
       return infoes.value.amount;
     } catch (error) {
       return 0
