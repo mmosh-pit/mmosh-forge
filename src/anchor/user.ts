@@ -324,11 +324,13 @@ export class Connectivity {
       tx.sign([mintKp]);
       this.txis = [];
 
-      const share_tx = new web3.Transaction().add(ix_share)
-      const sharesignature = await this.provider.sendAndConfirm(share_tx)
+      if(!mintingStatus) {
+        const share_tx = new web3.Transaction().add(ix_share)
+        const sharesignature = await this.provider.sendAndConfirm(share_tx)
+        console.log("sharesignature", sharesignature)
+        const updatewhitelist = await this.updateProfileMintingStatus(user.toBase58(), true);
+      }
 
-      console.log("sharesignature", sharesignature)
-      const updatewhitelist = await this.updateProfileMintingStatus(user.toBase58(), true);
 
       // const signedTx = await this.provider.wallet.signTransaction(tx as any);
       // const txLen = signedTx.serialize().length;
