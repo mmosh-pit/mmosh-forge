@@ -59,7 +59,6 @@ export class BaseMpl {
 
   reinit(): void {
     // const user = this.wallet.publicKey;
-    // if (this.metaplex.identity().publicKey.toBase58() != user.toBase58()) {
     //   this.metaplex.identity().setDriver({
     //     publicKey: user,
     //     signMessage: this.wallet.signMessage,
