@@ -59,6 +59,7 @@ export default function Profile() {
   const [isLoading, setIsLoading] = useState(true);
   const [gensis, setGensis] = useState("");
   const [subToken, setSubToken] = useState("");
+  const [whitelisted, setWhitelisted] = useState(false);
 
   useEffect(() => {
     if (wallet?.publicKey) {
@@ -135,6 +136,16 @@ export default function Profile() {
     }, 5000);
   };
 
+  const getProfileMintingStatus = async (address:string) => {
+    try {
+      const result = await axios.get(`/api/get-whitelist?wallet=`+address);
+      return result.data;
+    } catch (error) {
+      return false
+    }
+  };
+
+
   const validateFields = () => {
     if (subToken == "") {
       createMessage("Invalid activation token", "danger-container");
@@ -156,8 +167,8 @@ export default function Profile() {
       );
       return false;
     }
-
-    if (tokBalance < 20000) {
+    
+    if (tokBalance < 20000 && !whitelisted) {
       createMessage(
         <p>
           Hey! We checked your wallet and you don’t have enough MMOSH to mint.{" "}
@@ -199,6 +210,7 @@ export default function Profile() {
     const env = new anchor.AnchorProvider(connection.connection, wallet, {
       preflightCommitment: "processed",
     });
+
 
     let fullname = firstName;
     if(lastName.length > 0) {
@@ -419,7 +431,11 @@ export default function Profile() {
       setGeneration(profileInfo.generation);
       setProfileLineage(profileInfo.profilelineage);
     }
+    const isWhitelisted = await getProfileMintingStatus(wallet.publicKey);
+    setWhitelisted(isWhitelisted);
   };
+
+  
 
   const closeImageAction = () => {
     setImageFile([]);
@@ -583,7 +599,12 @@ export default function Profile() {
             </Button>
           )}
           <div className="price-details">
-            <p>Price: 20000 MMOSH</p>
+            {!whitelisted &&
+              <p>Price: 20000 MMOSH</p>
+            }
+            {whitelisted &&
+              <p>Price: 0 MMOSH</p>
+            }
             <label>plus a small amount of SOL for gas fees</label>
           </div>
           <div className="balance-details">
