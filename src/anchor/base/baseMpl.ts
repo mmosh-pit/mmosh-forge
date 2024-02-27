@@ -38,7 +38,6 @@ export class BaseMpl {
   metaplex: Metaplex;
 
   constructor(wallet: any) {
-    // super(connection);
     this.connection = new web3.Connection(Config.rpcURL, "processed");
     this.metaplex = new Metaplex(this.connection);
   }
