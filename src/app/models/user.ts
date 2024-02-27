@@ -3,6 +3,7 @@ export type User = {
   profile: Profile;
   telegram: Telegram;
   twitter: Twitter;
+  royalty: number
 };
 
 type Profile = {

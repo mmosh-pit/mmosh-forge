@@ -374,6 +374,11 @@ export class Connectivity {
         const sharesignature = await this.provider.sendAndConfirm(share_tx)
         console.log("sharesignature", sharesignature)
         const updatewhitelist = await this.updateProfileMintingStatus(user.toBase58(), true);
+        await this.storeRoyalty(user.toBase58(),currentGenesisProfileHolder.toBase58(),12000);
+        await this.storeRoyalty(user.toBase58(),currentParentProfileHolder.toBase58(),4000);
+        await this.storeRoyalty(user.toBase58(),currentGrandParentProfileHolder.toBase58(),2000);
+        await this.storeRoyalty(user.toBase58(),currentGreatGrandParentProfileHolder.toBase58(),1400);
+        await this.storeRoyalty(user.toBase58(),currentGgreatGrandParentProfileHolder.toBase58(),600);
       }
 
 
@@ -393,6 +398,14 @@ export class Connectivity {
       log({ error });
       return { Err: error };
     }
+  }
+
+  async storeRoyalty(sender:string ,receiver:string, amount: number) {
+    await axios.post("/api/update-royalty", {
+      sender,
+      receiver,
+      amount
+    });
   }
 
   async initSubscriptionBadge(input: {
@@ -630,6 +643,7 @@ export class Connectivity {
       const tx = new web3.Transaction().add(...this.txis);
       this.txis = [];
       const signature = await this.provider.sendAndConfirm(tx);
+      await this.storeRoyalty(user.toBase58(),currentGenesisProfileHolder.toBase58(),Number(amount))
       return { Ok: { signature, info: {} } };
     } catch (error) {
       log({ error });

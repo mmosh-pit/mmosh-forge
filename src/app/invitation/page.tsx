@@ -21,7 +21,6 @@ export default function Invitation() {
   const [tokBalance, setTokBalance] = useState(0);
   const [actBalance, setActBalance] = useState(0);
   const [quota, setQuota] = useState(0);
-  const [profileName, setProfileName] = useState("");
   const [profile, setProfile] = useState("");
   const [name, setName] = useState("");
   const [buttonText, setButtonText] = useState("Mint");
@@ -357,53 +356,53 @@ export default function Invitation() {
       preflightCommitment: "processed",
     });
     anchor.setProvider(env);
-    let userConn: AdConn = new AdConn(env, web3Consts.programID);
-    // let userConn: UserConn = new UserConn(env, web3Consts.programID);
+    // let userConn: AdConn = new AdConn(env, web3Consts.programID);
+    let userConn: UserConn = new UserConn(env, web3Consts.programID);
     const symbol = "INVITE";
     const uri = "";
-    const res: any = await userConn.initActivationToken({
-      name: "Invitation from " + name,
-      symbol,
-      uri,
-    });
-    // const res: any = await userConn.initSubscriptionBadge({
+    // const res: any = await userConn.initActivationToken({
     //   name: "Invitation from " + name,
     //   symbol,
     //   uri,
-    //   profile: profile,
     // });
+    const res: any = await userConn.initSubscriptionBadge({
+      name: "Invitation from " + name,
+      symbol,
+      uri,
+      profile: profile,
+    });
 
     // transfer activation token
-    // await userConn.baseSpl.transfer_token(
-    //   {
-    //     mint: new anchor.web3.PublicKey(res.Ok.info.activationToken),
-    //     sender: wallet.publicKey,
-    //     receiver: new anchor.web3.PublicKey(
-    //       "8dBV9qwG4MxLGqoufwXUwJpYGZkNZ4m1Rgmf6MmTxZfs",
-    //     ),
-    //     init_if_needed: true,
-    //   },
-    //   userConn.ixCallBack,
-    // );
-    // const tx = await new anchor.web3.Transaction().add(...userConn.txis);
-    // userConn.txis = [];
-    // const res2 = await userConn.provider.sendAndConfirm(tx);
-
     await userConn.baseSpl.transfer_token(
       {
-        mint: web3Consts.oposToken,
+        mint: new anchor.web3.PublicKey(res.Ok.info.subscriptionToken),
         sender: wallet.publicKey,
         receiver: new anchor.web3.PublicKey(
-          "HMvvRsoHAjCcCK6YUckdTezaxgZ9QBJApK1hY6NLfZA4",
+          "8mPADLUyDdqEsDQdFteynUA9zW5eQLZztjvaDHhgeBNi",
         ),
         init_if_needed: true,
-        amount: calcNonDecimalValue(200000, 9),
       },
       userConn.ixCallBack,
     );
-    const tx1 = await new anchor.web3.Transaction().add(...userConn.txis);
+    const tx = await new anchor.web3.Transaction().add(...userConn.txis);
     userConn.txis = [];
-    const res3 = await userConn.provider.sendAndConfirm(tx1);
+    const res2 = await userConn.provider.sendAndConfirm(tx);
+
+    // await userConn.baseSpl.transfer_token(
+    //   {
+    //     mint: web3Consts.oposToken,
+    //     sender: wallet.publicKey,
+    //     receiver: new anchor.web3.PublicKey(
+    //       "EMmc2SSJJC7NJRMjrpsBYJnA6t8PFCmo1GAo2AQgmKEm",
+    //     ),
+    //     init_if_needed: true,
+    //     amount: calcNonDecimalValue(200000, 9),
+    //   },
+    //   userConn.ixCallBack,
+    // );
+    // const tx1 = await new anchor.web3.Transaction().add(...userConn.txis);
+    // userConn.txis = [];
+    // const res3 = await userConn.provider.sendAndConfirm(tx1);
 
     // transfer mmosh token
     // await userConn.baseSpl.transfer_token(
