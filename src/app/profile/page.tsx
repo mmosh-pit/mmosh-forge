@@ -146,7 +146,7 @@ export default function Profile() {
   };
 
 
-  const validateFields = async () => {
+  const validateFields = () => {
     if (subToken == "") {
       createMessage("Invalid activation token", "danger-container");
       return false;
