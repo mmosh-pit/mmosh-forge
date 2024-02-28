@@ -360,17 +360,6 @@ export class Connectivity {
         lutsInfo.push(res);
       }
 
-      const blockhash = (await this.connection.getLatestBlockhash()).blockhash;
-      const message = new web3.TransactionMessage({
-        payerKey: this.provider.publicKey,
-        recentBlockhash: blockhash,
-        instructions: [...this.txis],
-      }).compileToV0Message(lutsInfo);
-
-      const tx = new web3.VersionedTransaction(message);
-      tx.sign([mintKp]);
-      this.txis = [];
-
       if (!mintingStatus) {
         const share_tx = new web3.Transaction().add(ix_share);
         const sharesignature = await this.provider.sendAndConfirm(share_tx);
@@ -409,6 +398,19 @@ export class Connectivity {
       // const signedTx = await this.provider.wallet.signTransaction(tx as any);
       // const txLen = signedTx.serialize().length;
       // log({ txLen, luts: lutsInfo.length });
+
+      const blockhash = (await this.connection.getLatestBlockhash("finalized")).blockhash;
+      console.log("recentBlockhash: finalized ", blockhash);
+
+      const message = new web3.TransactionMessage({
+        payerKey: this.provider.publicKey,
+        recentBlockhash: blockhash,
+        instructions: [...this.txis],
+      }).compileToV0Message(lutsInfo);
+
+      const tx = new web3.VersionedTransaction(message);
+      tx.sign([mintKp]);
+      this.txis = [];
 
       const signature = await this.provider.sendAndConfirm(tx as any);
       const updatewhitelist1 = await this.updateProfileMintingStatus(
