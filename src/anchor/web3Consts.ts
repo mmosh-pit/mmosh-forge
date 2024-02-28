@@ -23,7 +23,6 @@ export const web3Consts = {
   commonLut: new web3.PublicKey("5D3XazMMpBcQb8FLxTWMB7WoWzU1YeVP3usekchp1xLu"),
   // genesisProfile: new web3.PublicKey(
   //   "F6LFrZmngTpd1RrXpvVMLwguVPRsMgmnzAsjz1LswRrG",
-  // ),
   // commonLut: new web3.PublicKey("Gypc9MmJrtn5rtcagaYroz7AT1KpvnKgr9VvvQvZmbw7"),
   LAMPORTS_PER_OPOS: 1000_000_000,
   Seeds: {
