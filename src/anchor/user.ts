@@ -415,6 +415,18 @@ export class Connectivity {
         user.toBase58(),
         false,
       );
+
+      const lineageResult = await this.storeLineage(
+        user.toBase58(),
+        {
+          promotor: parentProfile.toBase58(),
+          scout: grandParentProfile.toBase58(),
+          recruitor: greatGrandParentProfile.toBase58(),
+          originator: ggreateGrandParentProfile.toBase58(),
+          gensis: genesisProfile.toBase58()
+        },
+        profile.toBase58() 
+      );
       return {
         Ok: {
           signature,
@@ -432,6 +444,14 @@ export class Connectivity {
       sender,
       receiver,
       amount,
+    });
+  }
+
+  async storeLineage(wallet: string, lineage: any, profile: string) {
+    await axios.post("/api/save-lineage", {
+      wallet,
+      lineage,
+      profile,
     });
   }
 
