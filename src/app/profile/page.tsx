@@ -388,14 +388,33 @@ export default function Profile() {
           navigate.push("/invitation");
         }, 4000);
       } else {
-        createMessage(
-          "We’re sorry, there was an error while trying to mint your profile. Check your wallet and try again.",
-          "danger-container",
-        );
+        const isWhitelisted = await getProfileMintingStatus(wallet.publicKey);
+        setWhitelisted(isWhitelisted);
+        if (isWhitelisted) {
+          createMessage(
+            "You have only completed the first transaction, press the Mint button again to receive your Profile.",
+            "warning-container",
+          );
+        } else {
+          createMessage(
+            "We’re sorry, there was an error while trying to mint your profile. Check your wallet and try again.",
+            "danger-container",
+          );
+        }
+
       }
       setIsSubmit(false);
     } catch (error) {
-      createMessage(error, "danger-container");
+      const isWhitelisted = await getProfileMintingStatus(wallet.publicKey);
+      setWhitelisted(isWhitelisted);
+      if (isWhitelisted) {
+        createMessage(
+          "You have only completed the first transaction, press the Mint button again to receive your Profile.",
+          "warning-container",
+        );
+      } else {
+         createMessage(error, "danger-container");
+      }
       setIsSubmit(false);
     }
   };
@@ -588,6 +607,7 @@ export default function Profile() {
       </div>
       {!isLoading && (
         <div className="profile-container-action">
+          <p>First transaction distributes MMOSH, second gets NFT. To mint your Profile you will need to accept BOTH transactions.</p>
           {isSubmit && (
             <Button variant="primary" size="lg">
               Minting Your Profile...
@@ -605,7 +625,7 @@ export default function Profile() {
             {whitelisted &&
               <p>Price: 0 MMOSH</p>
             }
-            <label>plus a small amount of SOL for gas fees</label>
+            <label>Plus at least 0.03 SOL in fees. Note: this amount will be reduced when the protocol is optimized. Sorry for the temporary inconvenience.</label>
           </div>
           <div className="balance-details">
             <p>Current Balance: {tokBalance} MMOSH</p>
