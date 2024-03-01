@@ -472,15 +472,21 @@ export class Connectivity {
       const profileState = this.__getProfileStateAccount(profile);
       const profileStateInfo =
         await this.program.account.profileState.fetch(profileState);
-      if (profileStateInfo.activationToken)
-        return {
-          Ok: {
-            signature: "",
-            info: {
-              subscriptionToken: profileStateInfo.activationToken.toBase58(),
+
+      if (profileStateInfo.activationToken) {
+        let hasInvitation = await this.isCreatorInvitation(profileStateInfo.activationToken,user.toBase58());
+        if(hasInvitation) {
+          return {
+            Ok: {
+              signature: "",
+              info: {
+                subscriptionToken: profileStateInfo.activationToken.toBase58(),
+              },
             },
-          },
-        };
+          };
+        }
+      }
+
       const profileMetadata = BaseMpl.getMetadataAccount(profile);
       const profileEdition = BaseMpl.getEditionAccount(profile);
       const profileCollectionAuthorityRecord =

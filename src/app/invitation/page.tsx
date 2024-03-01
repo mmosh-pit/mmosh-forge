@@ -69,8 +69,10 @@ export default function Invitation() {
     setProfileLineage(profileInfo.profilelineage);
     setGeneration(profileInfo.generation);
     const totalMints = profileInfo.totalChild;
-    if (totalMints > 0 || profileInfo.activationTokenBalance > 0) {
-      setFirstTime(false);
+    if (profileInfo.activationTokens.length > 0) {
+      if(profileInfo.activationTokens[0].activation != "") {
+          setFirstTime(false);
+      }
     }
     const totalChilds = totalMints;
     if (totalChilds < 3) {
