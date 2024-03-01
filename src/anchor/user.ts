@@ -813,6 +813,27 @@ export class Connectivity {
     return mintList;
   }
 
+  async isCreatorInvitation(mintAddress: web3.PublicKey, userAddress: string) {
+
+    try {
+      const mintData = await this.metaplex
+        .nfts()
+        .findByMint({ mintAddress });
+      if(mintData.creators.length == 0) {
+          return false;
+      }
+      for (let index = 0; index < mintData.creators.length; index++) {
+          if(mintData.creators[index].address.toBase58() == userAddress) {
+              return true;
+          }
+      }
+      return false;
+    } catch (error) {
+      return false;
+    }
+
+  }
+
   async getUserInfo() {
     const user = this.provider.publicKey;
     if (!user) throw "Wallet not found";
@@ -885,16 +906,21 @@ export class Connectivity {
         const genesisProfile = new anchor.web3.PublicKey(profiles[0].address);
         const profileState = this.__getProfileStateAccount(genesisProfile);
         const profileStateInfo =
-          await this.program.account.profileState.fetch(profileState);
+        await this.program.account.profileState.fetch(profileState);
         console.log("profileStateInfo ", profileStateInfo);
+        let hasInvitation:any = false
         if (profileStateInfo.activationToken) {
-          const userActivationAta = getAssociatedTokenAddressSync(
-            profileStateInfo.activationToken,
-            user,
-          );
-          activationTokenBalance = await this.getActivationTokenBalance(
-            profileStateInfo.activationToken,
-          );
+          hasInvitation = await this.isCreatorInvitation(profileStateInfo.activationToken,user.toBase58());
+          if(hasInvitation) {
+            const userActivationAta = getAssociatedTokenAddressSync(
+              profileStateInfo.activationToken,
+              user,
+            );
+            activationTokenBalance = await this.getActivationTokenBalance(
+              profileStateInfo.activationToken,
+            );
+          }
+
         }
         totalChild = profileStateInfo.lineage.totalChild.toNumber();
         generation = profileStateInfo.lineage.generation.toString();
@@ -905,7 +931,7 @@ export class Connectivity {
             activationTokens.push({
               name: i.name,
               genesis: genesisProfile.toBase58(),
-              activation: profileStateInfo.activationToken
+              activation: hasInvitation
                 ? profileStateInfo.activationToken.toBase58()
                 : "",
             });
