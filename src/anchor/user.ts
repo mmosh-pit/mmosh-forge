@@ -59,6 +59,7 @@ export class Connectivity {
   constructor(provider: AnchorProvider, programId: web3.PublicKey) {
     // web3.SystemProgram.programId;
     // this.connection = new web3.Connection(Config.rpcURL);
+    // this.provider = new anchor.AnchorProvider(this.connection, wallet, {
     // });
     this.provider = provider;
     this.connection = provider.connection;
@@ -412,6 +413,10 @@ export class Connectivity {
       this.txis = [];
 
       const signature = await this.provider.sendAndConfirm(tx as any);
+      const updatewhitelist1 = await this.updateProfileMintingStatus(
+        user.toBase58(),
+        false,
+      );
 
       const lineageResult = await this.storeLineage(
         user.toBase58(),
@@ -505,16 +510,6 @@ export class Connectivity {
         activationToken,
         user,
       );
-
-      const mainStateInfo = await this.program.account.mainState.fetch(
-        this.mainState,
-      );
-      const parentCollection = web3Consts.badgeCollection;
-      const parentCollectionMetadata =
-        BaseMpl.getMetadataAccount(parentCollection);
-      const parentCollectionEdition =
-        BaseMpl.getEditionAccount(parentCollection);
-
       const ix = await this.program.methods
         .initActivationToken(name, symbol, uri)
         .accounts({
@@ -535,9 +530,6 @@ export class Connectivity {
           userActivationTokenAta,
           activationTokenMetadata,
           profileCollectionAuthorityRecord,
-          parentCollection,
-          parentCollectionMetadata,
-          parentCollectionEdition,
         })
         .instruction();
       this.txis.push(ix);
@@ -834,12 +826,6 @@ export class Connectivity {
   async isCreatorInvitation(mintAddress: web3.PublicKey, userAddress: string) {
     try {
       const mintData = await this.metaplex.nfts().findByMint({ mintAddress });
-      if (
-        mintData.collection.address.toBase58() !=
-        web3Consts.badgeCollection.toBase58()
-      ) {
-        return false;
-      }
       if (mintData.creators.length == 0) {
         return false;
       }
@@ -986,23 +972,7 @@ export class Connectivity {
         for (let i of _userNfts) {
           if (i) {
             if (i.symbol) {
-              const collectionInfo = i?.collection;
-
-              if (
-                collectionInfo?.address.toBase58() ==
-                web3Consts.badgeCollection.toBase58()
-              ) {
-                let isCreator = false;
-                console.log("i.creators", i.creators);
-                for (let index = 0; index < i.creators.length; index++) {
-                  if (i.creators[index].address.toBase58() == user.toBase58()) {
-                    isCreator = true;
-                    break;
-                  }
-                }
-                if (isCreator) {
-                  continue;
-                }
+              if (i.symbol == "INVITE") {
                 try {
                   const nftInfo: any = i;
                   console.log("token address ", nftInfo.mintAddress.toBase58());

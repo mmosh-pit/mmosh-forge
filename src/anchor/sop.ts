@@ -1,2957 +1,2721 @@
 export type Sop = {
-  "version": "0.1.0",
-  "name": "sop",
-  "instructions": [
+  version: "0.1.0";
+  name: "sop";
+  instructions: [
     {
-      "name": "initMainState",
-      "accounts": [
+      name: "initMainState";
+      accounts: [
         {
-          "name": "owner",
-          "isMut": true,
-          "isSigner": true
+          name: "owner";
+          isMut: true;
+          isSigner: true;
         },
         {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
+          name: "mainState";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
+          name: "systemProgram";
+          isMut: false;
+          isSigner: false;
+        },
+      ];
+      args: [
         {
-          "name": "input",
-          "type": {
-            "defined": "MainStateInput"
-          }
-        }
-      ]
+          name: "input";
+          type: {
+            defined: "MainStateInput";
+          };
+        },
+      ];
     },
     {
-      "name": "updateMainState",
-      "accounts": [
+      name: "updateMainState";
+      accounts: [
         {
-          "name": "owner",
-          "isMut": true,
-          "isSigner": true
+          name: "owner";
+          isMut: true;
+          isSigner: true;
         },
         {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        }
-      ],
-      "args": [
+          name: "mainState";
+          isMut: true;
+          isSigner: false;
+        },
+      ];
+      args: [
         {
-          "name": "input",
-          "type": {
-            "defined": "MainStateInput"
-          }
-        }
-      ]
+          name: "input";
+          type: {
+            defined: "MainStateInput";
+          };
+        },
+      ];
     },
     {
-      "name": "updateMainStateOwner",
-      "accounts": [
+      name: "updateMainStateOwner";
+      accounts: [
         {
-          "name": "owner",
-          "isMut": true,
-          "isSigner": true
+          name: "owner";
+          isMut: true;
+          isSigner: true;
         },
         {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        }
-      ],
-      "args": [
+          name: "mainState";
+          isMut: true;
+          isSigner: false;
+        },
+      ];
+      args: [
         {
-          "name": "newOwner",
-          "type": "publicKey"
-        }
-      ]
+          name: "newOwner";
+          type: "publicKey";
+        },
+      ];
     },
     {
-      "name": "setCommonLut",
-      "accounts": [
+      name: "setCommonLut";
+      accounts: [
         {
-          "name": "owner",
-          "isMut": true,
-          "isSigner": true
+          name: "owner";
+          isMut: true;
+          isSigner: true;
         },
         {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        }
-      ],
-      "args": [
+          name: "mainState";
+          isMut: true;
+          isSigner: false;
+        },
+      ];
+      args: [
         {
-          "name": "lut",
-          "type": "publicKey"
-        }
-      ]
+          name: "lut";
+          type: "publicKey";
+        },
+      ];
     },
     {
-      "name": "resetMain",
-      "accounts": [
+      name: "resetMain";
+      accounts: [
         {
-          "name": "owner",
-          "isMut": true,
-          "isSigner": true
+          name: "owner";
+          isMut: true;
+          isSigner: true;
         },
         {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
+          name: "mainState";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
+          name: "systemProgram";
+          isMut: false;
+          isSigner: false;
+        },
+      ];
+      args: [];
     },
     {
-      "name": "createCollection",
-      "accounts": [
+      name: "createProfileCollection";
+      accounts: [
         {
-          "name": "admin",
-          "isMut": true,
-          "isSigner": true
+          name: "admin";
+          isMut: true;
+          isSigner: true;
         },
         {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
+          name: "mainState";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "collection",
-          "isMut": true,
-          "isSigner": false
+          name: "collection";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "adminAta",
-          "isMut": true,
-          "isSigner": false
+          name: "adminAta";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "collectionState",
-          "isMut": true,
-          "isSigner": false
+          name: "collectionState";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "collectionMetadata",
-          "isMut": true,
-          "isSigner": false
+          name: "collectionMetadata";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "collectionEdition",
-          "isMut": true,
-          "isSigner": false
+          name: "collectionEdition";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "collectionAuthorityRecord",
-          "isMut": true,
-          "isSigner": false
+          name: "collectionAuthorityRecord";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "sysvarInstructions",
-          "isMut": false,
-          "isSigner": false
+          name: "sysvarInstructions";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "parentCollection",
-          "isMut": true,
-          "isSigner": false
+          name: "mplProgram";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "parentCollectionMetadata",
-          "isMut": true,
-          "isSigner": false
+          name: "tokenProgram";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "parentCollectionEdition",
-          "isMut": true,
-          "isSigner": false
+          name: "associatedTokenProgram";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "systemProgram";
+          isMut: false;
+          isSigner: false;
+        },
+      ];
+      args: [
+        {
+          name: "name";
+          type: "string";
         },
         {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "symbol";
+          type: "string";
         },
         {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "uri";
+          type: "string";
         },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "name": "symbol",
-          "type": "string"
-        },
-        {
-          "name": "uri",
-          "type": "string"
-        },
-        {
-          "name": "collectionType",
-          "type": "string"
-        }
-      ]
+      ];
     },
     {
-      "name": "updateCollection",
-      "accounts": [
+      name: "mintGenesisProfile";
+      accounts: [
         {
-          "name": "admin",
-          "isMut": true,
-          "isSigner": true
+          name: "admin";
+          isMut: true;
+          isSigner: true;
         },
         {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
+          name: "mainState";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "collection",
-          "isMut": true,
-          "isSigner": false
+          name: "profile";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "collectionMetadata",
-          "isMut": true,
-          "isSigner": false
+          name: "adminAta";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "collectionEdition",
-          "isMut": true,
-          "isSigner": false
+          name: "profileState";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "sysvarInstructions",
-          "isMut": false,
-          "isSigner": false
+          name: "profileMetadata";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "parentCollection",
-          "isMut": true,
-          "isSigner": false
+          name: "profileEdition";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "parentCollectionMetadata",
-          "isMut": true,
-          "isSigner": false
+          name: "collection";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "parentCollectionEdition",
-          "isMut": true,
-          "isSigner": false
+          name: "collectionState";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "collectionMetadata";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "collectionEdition";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "collectionAuthorityRecord";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "name",
-          "type": "string"
+          name: "subCollectionAuthorityRecord";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "symbol",
-          "type": "string"
+          name: "sysvarInstructions";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "uri",
-          "type": "string"
-        }
-      ]
+          name: "mplProgram";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "tokenProgram";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "associatedTokenProgram";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "systemProgram";
+          isMut: false;
+          isSigner: false;
+        },
+      ];
+      args: [
+        {
+          name: "input";
+          type: {
+            defined: "MintProfileByAdminInput";
+          };
+        },
+      ];
     },
     {
-      "name": "mintGenesisProfile",
-      "accounts": [
+      name: "mintProfileByAt";
+      accounts: [
         {
-          "name": "admin",
-          "isMut": true,
-          "isSigner": true
+          name: "user";
+          isMut: true;
+          isSigner: true;
         },
         {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
+          name: "mplProgram";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "profile",
-          "isMut": true,
-          "isSigner": false
+          name: "tokenProgram";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "adminAta",
-          "isMut": true,
-          "isSigner": false
+          name: "associatedTokenProgram";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "profileState",
-          "isMut": true,
-          "isSigner": false
+          name: "systemProgram";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "profileMetadata",
-          "isMut": true,
-          "isSigner": false
+          name: "oposToken";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "profileEdition",
-          "isMut": true,
-          "isSigner": false
+          name: "userActivationTokenAta";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "collection",
-          "isMut": true,
-          "isSigner": false
+          name: "mainState";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "collectionState",
-          "isMut": true,
-          "isSigner": false
+          name: "activationToken";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "collectionMetadata",
-          "isMut": true,
-          "isSigner": false
+          name: "profile";
+          isMut: true;
+          isSigner: true;
         },
         {
-          "name": "collectionEdition",
-          "isMut": true,
-          "isSigner": false
+          name: "userProfileAta";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "collectionAuthorityRecord",
-          "isMut": true,
-          "isSigner": false
+          name: "profileState";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "subCollectionAuthorityRecord",
-          "isMut": true,
-          "isSigner": false
+          name: "profileMetadata";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "sysvarInstructions",
-          "isMut": false,
-          "isSigner": false
+          name: "profileEdition";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "parentProfileState";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "collection";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "collectionMetadata";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
+          name: "collectionEdition";
+          isMut: true;
+          isSigner: false;
+        },
         {
-          "name": "input",
-          "type": {
-            "defined": "MintProfileByAdminInput"
-          }
-        }
-      ]
+          name: "newLut";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "addressLookupTableProgram";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "sysvarInstructions";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "parentProfile";
+          isMut: false;
+          isSigner: false;
+        },
+      ];
+      args: [
+        {
+          name: "name";
+          type: "string";
+        },
+        {
+          name: "symbol";
+          type: "string";
+        },
+        {
+          name: "uriHash";
+          type: "string";
+        },
+        {
+          name: "recentSlot";
+          type: "u64";
+        },
+      ];
     },
     {
-      "name": "mintProfileByAt",
-      "accounts": [
+      name: "mintProfileDistribution";
+      accounts: [
         {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
+          name: "user";
+          isMut: true;
+          isSigner: true;
         },
         {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "oposToken";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "mainState";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "parentProfileState";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "mplProgram";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "oposToken",
-          "isMut": false,
-          "isSigner": false
+          name: "tokenProgram";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "userActivationTokenAta",
-          "isMut": true,
-          "isSigner": false
+          name: "associatedTokenProgram";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
+          name: "systemProgram";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "activationToken",
-          "isMut": true,
-          "isSigner": false
+          name: "parentProfile";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "profile",
-          "isMut": true,
-          "isSigner": true
+          name: "grandParentProfile";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "userProfileAta",
-          "isMut": true,
-          "isSigner": false
+          name: "greatGrandParentProfile";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "profileState",
-          "isMut": true,
-          "isSigner": false
+          name: "ggreateGrandParentProfile";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "profileMetadata",
-          "isMut": true,
-          "isSigner": false
+          name: "genesisProfile";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "profileEdition",
-          "isMut": true,
-          "isSigner": false
+          name: "currentParentProfileHolderAta";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "parentProfileState",
-          "isMut": true,
-          "isSigner": false
+          name: "currentGrandParentProfileHolderAta";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "collection",
-          "isMut": true,
-          "isSigner": false
+          name: "currentGreatGrandParentProfileHolderAta";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "collectionMetadata",
-          "isMut": true,
-          "isSigner": false
+          name: "currentGgreatGrandParentProfileHolderAta";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "collectionEdition",
-          "isMut": true,
-          "isSigner": false
+          name: "currentGenesisProfileHolderAta";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "newLut",
-          "isMut": true,
-          "isSigner": false
+          name: "currentParentProfileHolder";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "addressLookupTableProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "currentGrandParentProfileHolder";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "sysvarInstructions",
-          "isMut": false,
-          "isSigner": false
+          name: "currentGreatGrandParentProfileHolder";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "parentProfile",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "name",
-          "type": "string"
+          name: "currentGgreatGrandParentProfileHolder";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "symbol",
-          "type": "string"
+          name: "currentGenesisProfileHolder";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "uriHash",
-          "type": "string"
+          name: "userOposAta";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "recentSlot",
-          "type": "u64"
-        }
-      ]
+          name: "parentProfileHolderOposAta";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "grandParentProfileHolderOposAta";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "greatGrandParentProfileHolderOposAta";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "ggreatGrandParentProfileHolderOposAta";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "genesisProfileHolderOposAta";
+          isMut: true;
+          isSigner: false;
+        },
+      ];
+      args: [];
     },
     {
-      "name": "mintProfileDistribution",
-      "accounts": [
+      name: "initActivationToken";
+      accounts: [
         {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
+          name: "user";
+          isMut: true;
+          isSigner: true;
         },
         {
-          "name": "oposToken",
-          "isMut": false,
-          "isSigner": false
+          name: "userProfileAta";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
+          name: "userActivationTokenAta";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "parentProfileState",
-          "isMut": true,
-          "isSigner": false
+          name: "mainState";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "activationToken";
+          isMut: true;
+          isSigner: true;
         },
         {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "activationTokenState";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "activationTokenMetadata";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "profile";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "parentProfile",
-          "isMut": false,
-          "isSigner": false
+          name: "profileState";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "grandParentProfile",
-          "isMut": false,
-          "isSigner": false
+          name: "profileMetadata";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "greatGrandParentProfile",
-          "isMut": false,
-          "isSigner": false
+          name: "profileEdition";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "ggreateGrandParentProfile",
-          "isMut": false,
-          "isSigner": false
+          name: "profileCollectionAuthorityRecord";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "genesisProfile",
-          "isMut": false,
-          "isSigner": false
+          name: "sysvarInstructions";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "currentParentProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
+          name: "mplProgram";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "currentGrandParentProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
+          name: "associatedTokenProgram";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "currentGreatGrandParentProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
+          name: "tokenProgram";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "currentGgreatGrandParentProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
+          name: "systemProgram";
+          isMut: false;
+          isSigner: false;
+        },
+      ];
+      args: [
+        {
+          name: "name";
+          type: "string";
         },
         {
-          "name": "currentGenesisProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
+          name: "symbol";
+          type: "string";
         },
         {
-          "name": "currentParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
+          name: "uri";
+          type: "string";
         },
-        {
-          "name": "currentGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGreatGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGgreatGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGenesisProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "userOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "grandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "greatGrandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ggreatGrandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "genesisProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        }
-      ],
-      "args": []
+      ];
     },
     {
-      "name": "initActivationToken",
-      "accounts": [
+      name: "mintActivationToken";
+      accounts: [
         {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
+          name: "minter";
+          isMut: true;
+          isSigner: true;
         },
         {
-          "name": "userProfileAta",
-          "isMut": true,
-          "isSigner": false
+          name: "minterProfileAta";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "userActivationTokenAta",
-          "isMut": true,
-          "isSigner": false
+          name: "receiverAta";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
+          name: "mainState";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "activationToken",
-          "isMut": true,
-          "isSigner": true
+          name: "activationToken";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "activationTokenState",
-          "isMut": true,
-          "isSigner": false
+          name: "activationTokenState";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "activationTokenMetadata",
-          "isMut": true,
-          "isSigner": false
+          name: "profile";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "profile",
-          "isMut": false,
-          "isSigner": false
+          name: "profileState";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "profileState",
-          "isMut": true,
-          "isSigner": false
+          name: "tokenProgram";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "profileMetadata",
-          "isMut": true,
-          "isSigner": false
+          name: "associatedTokenProgram";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "profileEdition",
-          "isMut": true,
-          "isSigner": false
+          name: "systemProgram";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "profileCollectionAuthorityRecord",
-          "isMut": true,
-          "isSigner": false
+          name: "parentProfile";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "parentCollection",
-          "isMut": true,
-          "isSigner": false
+          name: "grandParentProfile";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "parentCollectionMetadata",
-          "isMut": true,
-          "isSigner": false
+          name: "greatGrandParentProfile";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "parentCollectionEdition",
-          "isMut": true,
-          "isSigner": false
+          name: "ggreateGrandParentProfile";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "sysvarInstructions",
-          "isMut": false,
-          "isSigner": false
+          name: "genesisProfile";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "parentProfileState";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "oposToken";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "currentParentProfileHolderAta";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "name",
-          "type": "string"
+          name: "currentGrandParentProfileHolderAta";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "symbol",
-          "type": "string"
+          name: "currentGreatGrandParentProfileHolderAta";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "uri",
-          "type": "string"
-        }
-      ]
+          name: "currentGgreatGrandParentProfileHolderAta";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "currentGenesisProfileHolderAta";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "currentParentProfileHolder";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "currentGrandParentProfileHolder";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "currentGreatGrandParentProfileHolder";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "currentGgreatGrandParentProfileHolder";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "currentGenesisProfileHolder";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "userOposAta";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "parentProfileHolderOposAta";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "grandParentProfileHolderOposAta";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "greatGrandParentProfileHolderOposAta";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "ggreatGrandParentProfileHolderOposAta";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "genesisProfileHolderOposAta";
+          isMut: true;
+          isSigner: false;
+        },
+      ];
+      args: [
+        {
+          name: "amount";
+          type: "u64";
+        },
+      ];
     },
     {
-      "name": "mintActivationToken",
-      "accounts": [
+      name: "mintOffer";
+      accounts: [
         {
-          "name": "minter",
-          "isMut": true,
-          "isSigner": true
+          name: "user";
+          isMut: true;
+          isSigner: true;
         },
         {
-          "name": "minterProfileAta",
-          "isMut": true,
-          "isSigner": false
+          name: "userProfileAta";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "receiverAta",
-          "isMut": true,
-          "isSigner": false
+          name: "userOfferAta";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
+          name: "mainState";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "activationToken",
-          "isMut": true,
-          "isSigner": false
+          name: "offer";
+          isMut: true;
+          isSigner: true;
         },
         {
-          "name": "activationTokenState",
-          "isMut": true,
-          "isSigner": false
+          name: "offerMetadata";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "profile",
-          "isMut": false,
-          "isSigner": false
+          name: "offerEdition";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "profileState",
-          "isMut": true,
-          "isSigner": false
+          name: "profile";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "profileState";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "profileMetadata";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "profileEdition";
+          isMut: true;
+          isSigner: false;
         },
         {
-          "name": "parentProfile",
-          "isMut": false,
-          "isSigner": false
+          name: "sysvarInstructions";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "grandParentProfile",
-          "isMut": false,
-          "isSigner": false
+          name: "mplProgram";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "greatGrandParentProfile",
-          "isMut": false,
-          "isSigner": false
+          name: "associatedTokenProgram";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "ggreateGrandParentProfile",
-          "isMut": false,
-          "isSigner": false
+          name: "tokenProgram";
+          isMut: false;
+          isSigner: false;
         },
         {
-          "name": "genesisProfile",
-          "isMut": false,
-          "isSigner": false
+          name: "systemProgram";
+          isMut: false;
+          isSigner: false;
+        },
+      ];
+      args: [
+        {
+          name: "name";
+          type: "string";
         },
         {
-          "name": "parentProfileState",
-          "isMut": true,
-          "isSigner": false
+          name: "symbol";
+          type: "string";
         },
         {
-          "name": "oposToken",
-          "isMut": false,
-          "isSigner": false
+          name: "uri";
+          type: "string";
         },
-        {
-          "name": "currentParentProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGrandParentProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGreatGrandParentProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGgreatGrandParentProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGenesisProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGreatGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGgreatGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGenesisProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "userOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "grandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "greatGrandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ggreatGrandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "genesisProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "amount",
-          "type": "u64"
-        }
-      ]
+      ];
+    },
+  ];
+  accounts: [
+    {
+      name: "mainState";
+      type: {
+        kind: "struct";
+        fields: [
+          {
+            name: "owner";
+            type: "publicKey";
+          },
+          {
+            name: "oposToken";
+            type: "publicKey";
+          },
+          {
+            name: "profileMintingCost";
+            type: "u64";
+          },
+          {
+            name: "invitationMintingCost";
+            type: "u64";
+          },
+          {
+            name: "mintingCostDistribution";
+            type: {
+              defined: "MintingCostDistribution";
+            };
+          },
+          {
+            name: "tradingPriceDistribution";
+            type: {
+              defined: "TradingPriceDistribution";
+            };
+          },
+          {
+            name: "sellerFeeBasisPoints";
+            type: "u16";
+          },
+          {
+            name: "bump";
+            type: "u8";
+          },
+          {
+            name: "totalMintedProfile";
+            type: "u64";
+          },
+          {
+            name: "profileCollection";
+            type: "publicKey";
+          },
+          {
+            name: "genesisProfile";
+            type: "publicKey";
+          },
+          {
+            name: "commonLut";
+            type: "publicKey";
+          },
+        ];
+      };
     },
     {
-      "name": "mintOffer",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "userProfileAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userOfferAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "offer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "offerMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "offerEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profile",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "profileState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "sysvarInstructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "name": "symbol",
-          "type": "string"
-        },
-        {
-          "name": "uri",
-          "type": "string"
-        }
-      ]
-    }
-  ],
-  "accounts": [
-    {
-      "name": "mainState",
-      "type": {
-        "kind": "struct",
-        "fields": [
+      name: "activationTokenState";
+      type: {
+        kind: "struct";
+        fields: [
           {
-            "name": "owner",
-            "type": "publicKey"
+            name: "parentProfile";
+            type: "publicKey";
           },
           {
-            "name": "oposToken",
-            "type": "publicKey"
+            name: "creator";
+            type: "publicKey";
           },
-          {
-            "name": "profileMintingCost",
-            "type": "u64"
-          },
-          {
-            "name": "invitationMintingCost",
-            "type": "u64"
-          },
-          {
-            "name": "mintingCostDistribution",
-            "type": {
-              "defined": "MintingCostDistribution"
-            }
-          },
-          {
-            "name": "tradingPriceDistribution",
-            "type": {
-              "defined": "TradingPriceDistribution"
-            }
-          },
-          {
-            "name": "sellerFeeBasisPoints",
-            "type": "u16"
-          },
-          {
-            "name": "bump",
-            "type": "u8"
-          },
-          {
-            "name": "totalMintedProfile",
-            "type": "u64"
-          },
-          {
-            "name": "profileCollection",
-            "type": "publicKey"
-          },
-          {
-            "name": "genesisProfile",
-            "type": "publicKey"
-          },
-          {
-            "name": "commonLut",
-            "type": "publicKey"
-          }
-        ]
-      }
+        ];
+      };
     },
     {
-      "name": "activationTokenState",
-      "type": {
-        "kind": "struct",
-        "fields": [
+      name: "collectionState";
+      type: {
+        kind: "struct";
+        fields: [
           {
-            "name": "parentProfile",
-            "type": "publicKey"
+            name: "genesisProfile";
+            type: "publicKey";
           },
           {
-            "name": "creator",
-            "type": "publicKey"
-          }
-        ]
-      }
+            name: "collectionId";
+            type: "publicKey";
+          },
+        ];
+      };
     },
     {
-      "name": "collectionState",
-      "type": {
-        "kind": "struct",
-        "fields": [
+      name: "fakeIdState";
+      type: {
+        kind: "struct";
+        fields: [
           {
-            "name": "genesisProfile",
-            "type": "publicKey"
+            name: "lineage";
+            type: {
+              defined: "LineageInfo";
+            };
           },
           {
-            "name": "collectionId",
-            "type": "publicKey"
-          }
-        ]
-      }
+            name: "mint";
+            type: "publicKey";
+          },
+        ];
+      };
     },
     {
-      "name": "fakeIdState",
-      "type": {
-        "kind": "struct",
-        "fields": [
+      name: "profileState";
+      type: {
+        kind: "struct";
+        fields: [
           {
-            "name": "lineage",
-            "type": {
-              "defined": "LineageInfo"
-            }
+            name: "lineage";
+            type: {
+              defined: "LineageInfo";
+            };
           },
           {
-            "name": "mint",
-            "type": "publicKey"
-          }
-        ]
-      }
+            name: "mint";
+            type: "publicKey";
+          },
+          {
+            name: "activationToken";
+            type: {
+              option: "publicKey";
+            };
+          },
+          {
+            name: "totalMintedSft";
+            type: "u64";
+          },
+          {
+            name: "totalMintedOffers";
+            type: "u64";
+          },
+          {
+            name: "lut";
+            type: "publicKey";
+          },
+        ];
+      };
+    },
+  ];
+  types: [
+    {
+      name: "MainStateInput";
+      type: {
+        kind: "struct";
+        fields: [
+          {
+            name: "profileMintingCost";
+            type: "u64";
+          },
+          {
+            name: "invitationMintingCost";
+            type: "u64";
+          },
+          {
+            name: "oposToken";
+            type: "publicKey";
+          },
+          {
+            name: "mintingCostDistribution";
+            type: {
+              defined: "MintingCostDistribution";
+            };
+          },
+          {
+            name: "tradingPriceDistribution";
+            type: {
+              defined: "TradingPriceDistribution";
+            };
+          },
+        ];
+      };
     },
     {
-      "name": "profileState",
-      "type": {
-        "kind": "struct",
-        "fields": [
+      name: "LineageInfo";
+      type: {
+        kind: "struct";
+        fields: [
           {
-            "name": "lineage",
-            "type": {
-              "defined": "LineageInfo"
-            }
+            name: "creator";
+            type: "publicKey";
           },
           {
-            "name": "mint",
-            "type": "publicKey"
+            name: "parent";
+            type: "publicKey";
           },
           {
-            "name": "activationToken",
-            "type": {
-              "option": "publicKey"
-            }
+            name: "grandParent";
+            type: "publicKey";
           },
           {
-            "name": "totalMintedSft",
-            "type": "u64"
+            name: "greatGrandParent";
+            type: "publicKey";
           },
           {
-            "name": "totalMintedOffers",
-            "type": "u64"
+            name: "ggreatGrandParent";
+            type: "publicKey";
           },
           {
-            "name": "lut",
-            "type": "publicKey"
-          }
-        ]
-      }
-    }
-  ],
-  "types": [
-    {
-      "name": "MainStateInput",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "profileMintingCost",
-            "type": "u64"
+            name: "generation";
+            type: "u64";
           },
           {
-            "name": "invitationMintingCost",
-            "type": "u64"
+            name: "totalChild";
+            type: "u64";
           },
-          {
-            "name": "oposToken",
-            "type": "publicKey"
-          },
-          {
-            "name": "mintingCostDistribution",
-            "type": {
-              "defined": "MintingCostDistribution"
-            }
-          },
-          {
-            "name": "tradingPriceDistribution",
-            "type": {
-              "defined": "TradingPriceDistribution"
-            }
-          }
-        ]
-      }
+        ];
+      };
     },
     {
-      "name": "LineageInfo",
-      "type": {
-        "kind": "struct",
-        "fields": [
+      name: "MintingCostDistribution";
+      type: {
+        kind: "struct";
+        fields: [
           {
-            "name": "creator",
-            "type": "publicKey"
+            name: "parent";
+            type: "u16";
           },
           {
-            "name": "parent",
-            "type": "publicKey"
+            name: "grandParent";
+            type: "u16";
           },
           {
-            "name": "grandParent",
-            "type": "publicKey"
+            name: "greatGrandParent";
+            type: "u16";
           },
           {
-            "name": "greatGrandParent",
-            "type": "publicKey"
+            name: "ggreatGrandParent";
+            type: "u16";
           },
           {
-            "name": "ggreatGrandParent",
-            "type": "publicKey"
+            name: "genesis";
+            type: "u16";
           },
-          {
-            "name": "generation",
-            "type": "u64"
-          },
-          {
-            "name": "totalChild",
-            "type": "u64"
-          }
-        ]
-      }
+        ];
+      };
     },
     {
-      "name": "MintingCostDistribution",
-      "type": {
-        "kind": "struct",
-        "fields": [
+      name: "TradingPriceDistribution";
+      type: {
+        kind: "struct";
+        fields: [
           {
-            "name": "parent",
-            "type": "u16"
+            name: "seller";
+            type: "u16";
           },
           {
-            "name": "grandParent",
-            "type": "u16"
+            name: "parent";
+            type: "u16";
           },
           {
-            "name": "greatGrandParent",
-            "type": "u16"
+            name: "grandParent";
+            type: "u16";
           },
           {
-            "name": "ggreatGrandParent",
-            "type": "u16"
+            name: "greatGrandParent";
+            type: "u16";
           },
           {
-            "name": "genesis",
-            "type": "u16"
-          }
-        ]
-      }
+            name: "genesis";
+            type: "u16";
+          },
+        ];
+      };
     },
     {
-      "name": "TradingPriceDistribution",
-      "type": {
-        "kind": "struct",
-        "fields": [
+      name: "MintProfileByAdminInput";
+      type: {
+        kind: "struct";
+        fields: [
           {
-            "name": "seller",
-            "type": "u16"
+            name: "name";
+            type: "string";
           },
           {
-            "name": "parent",
-            "type": "u16"
+            name: "symbol";
+            type: "string";
           },
           {
-            "name": "grandParent",
-            "type": "u16"
+            name: "uri";
+            type: "string";
           },
           {
-            "name": "greatGrandParent",
-            "type": "u16"
+            name: "lineage";
+            type: {
+              defined: "LineageInfo";
+            };
           },
           {
-            "name": "genesis",
-            "type": "u16"
-          }
-        ]
-      }
+            name: "parentMint";
+            type: "publicKey";
+          },
+        ];
+      };
     },
     {
-      "name": "MintProfileByAdminInput",
-      "type": {
-        "kind": "struct",
-        "fields": [
+      name: "MintProfileByAtInput";
+      type: {
+        kind: "struct";
+        fields: [
           {
-            "name": "name",
-            "type": "string"
+            name: "name";
+            type: "string";
           },
           {
-            "name": "symbol",
-            "type": "string"
+            name: "symbol";
+            type: "string";
           },
           {
-            "name": "uri",
-            "type": "string"
+            name: "uriHash";
+            type: "string";
           },
           {
-            "name": "lineage",
-            "type": {
-              "defined": "LineageInfo"
-            }
+            name: "recentSlot";
+            type: "u64";
           },
-          {
-            "name": "parentMint",
-            "type": "publicKey"
-          }
-        ]
-      }
+        ];
+      };
+    },
+  ];
+  errors: [
+    {
+      code: 6000;
+      name: "FirstError";
+      msg: "first erorr";
     },
     {
-      "name": "MintProfileByAtInput",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "name": "symbol",
-            "type": "string"
-          },
-          {
-            "name": "uriHash",
-            "type": "string"
-          },
-          {
-            "name": "recentSlot",
-            "type": "u64"
-          }
-        ]
-      }
-    }
-  ],
-  "errors": [
-    {
-      "code": 6000,
-      "name": "FirstError",
-      "msg": "first erorr"
+      code: 6001;
+      name: "AlreadySet";
+      msg: "Value assing already";
     },
     {
-      "code": 6001,
-      "name": "AlreadySet",
-      "msg": "Value assing already"
+      code: 6002;
+      name: "OnlyOwnerCanCall";
+      msg: "This method can only be called by onwer";
     },
     {
-      "code": 6002,
-      "name": "OnlyOwnerCanCall",
-      "msg": "This method can only be called by onwer"
+      code: 6003;
+      name: "UnknownNft";
+      msg: "Unknown NFT";
     },
     {
-      "code": 6003,
-      "name": "UnknownNft",
-      "msg": "Unknown NFT"
+      code: 6004;
+      name: "InvalidNftHolder";
+      msg: "Invalid Nft holder";
     },
     {
-      "code": 6004,
-      "name": "InvalidNftHolder",
-      "msg": "Invalid Nft holder"
+      code: 6005;
+      name: "GenesisNftAlreadyMinted";
+      msg: "Genesis nft already created";
     },
     {
-      "code": 6005,
-      "name": "GenesisNftAlreadyMinted",
-      "msg": "Genesis nft already created"
+      code: 6006;
+      name: "ActivationTokenNotFound";
+      msg: "Activation token not found";
     },
     {
-      "code": 6006,
-      "name": "ActivationTokenNotFound",
-      "msg": "Activation token not found"
+      code: 6007;
+      name: "ActivationTokenAlreadyInitialize";
+      msg: "Activation Token already initialize";
     },
     {
-      "code": 6007,
-      "name": "ActivationTokenAlreadyInitialize",
-      "msg": "Activation Token already initialize"
+      code: 6008;
+      name: "OnlyProfileHolderAllow";
+      msg: "Only Profile Holder can call";
     },
     {
-      "code": 6008,
-      "name": "OnlyProfileHolderAllow",
-      "msg": "Only Profile Holder can call"
+      code: 6009;
+      name: "NotEnoughTokenToMint";
+      msg: "Not have enough token to mint";
     },
     {
-      "code": 6009,
-      "name": "NotEnoughTokenToMint",
-      "msg": "Not have enough token to mint"
+      code: 6010;
+      name: "ProfileIdMissMatch";
+      msg: "Profile ID missmatch";
     },
-    {
-      "code": 6010,
-      "name": "ProfileIdMissMatch",
-      "msg": "Profile ID missmatch"
-    }
-  ]
+  ];
 };
 
 export const IDL: Sop = {
-  "version": "0.1.0",
-  "name": "sop",
-  "instructions": [
+  version: "0.1.0",
+  name: "sop",
+  instructions: [
     {
-      "name": "initMainState",
-      "accounts": [
+      name: "initMainState",
+      accounts: [
         {
-          "name": "owner",
-          "isMut": true,
-          "isSigner": true
+          name: "owner",
+          isMut: true,
+          isSigner: true,
         },
         {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
+          name: "mainState",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
+          name: "systemProgram",
+          isMut: false,
+          isSigner: false,
+        },
       ],
-      "args": [
+      args: [
         {
-          "name": "input",
-          "type": {
-            "defined": "MainStateInput"
-          }
-        }
-      ]
+          name: "input",
+          type: {
+            defined: "MainStateInput",
+          },
+        },
+      ],
     },
     {
-      "name": "updateMainState",
-      "accounts": [
+      name: "updateMainState",
+      accounts: [
         {
-          "name": "owner",
-          "isMut": true,
-          "isSigner": true
+          name: "owner",
+          isMut: true,
+          isSigner: true,
         },
         {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        }
+          name: "mainState",
+          isMut: true,
+          isSigner: false,
+        },
       ],
-      "args": [
+      args: [
         {
-          "name": "input",
-          "type": {
-            "defined": "MainStateInput"
-          }
-        }
-      ]
+          name: "input",
+          type: {
+            defined: "MainStateInput",
+          },
+        },
+      ],
     },
     {
-      "name": "updateMainStateOwner",
-      "accounts": [
+      name: "updateMainStateOwner",
+      accounts: [
         {
-          "name": "owner",
-          "isMut": true,
-          "isSigner": true
+          name: "owner",
+          isMut: true,
+          isSigner: true,
         },
         {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        }
+          name: "mainState",
+          isMut: true,
+          isSigner: false,
+        },
       ],
-      "args": [
+      args: [
         {
-          "name": "newOwner",
-          "type": "publicKey"
-        }
-      ]
+          name: "newOwner",
+          type: "publicKey",
+        },
+      ],
     },
     {
-      "name": "setCommonLut",
-      "accounts": [
+      name: "setCommonLut",
+      accounts: [
         {
-          "name": "owner",
-          "isMut": true,
-          "isSigner": true
+          name: "owner",
+          isMut: true,
+          isSigner: true,
         },
         {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        }
+          name: "mainState",
+          isMut: true,
+          isSigner: false,
+        },
       ],
-      "args": [
+      args: [
         {
-          "name": "lut",
-          "type": "publicKey"
-        }
-      ]
+          name: "lut",
+          type: "publicKey",
+        },
+      ],
     },
     {
-      "name": "resetMain",
-      "accounts": [
+      name: "resetMain",
+      accounts: [
         {
-          "name": "owner",
-          "isMut": true,
-          "isSigner": true
+          name: "owner",
+          isMut: true,
+          isSigner: true,
         },
         {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
+          name: "mainState",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
+          name: "systemProgram",
+          isMut: false,
+          isSigner: false,
+        },
       ],
-      "args": []
+      args: [],
     },
     {
-      "name": "createCollection",
-      "accounts": [
+      name: "createProfileCollection",
+      accounts: [
         {
-          "name": "admin",
-          "isMut": true,
-          "isSigner": true
+          name: "admin",
+          isMut: true,
+          isSigner: true,
         },
         {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
+          name: "mainState",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "collection",
-          "isMut": true,
-          "isSigner": false
+          name: "collection",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "adminAta",
-          "isMut": true,
-          "isSigner": false
+          name: "adminAta",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "collectionState",
-          "isMut": true,
-          "isSigner": false
+          name: "collectionState",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "collectionMetadata",
-          "isMut": true,
-          "isSigner": false
+          name: "collectionMetadata",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "collectionEdition",
-          "isMut": true,
-          "isSigner": false
+          name: "collectionEdition",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "collectionAuthorityRecord",
-          "isMut": true,
-          "isSigner": false
+          name: "collectionAuthorityRecord",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "sysvarInstructions",
-          "isMut": false,
-          "isSigner": false
+          name: "sysvarInstructions",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "parentCollection",
-          "isMut": true,
-          "isSigner": false
+          name: "mplProgram",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "parentCollectionMetadata",
-          "isMut": true,
-          "isSigner": false
+          name: "tokenProgram",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "parentCollectionEdition",
-          "isMut": true,
-          "isSigner": false
+          name: "associatedTokenProgram",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "systemProgram",
+          isMut: false,
+          isSigner: false,
         },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
       ],
-      "args": [
+      args: [
         {
-          "name": "name",
-          "type": "string"
+          name: "name",
+          type: "string",
         },
         {
-          "name": "symbol",
-          "type": "string"
+          name: "symbol",
+          type: "string",
         },
         {
-          "name": "uri",
-          "type": "string"
+          name: "uri",
+          type: "string",
         },
-        {
-          "name": "collectionType",
-          "type": "string"
-        }
-      ]
+      ],
     },
     {
-      "name": "updateCollection",
-      "accounts": [
+      name: "mintGenesisProfile",
+      accounts: [
         {
-          "name": "admin",
-          "isMut": true,
-          "isSigner": true
+          name: "admin",
+          isMut: true,
+          isSigner: true,
         },
         {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
+          name: "mainState",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "collection",
-          "isMut": true,
-          "isSigner": false
+          name: "profile",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "collectionMetadata",
-          "isMut": true,
-          "isSigner": false
+          name: "adminAta",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "collectionEdition",
-          "isMut": true,
-          "isSigner": false
+          name: "profileState",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "sysvarInstructions",
-          "isMut": false,
-          "isSigner": false
+          name: "profileMetadata",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "parentCollection",
-          "isMut": true,
-          "isSigner": false
+          name: "profileEdition",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "parentCollectionMetadata",
-          "isMut": true,
-          "isSigner": false
+          name: "collection",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "parentCollectionEdition",
-          "isMut": true,
-          "isSigner": false
+          name: "collectionState",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "collectionMetadata",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "collectionEdition",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "collectionAuthorityRecord",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
+          name: "subCollectionAuthorityRecord",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "sysvarInstructions",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "mplProgram",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "tokenProgram",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "associatedTokenProgram",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "systemProgram",
+          isMut: false,
+          isSigner: false,
+        },
       ],
-      "args": [
+      args: [
         {
-          "name": "name",
-          "type": "string"
+          name: "input",
+          type: {
+            defined: "MintProfileByAdminInput",
+          },
         },
-        {
-          "name": "symbol",
-          "type": "string"
-        },
-        {
-          "name": "uri",
-          "type": "string"
-        }
-      ]
+      ],
     },
     {
-      "name": "mintGenesisProfile",
-      "accounts": [
+      name: "mintProfileByAt",
+      accounts: [
         {
-          "name": "admin",
-          "isMut": true,
-          "isSigner": true
+          name: "user",
+          isMut: true,
+          isSigner: true,
         },
         {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
+          name: "mplProgram",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "profile",
-          "isMut": true,
-          "isSigner": false
+          name: "tokenProgram",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "adminAta",
-          "isMut": true,
-          "isSigner": false
+          name: "associatedTokenProgram",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "profileState",
-          "isMut": true,
-          "isSigner": false
+          name: "systemProgram",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "profileMetadata",
-          "isMut": true,
-          "isSigner": false
+          name: "oposToken",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "profileEdition",
-          "isMut": true,
-          "isSigner": false
+          name: "userActivationTokenAta",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "collection",
-          "isMut": true,
-          "isSigner": false
+          name: "mainState",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "collectionState",
-          "isMut": true,
-          "isSigner": false
+          name: "activationToken",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "collectionMetadata",
-          "isMut": true,
-          "isSigner": false
+          name: "profile",
+          isMut: true,
+          isSigner: true,
         },
         {
-          "name": "collectionEdition",
-          "isMut": true,
-          "isSigner": false
+          name: "userProfileAta",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "collectionAuthorityRecord",
-          "isMut": true,
-          "isSigner": false
+          name: "profileState",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "subCollectionAuthorityRecord",
-          "isMut": true,
-          "isSigner": false
+          name: "profileMetadata",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "sysvarInstructions",
-          "isMut": false,
-          "isSigner": false
+          name: "profileEdition",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "parentProfileState",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "collection",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "collectionMetadata",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
+          name: "collectionEdition",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "newLut",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "addressLookupTableProgram",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "sysvarInstructions",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "parentProfile",
+          isMut: false,
+          isSigner: false,
+        },
       ],
-      "args": [
+      args: [
         {
-          "name": "input",
-          "type": {
-            "defined": "MintProfileByAdminInput"
-          }
-        }
-      ]
+          name: "name",
+          type: "string",
+        },
+        {
+          name: "symbol",
+          type: "string",
+        },
+        {
+          name: "uriHash",
+          type: "string",
+        },
+        {
+          name: "recentSlot",
+          type: "u64",
+        },
+      ],
     },
     {
-      "name": "mintProfileByAt",
-      "accounts": [
+      name: "mintProfileDistribution",
+      accounts: [
         {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
+          name: "user",
+          isMut: true,
+          isSigner: true,
         },
         {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "oposToken",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "mainState",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "parentProfileState",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "mplProgram",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "oposToken",
-          "isMut": false,
-          "isSigner": false
+          name: "tokenProgram",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "userActivationTokenAta",
-          "isMut": true,
-          "isSigner": false
+          name: "associatedTokenProgram",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
+          name: "systemProgram",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "activationToken",
-          "isMut": true,
-          "isSigner": false
+          name: "parentProfile",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "profile",
-          "isMut": true,
-          "isSigner": true
+          name: "grandParentProfile",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "userProfileAta",
-          "isMut": true,
-          "isSigner": false
+          name: "greatGrandParentProfile",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "profileState",
-          "isMut": true,
-          "isSigner": false
+          name: "ggreateGrandParentProfile",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "profileMetadata",
-          "isMut": true,
-          "isSigner": false
+          name: "genesisProfile",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "profileEdition",
-          "isMut": true,
-          "isSigner": false
+          name: "currentParentProfileHolderAta",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "parentProfileState",
-          "isMut": true,
-          "isSigner": false
+          name: "currentGrandParentProfileHolderAta",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "collection",
-          "isMut": true,
-          "isSigner": false
+          name: "currentGreatGrandParentProfileHolderAta",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "collectionMetadata",
-          "isMut": true,
-          "isSigner": false
+          name: "currentGgreatGrandParentProfileHolderAta",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "collectionEdition",
-          "isMut": true,
-          "isSigner": false
+          name: "currentGenesisProfileHolderAta",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "newLut",
-          "isMut": true,
-          "isSigner": false
+          name: "currentParentProfileHolder",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "addressLookupTableProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "currentGrandParentProfileHolder",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "sysvarInstructions",
-          "isMut": false,
-          "isSigner": false
+          name: "currentGreatGrandParentProfileHolder",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "parentProfile",
-          "isMut": false,
-          "isSigner": false
-        }
+          name: "currentGgreatGrandParentProfileHolder",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "currentGenesisProfileHolder",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "userOposAta",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "parentProfileHolderOposAta",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "grandParentProfileHolderOposAta",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "greatGrandParentProfileHolderOposAta",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "ggreatGrandParentProfileHolderOposAta",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "genesisProfileHolderOposAta",
+          isMut: true,
+          isSigner: false,
+        },
       ],
-      "args": [
-        {
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "name": "symbol",
-          "type": "string"
-        },
-        {
-          "name": "uriHash",
-          "type": "string"
-        },
-        {
-          "name": "recentSlot",
-          "type": "u64"
-        }
-      ]
+      args: [],
     },
     {
-      "name": "mintProfileDistribution",
-      "accounts": [
+      name: "initActivationToken",
+      accounts: [
         {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
+          name: "user",
+          isMut: true,
+          isSigner: true,
         },
         {
-          "name": "oposToken",
-          "isMut": false,
-          "isSigner": false
+          name: "userProfileAta",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
+          name: "userActivationTokenAta",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "parentProfileState",
-          "isMut": true,
-          "isSigner": false
+          name: "mainState",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "activationToken",
+          isMut: true,
+          isSigner: true,
         },
         {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "activationTokenState",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "activationTokenMetadata",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "profile",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "parentProfile",
-          "isMut": false,
-          "isSigner": false
+          name: "profileState",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "grandParentProfile",
-          "isMut": false,
-          "isSigner": false
+          name: "profileMetadata",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "greatGrandParentProfile",
-          "isMut": false,
-          "isSigner": false
+          name: "profileEdition",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "ggreateGrandParentProfile",
-          "isMut": false,
-          "isSigner": false
+          name: "profileCollectionAuthorityRecord",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "genesisProfile",
-          "isMut": false,
-          "isSigner": false
+          name: "sysvarInstructions",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "currentParentProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
+          name: "mplProgram",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "currentGrandParentProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
+          name: "associatedTokenProgram",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "currentGreatGrandParentProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
+          name: "tokenProgram",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "currentGgreatGrandParentProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
+          name: "systemProgram",
+          isMut: false,
+          isSigner: false,
         },
-        {
-          "name": "currentGenesisProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGreatGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGgreatGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGenesisProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "userOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "grandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "greatGrandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ggreatGrandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "genesisProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        }
       ],
-      "args": []
+      args: [
+        {
+          name: "name",
+          type: "string",
+        },
+        {
+          name: "symbol",
+          type: "string",
+        },
+        {
+          name: "uri",
+          type: "string",
+        },
+      ],
     },
     {
-      "name": "initActivationToken",
-      "accounts": [
+      name: "mintActivationToken",
+      accounts: [
         {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
+          name: "minter",
+          isMut: true,
+          isSigner: true,
         },
         {
-          "name": "userProfileAta",
-          "isMut": true,
-          "isSigner": false
+          name: "minterProfileAta",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "userActivationTokenAta",
-          "isMut": true,
-          "isSigner": false
+          name: "receiverAta",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
+          name: "mainState",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "activationToken",
-          "isMut": true,
-          "isSigner": true
+          name: "activationToken",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "activationTokenState",
-          "isMut": true,
-          "isSigner": false
+          name: "activationTokenState",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "activationTokenMetadata",
-          "isMut": true,
-          "isSigner": false
+          name: "profile",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "profile",
-          "isMut": false,
-          "isSigner": false
+          name: "profileState",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "profileState",
-          "isMut": true,
-          "isSigner": false
+          name: "tokenProgram",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "profileMetadata",
-          "isMut": true,
-          "isSigner": false
+          name: "associatedTokenProgram",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "profileEdition",
-          "isMut": true,
-          "isSigner": false
+          name: "systemProgram",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "profileCollectionAuthorityRecord",
-          "isMut": true,
-          "isSigner": false
+          name: "parentProfile",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "parentCollection",
-          "isMut": true,
-          "isSigner": false
+          name: "grandParentProfile",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "parentCollectionMetadata",
-          "isMut": true,
-          "isSigner": false
+          name: "greatGrandParentProfile",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "parentCollectionEdition",
-          "isMut": true,
-          "isSigner": false
+          name: "ggreateGrandParentProfile",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "sysvarInstructions",
-          "isMut": false,
-          "isSigner": false
+          name: "genesisProfile",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "parentProfileState",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "oposToken",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "currentParentProfileHolderAta",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
+          name: "currentGrandParentProfileHolderAta",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "currentGreatGrandParentProfileHolderAta",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "currentGgreatGrandParentProfileHolderAta",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "currentGenesisProfileHolderAta",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "currentParentProfileHolder",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "currentGrandParentProfileHolder",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "currentGreatGrandParentProfileHolder",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "currentGgreatGrandParentProfileHolder",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "currentGenesisProfileHolder",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "userOposAta",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "parentProfileHolderOposAta",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "grandParentProfileHolderOposAta",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "greatGrandParentProfileHolderOposAta",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "ggreatGrandParentProfileHolderOposAta",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "genesisProfileHolderOposAta",
+          isMut: true,
+          isSigner: false,
+        },
       ],
-      "args": [
+      args: [
         {
-          "name": "name",
-          "type": "string"
+          name: "amount",
+          type: "u64",
         },
-        {
-          "name": "symbol",
-          "type": "string"
-        },
-        {
-          "name": "uri",
-          "type": "string"
-        }
-      ]
+      ],
     },
     {
-      "name": "mintActivationToken",
-      "accounts": [
+      name: "mintOffer",
+      accounts: [
         {
-          "name": "minter",
-          "isMut": true,
-          "isSigner": true
+          name: "user",
+          isMut: true,
+          isSigner: true,
         },
         {
-          "name": "minterProfileAta",
-          "isMut": true,
-          "isSigner": false
+          name: "userProfileAta",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "receiverAta",
-          "isMut": true,
-          "isSigner": false
+          name: "userOfferAta",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
+          name: "mainState",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "activationToken",
-          "isMut": true,
-          "isSigner": false
+          name: "offer",
+          isMut: true,
+          isSigner: true,
         },
         {
-          "name": "activationTokenState",
-          "isMut": true,
-          "isSigner": false
+          name: "offerMetadata",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "profile",
-          "isMut": false,
-          "isSigner": false
+          name: "offerEdition",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "profileState",
-          "isMut": true,
-          "isSigner": false
+          name: "profile",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "profileState",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "profileMetadata",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
+          name: "profileEdition",
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "parentProfile",
-          "isMut": false,
-          "isSigner": false
+          name: "sysvarInstructions",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "grandParentProfile",
-          "isMut": false,
-          "isSigner": false
+          name: "mplProgram",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "greatGrandParentProfile",
-          "isMut": false,
-          "isSigner": false
+          name: "associatedTokenProgram",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "ggreateGrandParentProfile",
-          "isMut": false,
-          "isSigner": false
+          name: "tokenProgram",
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "genesisProfile",
-          "isMut": false,
-          "isSigner": false
+          name: "systemProgram",
+          isMut: false,
+          isSigner: false,
         },
-        {
-          "name": "parentProfileState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "oposToken",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentParentProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGrandParentProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGreatGrandParentProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGgreatGrandParentProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGenesisProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGreatGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGgreatGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGenesisProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "userOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "grandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "greatGrandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ggreatGrandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "genesisProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        }
       ],
-      "args": [
+      args: [
         {
-          "name": "amount",
-          "type": "u64"
-        }
-      ]
+          name: "name",
+          type: "string",
+        },
+        {
+          name: "symbol",
+          type: "string",
+        },
+        {
+          name: "uri",
+          type: "string",
+        },
+      ],
     },
-    {
-      "name": "mintOffer",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "userProfileAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userOfferAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "offer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "offerMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "offerEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profile",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "profileState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "sysvarInstructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "name": "symbol",
-          "type": "string"
-        },
-        {
-          "name": "uri",
-          "type": "string"
-        }
-      ]
-    }
   ],
-  "accounts": [
+  accounts: [
     {
-      "name": "mainState",
-      "type": {
-        "kind": "struct",
-        "fields": [
+      name: "mainState",
+      type: {
+        kind: "struct",
+        fields: [
           {
-            "name": "owner",
-            "type": "publicKey"
+            name: "owner",
+            type: "publicKey",
           },
           {
-            "name": "oposToken",
-            "type": "publicKey"
+            name: "oposToken",
+            type: "publicKey",
           },
           {
-            "name": "profileMintingCost",
-            "type": "u64"
+            name: "profileMintingCost",
+            type: "u64",
           },
           {
-            "name": "invitationMintingCost",
-            "type": "u64"
+            name: "invitationMintingCost",
+            type: "u64",
           },
           {
-            "name": "mintingCostDistribution",
-            "type": {
-              "defined": "MintingCostDistribution"
-            }
+            name: "mintingCostDistribution",
+            type: {
+              defined: "MintingCostDistribution",
+            },
           },
           {
-            "name": "tradingPriceDistribution",
-            "type": {
-              "defined": "TradingPriceDistribution"
-            }
+            name: "tradingPriceDistribution",
+            type: {
+              defined: "TradingPriceDistribution",
+            },
           },
           {
-            "name": "sellerFeeBasisPoints",
-            "type": "u16"
+            name: "sellerFeeBasisPoints",
+            type: "u16",
           },
           {
-            "name": "bump",
-            "type": "u8"
+            name: "bump",
+            type: "u8",
           },
           {
-            "name": "totalMintedProfile",
-            "type": "u64"
+            name: "totalMintedProfile",
+            type: "u64",
           },
           {
-            "name": "profileCollection",
-            "type": "publicKey"
+            name: "profileCollection",
+            type: "publicKey",
           },
           {
-            "name": "genesisProfile",
-            "type": "publicKey"
+            name: "genesisProfile",
+            type: "publicKey",
           },
           {
-            "name": "commonLut",
-            "type": "publicKey"
-          }
-        ]
-      }
+            name: "commonLut",
+            type: "publicKey",
+          },
+        ],
+      },
     },
     {
-      "name": "activationTokenState",
-      "type": {
-        "kind": "struct",
-        "fields": [
+      name: "activationTokenState",
+      type: {
+        kind: "struct",
+        fields: [
           {
-            "name": "parentProfile",
-            "type": "publicKey"
+            name: "parentProfile",
+            type: "publicKey",
           },
           {
-            "name": "creator",
-            "type": "publicKey"
-          }
-        ]
-      }
+            name: "creator",
+            type: "publicKey",
+          },
+        ],
+      },
     },
     {
-      "name": "collectionState",
-      "type": {
-        "kind": "struct",
-        "fields": [
+      name: "collectionState",
+      type: {
+        kind: "struct",
+        fields: [
           {
-            "name": "genesisProfile",
-            "type": "publicKey"
+            name: "genesisProfile",
+            type: "publicKey",
           },
           {
-            "name": "collectionId",
-            "type": "publicKey"
-          }
-        ]
-      }
+            name: "collectionId",
+            type: "publicKey",
+          },
+        ],
+      },
     },
     {
-      "name": "fakeIdState",
-      "type": {
-        "kind": "struct",
-        "fields": [
+      name: "fakeIdState",
+      type: {
+        kind: "struct",
+        fields: [
           {
-            "name": "lineage",
-            "type": {
-              "defined": "LineageInfo"
-            }
+            name: "lineage",
+            type: {
+              defined: "LineageInfo",
+            },
           },
           {
-            "name": "mint",
-            "type": "publicKey"
-          }
-        ]
-      }
+            name: "mint",
+            type: "publicKey",
+          },
+        ],
+      },
     },
     {
-      "name": "profileState",
-      "type": {
-        "kind": "struct",
-        "fields": [
+      name: "profileState",
+      type: {
+        kind: "struct",
+        fields: [
           {
-            "name": "lineage",
-            "type": {
-              "defined": "LineageInfo"
-            }
+            name: "lineage",
+            type: {
+              defined: "LineageInfo",
+            },
           },
           {
-            "name": "mint",
-            "type": "publicKey"
+            name: "mint",
+            type: "publicKey",
           },
           {
-            "name": "activationToken",
-            "type": {
-              "option": "publicKey"
-            }
+            name: "activationToken",
+            type: {
+              option: "publicKey",
+            },
           },
           {
-            "name": "totalMintedSft",
-            "type": "u64"
+            name: "totalMintedSft",
+            type: "u64",
           },
           {
-            "name": "totalMintedOffers",
-            "type": "u64"
+            name: "totalMintedOffers",
+            type: "u64",
           },
           {
-            "name": "lut",
-            "type": "publicKey"
-          }
-        ]
-      }
-    }
+            name: "lut",
+            type: "publicKey",
+          },
+        ],
+      },
+    },
   ],
-  "types": [
+  types: [
     {
-      "name": "MainStateInput",
-      "type": {
-        "kind": "struct",
-        "fields": [
+      name: "MainStateInput",
+      type: {
+        kind: "struct",
+        fields: [
           {
-            "name": "profileMintingCost",
-            "type": "u64"
+            name: "profileMintingCost",
+            type: "u64",
           },
           {
-            "name": "invitationMintingCost",
-            "type": "u64"
+            name: "invitationMintingCost",
+            type: "u64",
           },
           {
-            "name": "oposToken",
-            "type": "publicKey"
+            name: "oposToken",
+            type: "publicKey",
           },
           {
-            "name": "mintingCostDistribution",
-            "type": {
-              "defined": "MintingCostDistribution"
-            }
+            name: "mintingCostDistribution",
+            type: {
+              defined: "MintingCostDistribution",
+            },
           },
           {
-            "name": "tradingPriceDistribution",
-            "type": {
-              "defined": "TradingPriceDistribution"
-            }
-          }
-        ]
-      }
+            name: "tradingPriceDistribution",
+            type: {
+              defined: "TradingPriceDistribution",
+            },
+          },
+        ],
+      },
     },
     {
-      "name": "LineageInfo",
-      "type": {
-        "kind": "struct",
-        "fields": [
+      name: "LineageInfo",
+      type: {
+        kind: "struct",
+        fields: [
           {
-            "name": "creator",
-            "type": "publicKey"
+            name: "creator",
+            type: "publicKey",
           },
           {
-            "name": "parent",
-            "type": "publicKey"
+            name: "parent",
+            type: "publicKey",
           },
           {
-            "name": "grandParent",
-            "type": "publicKey"
+            name: "grandParent",
+            type: "publicKey",
           },
           {
-            "name": "greatGrandParent",
-            "type": "publicKey"
+            name: "greatGrandParent",
+            type: "publicKey",
           },
           {
-            "name": "ggreatGrandParent",
-            "type": "publicKey"
+            name: "ggreatGrandParent",
+            type: "publicKey",
           },
           {
-            "name": "generation",
-            "type": "u64"
+            name: "generation",
+            type: "u64",
           },
           {
-            "name": "totalChild",
-            "type": "u64"
-          }
-        ]
-      }
+            name: "totalChild",
+            type: "u64",
+          },
+        ],
+      },
     },
     {
-      "name": "MintingCostDistribution",
-      "type": {
-        "kind": "struct",
-        "fields": [
+      name: "MintingCostDistribution",
+      type: {
+        kind: "struct",
+        fields: [
           {
-            "name": "parent",
-            "type": "u16"
+            name: "parent",
+            type: "u16",
           },
           {
-            "name": "grandParent",
-            "type": "u16"
+            name: "grandParent",
+            type: "u16",
           },
           {
-            "name": "greatGrandParent",
-            "type": "u16"
+            name: "greatGrandParent",
+            type: "u16",
           },
           {
-            "name": "ggreatGrandParent",
-            "type": "u16"
+            name: "ggreatGrandParent",
+            type: "u16",
           },
           {
-            "name": "genesis",
-            "type": "u16"
-          }
-        ]
-      }
+            name: "genesis",
+            type: "u16",
+          },
+        ],
+      },
     },
     {
-      "name": "TradingPriceDistribution",
-      "type": {
-        "kind": "struct",
-        "fields": [
+      name: "TradingPriceDistribution",
+      type: {
+        kind: "struct",
+        fields: [
           {
-            "name": "seller",
-            "type": "u16"
+            name: "seller",
+            type: "u16",
           },
           {
-            "name": "parent",
-            "type": "u16"
+            name: "parent",
+            type: "u16",
           },
           {
-            "name": "grandParent",
-            "type": "u16"
+            name: "grandParent",
+            type: "u16",
           },
           {
-            "name": "greatGrandParent",
-            "type": "u16"
+            name: "greatGrandParent",
+            type: "u16",
           },
           {
-            "name": "genesis",
-            "type": "u16"
-          }
-        ]
-      }
+            name: "genesis",
+            type: "u16",
+          },
+        ],
+      },
     },
     {
-      "name": "MintProfileByAdminInput",
-      "type": {
-        "kind": "struct",
-        "fields": [
+      name: "MintProfileByAdminInput",
+      type: {
+        kind: "struct",
+        fields: [
           {
-            "name": "name",
-            "type": "string"
+            name: "name",
+            type: "string",
           },
           {
-            "name": "symbol",
-            "type": "string"
+            name: "symbol",
+            type: "string",
           },
           {
-            "name": "uri",
-            "type": "string"
+            name: "uri",
+            type: "string",
           },
           {
-            "name": "lineage",
-            "type": {
-              "defined": "LineageInfo"
-            }
+            name: "lineage",
+            type: {
+              defined: "LineageInfo",
+            },
           },
           {
-            "name": "parentMint",
-            "type": "publicKey"
-          }
-        ]
-      }
+            name: "parentMint",
+            type: "publicKey",
+          },
+        ],
+      },
     },
     {
-      "name": "MintProfileByAtInput",
-      "type": {
-        "kind": "struct",
-        "fields": [
+      name: "MintProfileByAtInput",
+      type: {
+        kind: "struct",
+        fields: [
           {
-            "name": "name",
-            "type": "string"
+            name: "name",
+            type: "string",
           },
           {
-            "name": "symbol",
-            "type": "string"
+            name: "symbol",
+            type: "string",
           },
           {
-            "name": "uriHash",
-            "type": "string"
+            name: "uriHash",
+            type: "string",
           },
           {
-            "name": "recentSlot",
-            "type": "u64"
-          }
-        ]
-      }
-    }
+            name: "recentSlot",
+            type: "u64",
+          },
+        ],
+      },
+    },
   ],
-  "errors": [
+  errors: [
     {
-      "code": 6000,
-      "name": "FirstError",
-      "msg": "first erorr"
+      code: 6000,
+      name: "FirstError",
+      msg: "first erorr",
     },
     {
-      "code": 6001,
-      "name": "AlreadySet",
-      "msg": "Value assing already"
+      code: 6001,
+      name: "AlreadySet",
+      msg: "Value assing already",
     },
     {
-      "code": 6002,
-      "name": "OnlyOwnerCanCall",
-      "msg": "This method can only be called by onwer"
+      code: 6002,
+      name: "OnlyOwnerCanCall",
+      msg: "This method can only be called by onwer",
     },
     {
-      "code": 6003,
-      "name": "UnknownNft",
-      "msg": "Unknown NFT"
+      code: 6003,
+      name: "UnknownNft",
+      msg: "Unknown NFT",
     },
     {
-      "code": 6004,
-      "name": "InvalidNftHolder",
-      "msg": "Invalid Nft holder"
+      code: 6004,
+      name: "InvalidNftHolder",
+      msg: "Invalid Nft holder",
     },
     {
-      "code": 6005,
-      "name": "GenesisNftAlreadyMinted",
-      "msg": "Genesis nft already created"
+      code: 6005,
+      name: "GenesisNftAlreadyMinted",
+      msg: "Genesis nft already created",
     },
     {
-      "code": 6006,
-      "name": "ActivationTokenNotFound",
-      "msg": "Activation token not found"
+      code: 6006,
+      name: "ActivationTokenNotFound",
+      msg: "Activation token not found",
     },
     {
-      "code": 6007,
-      "name": "ActivationTokenAlreadyInitialize",
-      "msg": "Activation Token already initialize"
+      code: 6007,
+      name: "ActivationTokenAlreadyInitialize",
+      msg: "Activation Token already initialize",
     },
     {
-      "code": 6008,
-      "name": "OnlyProfileHolderAllow",
-      "msg": "Only Profile Holder can call"
+      code: 6008,
+      name: "OnlyProfileHolderAllow",
+      msg: "Only Profile Holder can call",
     },
     {
-      "code": 6009,
-      "name": "NotEnoughTokenToMint",
-      "msg": "Not have enough token to mint"
+      code: 6009,
+      name: "NotEnoughTokenToMint",
+      msg: "Not have enough token to mint",
     },
     {
-      "code": 6010,
-      "name": "ProfileIdMissMatch",
-      "msg": "Profile ID missmatch"
-    }
-  ]
+      code: 6010,
+      name: "ProfileIdMissMatch",
+      msg: "Profile ID missmatch",
+    },
+  ],
 };
