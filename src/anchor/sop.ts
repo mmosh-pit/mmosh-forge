@@ -117,7 +117,7 @@ export type Sop = {
       "args": []
     },
     {
-      "name": "createProfileCollection",
+      "name": "createCollection",
       "accounts": [
         {
           "name": "admin",
@@ -162,6 +162,109 @@ export type Sop = {
         {
           "name": "sysvarInstructions",
           "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "parentCollection",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentCollectionMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentCollectionEdition",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mplProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "symbol",
+          "type": "string"
+        },
+        {
+          "name": "uri",
+          "type": "string"
+        },
+        {
+          "name": "collectionType",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "updateCollection",
+      "accounts": [
+        {
+          "name": "admin",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "mainState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collection",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collectionMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collectionEdition",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "sysvarInstructions",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "parentCollection",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentCollectionMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentCollectionEdition",
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -647,6 +750,21 @@ export type Sop = {
         },
         {
           "name": "profileCollectionAuthorityRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentCollection",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentCollectionMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentCollectionEdition",
           "isMut": true,
           "isSigner": false
         },
@@ -1478,7 +1596,7 @@ export const IDL: Sop = {
       "args": []
     },
     {
-      "name": "createProfileCollection",
+      "name": "createCollection",
       "accounts": [
         {
           "name": "admin",
@@ -1523,6 +1641,109 @@ export const IDL: Sop = {
         {
           "name": "sysvarInstructions",
           "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "parentCollection",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentCollectionMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentCollectionEdition",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mplProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "symbol",
+          "type": "string"
+        },
+        {
+          "name": "uri",
+          "type": "string"
+        },
+        {
+          "name": "collectionType",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "updateCollection",
+      "accounts": [
+        {
+          "name": "admin",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "mainState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collection",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collectionMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collectionEdition",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "sysvarInstructions",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "parentCollection",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentCollectionMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentCollectionEdition",
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -2008,6 +2229,21 @@ export const IDL: Sop = {
         },
         {
           "name": "profileCollectionAuthorityRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentCollection",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentCollectionMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentCollectionEdition",
           "isMut": true,
           "isSigner": false
         },
