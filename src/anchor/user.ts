@@ -399,7 +399,7 @@ export class Connectivity {
       // const txLen = signedTx.serialize().length;
       // log({ txLen, luts: lutsInfo.length });
 
-      const blockhash = (await this.connection.getLatestBlockhash("confirmed")).blockhash;
+      const blockhash = (await this.connection.getLatestBlockhash("finalized")).blockhash;
       console.log("recentBlockhash: confirmed ", blockhash);
       const message = new web3.TransactionMessage({
         payerKey: this.provider.publicKey,
