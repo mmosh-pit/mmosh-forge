@@ -12,7 +12,6 @@ export const web3Consts = {
     "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
   ),
   addressLookupTableProgram: web3.AddressLookupTableProgram.programId,
-  // oposToken: new web3.PublicKey("HFu3qpvAZp5kAv79ML2M6v5EcLFb1fQw97kxBi8TJvQG"),
   oposToken: new web3.PublicKey("6vgT7gxtF8Jdu7foPDZzdHxkwYFX9Y1jvgpxP8vH2Apw"),
   rootProfile: new web3.PublicKey(
     "85YaBFhbwuqPiRVNrXdMJwdt1qjdxbtypGcFBc6Tp7qA",
@@ -21,9 +20,8 @@ export const web3Consts = {
     "J2tFYfnM4t8XMcaMsR2WyUhaNrkJ26pwKZGq2J9T7rQL",
   ),
   commonLut: new web3.PublicKey("5D3XazMMpBcQb8FLxTWMB7WoWzU1YeVP3usekchp1xLu"),
-  // genesisProfile: new web3.PublicKey(
-  //   "F6LFrZmngTpd1RrXpvVMLwguVPRsMgmnzAsjz1LswRrG",
-  // commonLut: new web3.PublicKey("Gypc9MmJrtn5rtcagaYroz7AT1KpvnKgr9VvvQvZmbw7"),
+  badgeCollection: new web3.PublicKey("147m8aw1hcmyBduQvSJoXCFaLb8wQSe9DNxWVsLTfqec"),
+  rootCollection: new web3.PublicKey("9h9c4idX2UnGhFa266dQxMGD5kMk9pigumRAV2x9Hbk2"),
   LAMPORTS_PER_OPOS: 1000_000_000,
   Seeds: {
     mainState: utf8.encode("main_state4"),
