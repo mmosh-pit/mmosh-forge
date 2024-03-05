@@ -59,7 +59,6 @@ export class Connectivity {
   constructor(provider: AnchorProvider, programId: web3.PublicKey) {
     // web3.SystemProgram.programId;
     // this.connection = new web3.Connection(Config.rpcURL);
-    // this.provider = new anchor.AnchorProvider(this.connection, wallet, {
     // });
     this.provider = provider;
     this.connection = provider.connection;
@@ -399,7 +398,8 @@ export class Connectivity {
       // const txLen = signedTx.serialize().length;
       // log({ txLen, luts: lutsInfo.length });
 
-      const blockhash = (await this.connection.getLatestBlockhash("confirmed")).blockhash;
+      const blockhash = (await this.connection.getLatestBlockhash("confirmed"))
+        .blockhash;
       console.log("recentBlockhash: confirmed ", blockhash);
       const message = new web3.TransactionMessage({
         payerKey: this.provider.publicKey,
@@ -420,9 +420,9 @@ export class Connectivity {
           scout: grandParentProfile.toBase58(),
           recruitor: greatGrandParentProfile.toBase58(),
           originator: ggreateGrandParentProfile.toBase58(),
-          gensis: genesisProfile.toBase58()
+          gensis: genesisProfile.toBase58(),
         },
-        profile.toBase58() 
+        profile.toBase58(),
       );
       return {
         Ok: {
@@ -470,8 +470,11 @@ export class Connectivity {
         await this.program.account.profileState.fetch(profileState);
 
       if (profileStateInfo.activationToken) {
-        let hasInvitation = await this.isCreatorInvitation(profileStateInfo.activationToken,user.toBase58());
-        if(hasInvitation) {
+        let hasInvitation = await this.isCreatorInvitation(
+          profileStateInfo.activationToken,
+          user.toBase58(),
+        );
+        if (hasInvitation) {
           return {
             Ok: {
               signature: "",
@@ -503,12 +506,15 @@ export class Connectivity {
         user,
       );
 
-      const mainStateInfo = await this.program.account.mainState.fetch(this.mainState)
-      const parentCollection = web3Consts.badgeCollection
-      const parentCollectionMetadata = BaseMpl.getMetadataAccount(parentCollection)
-      const parentCollectionEdition = BaseMpl.getEditionAccount(parentCollection)
+      const mainStateInfo = await this.program.account.mainState.fetch(
+        this.mainState,
+      );
+      const parentCollection = web3Consts.badgeCollection;
+      const parentCollectionMetadata =
+        BaseMpl.getMetadataAccount(parentCollection);
+      const parentCollectionEdition =
+        BaseMpl.getEditionAccount(parentCollection);
 
-      
       const ix = await this.program.methods
         .initActivationToken(name, symbol, uri)
         .accounts({
@@ -531,7 +537,7 @@ export class Connectivity {
           profileCollectionAuthorityRecord,
           parentCollection,
           parentCollectionMetadata,
-          parentCollectionEdition
+          parentCollectionEdition,
         })
         .instruction();
       this.txis.push(ix);
@@ -826,27 +832,26 @@ export class Connectivity {
   }
 
   async isCreatorInvitation(mintAddress: web3.PublicKey, userAddress: string) {
-
     try {
-      const mintData = await this.metaplex
-        .nfts()
-        .findByMint({ mintAddress });
-      if(mintData.collection.address.toBase58() != web3Consts.badgeCollection.toBase58()) {
-         return false;
+      const mintData = await this.metaplex.nfts().findByMint({ mintAddress });
+      if (
+        mintData.collection.address.toBase58() !=
+        web3Consts.badgeCollection.toBase58()
+      ) {
+        return false;
       }
-      if(mintData.creators.length == 0) {
-          return false;
+      if (mintData.creators.length == 0) {
+        return false;
       }
       for (let index = 0; index < mintData.creators.length; index++) {
-          if(mintData.creators[index].address.toBase58() == userAddress) {
-              return true;
-          }
+        if (mintData.creators[index].address.toBase58() == userAddress) {
+          return true;
+        }
       }
       return false;
     } catch (error) {
       return false;
     }
-
   }
 
   async getUserInfo() {
@@ -921,12 +926,15 @@ export class Connectivity {
         const genesisProfile = new anchor.web3.PublicKey(profiles[0].address);
         const profileState = this.__getProfileStateAccount(genesisProfile);
         const profileStateInfo =
-        await this.program.account.profileState.fetch(profileState);
+          await this.program.account.profileState.fetch(profileState);
         console.log("profileStateInfo ", profileStateInfo);
-        let hasInvitation:any = false
+        let hasInvitation: any = false;
         if (profileStateInfo.activationToken) {
-          hasInvitation = await this.isCreatorInvitation(profileStateInfo.activationToken,user.toBase58());
-          if(hasInvitation) {
+          hasInvitation = await this.isCreatorInvitation(
+            profileStateInfo.activationToken,
+            user.toBase58(),
+          );
+          if (hasInvitation) {
             const userActivationAta = getAssociatedTokenAddressSync(
               profileStateInfo.activationToken,
               user,
@@ -935,7 +943,6 @@ export class Connectivity {
               profileStateInfo.activationToken,
             );
           }
-
         }
         totalChild = profileStateInfo.lineage.totalChild.toNumber();
         generation = profileStateInfo.lineage.generation.toString();
@@ -980,19 +987,20 @@ export class Connectivity {
           if (i) {
             if (i.symbol) {
               const collectionInfo = i?.collection;
-              
+
               if (
-                collectionInfo?.address.toBase58() == web3Consts.badgeCollection.toBase58()
-              )  {
+                collectionInfo?.address.toBase58() ==
+                web3Consts.badgeCollection.toBase58()
+              ) {
                 let isCreator = false;
                 console.log("i.creators", i.creators);
                 for (let index = 0; index < i.creators.length; index++) {
-                    if(i.creators[index].address.toBase58() == user.toBase58()) {
-                        isCreator = true;
-                        break;
-                    }
+                  if (i.creators[index].address.toBase58() == user.toBase58()) {
+                    isCreator = true;
+                    break;
+                  }
                 }
-                if(isCreator) {
+                if (isCreator) {
                   continue;
                 }
                 try {
