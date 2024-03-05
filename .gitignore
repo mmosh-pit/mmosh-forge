@@ -3,3 +3,6 @@
 .env.local
 
 /.next
+
+# Sentry Config File
+.sentryclirc
