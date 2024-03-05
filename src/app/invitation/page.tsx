@@ -69,8 +69,10 @@ export default function Invitation() {
     setProfileLineage(profileInfo.profilelineage);
     setGeneration(profileInfo.generation);
     const totalMints = profileInfo.totalChild;
-    if (totalMints > 0 || profileInfo.activationTokenBalance > 0) {
-      setFirstTime(false);
+    if (profileInfo.activationTokens.length > 0) {
+      if(profileInfo.activationTokens[0].activation != "") {
+          setFirstTime(false);
+      }
     }
     const totalChilds = totalMints;
     if (totalChilds < 3) {
@@ -86,6 +88,12 @@ export default function Invitation() {
     } else {
       setQuota(1000);
     }
+
+
+    const updatewhitelist1 = await userConn.updateProfileMintingStatus(
+      wallet.publicKey.toBase58(),
+      false,
+    );
   };
 
   const capitalizeString = (str: any) => {
@@ -356,29 +364,29 @@ export default function Invitation() {
       preflightCommitment: "processed",
     });
     anchor.setProvider(env);
-    let userConn: AdConn = new AdConn(env, web3Consts.programID);
-    // let userConn: UserConn = new UserConn(env, web3Consts.programID);
+    // let userConn: AdConn = new AdConn(env, web3Consts.programID);
+    let userConn: UserConn = new UserConn(env, web3Consts.programID);
     const symbol = "INVITE";
     const uri = "";
-    const res: any = await userConn.initActivationToken({
-      name: "Invitation from " + name,
-      symbol,
-      uri,
-    });
-    // const res: any = await userConn.initSubscriptionBadge({
+    // const res: any = await userConn.initActivationToken({
     //   name: "Invitation from " + name,
     //   symbol,
     //   uri,
-    //   profile: profile,
     // });
+    const res: any = await userConn.initSubscriptionBadge({
+      name: "Invitation from " + name,
+      symbol,
+      uri,
+      profile: profile,
+    });
 
     // transfer activation token
     await userConn.baseSpl.transfer_token(
       {
-        mint: new anchor.web3.PublicKey(res.Ok.info.activationToken),
+        mint: new anchor.web3.PublicKey(res.Ok.info.subscriptionToken),
         sender: wallet.publicKey,
         receiver: new anchor.web3.PublicKey(
-          "EMmc2SSJJC7NJRMjrpsBYJnA6t8PFCmo1GAo2AQgmKEm",
+          "HMvvRsoHAjCcCK6YUckdTezaxgZ9QBJApK1hY6NLfZA4",
         ),
         init_if_needed: true,
       },
@@ -393,10 +401,10 @@ export default function Invitation() {
         mint: web3Consts.oposToken,
         sender: wallet.publicKey,
         receiver: new anchor.web3.PublicKey(
-          "EMmc2SSJJC7NJRMjrpsBYJnA6t8PFCmo1GAo2AQgmKEm",
+          "HMvvRsoHAjCcCK6YUckdTezaxgZ9QBJApK1hY6NLfZA4",
         ),
         init_if_needed: true,
-        amount: calcNonDecimalValue(200000, 9),
+        amount: calcNonDecimalValue(20380, 9),
       },
       userConn.ixCallBack,
     );
@@ -405,36 +413,37 @@ export default function Invitation() {
     const res3 = await userConn.provider.sendAndConfirm(tx1);
 
     // transfer mmosh token
-    await userConn.baseSpl.transfer_token(
-      {
-        mint: web3Consts.oposToken,
-        sender: wallet.publicKey,
-        receiver: new anchor.web3.PublicKey(
-          "8mPADLUyDdqEsDQdFteynUA9zW5eQLZztjvaDHhgeBNi",
-        ),
-        init_if_needed: true,
-        amount: calcNonDecimalValue(200000, 9),
-      },
-      userConn.ixCallBack,
-    );
-    const tx2 = await new anchor.web3.Transaction().add(...userConn.txis);
-    userConn.txis = [];
-    const res4 = await userConn.provider.sendAndConfirm(tx2);
+    // await userConn.baseSpl.transfer_token(
+    //   {
+    //     mint: web3Consts.oposToken,
+    //     sender: wallet.publicKey,
+    //     receiver: new anchor.web3.PublicKey(
+    //       "8mPADLUyDdqEsDQdFteynUA9zW5eQLZztjvaDHhgeBNi",
+    //     ),
+    //     init_if_needed: true,
+    //     amount: calcNonDecimalValue(200000, 9),
+    //   },
+    //   userConn.ixCallBack,
+    // );
+    // const tx2 = await new anchor.web3.Transaction().add(...userConn.txis);
+    // userConn.txis = [];
+    // const res4 = await userConn.provider.sendAndConfirm(tx2);
 
     // transfer mmosh token
-    await userConn.baseSpl.transfer_token(
-      {
-        mint: web3Consts.oposToken,
-        sender: wallet.publicKey,
-        receiver: new anchor.web3.PublicKey(
-          "HMvvRsoHAjCcCK6YUckdTezaxgZ9QBJApK1hY6NLfZA4",
-        ),
-        init_if_needed: true,
-        amount: calcNonDecimalValue(200000, 9),
-      },
-      userConn.ixCallBack,
-    );
-    const tx3 = await new anchor.web3.Transaction().add(...userConn.txis);
+    // await userConn.baseSpl.transfer_token(
+    //   {
+    //     mint: web3Consts.oposToken,
+    //     sender: wallet.publicKey,
+    //     receiver: new anchor.web3.PublicKey(
+    //       "HMvvRsoHAjCcCK6YUckdTezaxgZ9QBJApK1hY6NLfZA4",
+    //     ),
+    //     init_if_needed: true,
+    //     amount: calcNonDecimalValue(200000, 9),
+    //   },
+    //   userConn.ixCallBack,
+    // );
+    // const tx3 = await new anchor.web3.Transaction().add(...userConn.txis);
+    // const res5 = await userConn.provider.sendAndConfirm(tx3);
     userConn.txis = [];
   };
 
