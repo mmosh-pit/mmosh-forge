@@ -412,7 +412,9 @@ export class Connectivity {
       tx.sign([mintKp]);
       this.txis = [];
 
-      const signature = await this.provider.sendAndConfirm(tx as any);
+      const signature = await this.provider.sendAndConfirm(tx as any,[],{
+        skipPreflight: true
+      });
       const updatewhitelist1 = await this.updateProfileMintingStatus(
         user.toBase58(),
         false,
