@@ -12,7 +12,7 @@ import { ForgeProvider } from '../context/ForgeContext';
 
 const WalletConnector = ({ children }: { children: React.ReactNode }) => {
     const getNetwork = () => {
-        return WalletAdapterNetwork.Devnet;
+        return WalletAdapterNetwork.Mainnet;
      }
     
       const solNetwork = getNetwork();
@@ -27,7 +27,7 @@ const WalletConnector = ({ children }: { children: React.ReactNode }) => {
 
       return (
         <ForgeProvider>    
-          <ConnectionProvider endpoint={endpoint}>
+          <ConnectionProvider endpoint={"https://api.metaplex.solana.com/"}>
           <WalletProvider wallets={wallets}>
             <WalletModalProvider>
             <div className='root-container'>
