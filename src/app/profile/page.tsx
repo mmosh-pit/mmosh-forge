@@ -127,6 +127,7 @@ export default function Profile() {
   };
 
   const createMessage = (message: any, type: any) => {
+    window.location.href="/";
     window.scrollTo(0, 0);
     setMsgText(message);
     setMsgClass(type);
@@ -391,6 +392,7 @@ export default function Profile() {
         const isWhitelisted = await getProfileMintingStatus(wallet.publicKey);
         setWhitelisted(isWhitelisted);
         if (isWhitelisted) {
+          window.location.href="/";
           createMessage(
             "You have only completed the first transaction, press the Mint button again to receive your Profile.",
             "warning-container",
@@ -405,9 +407,11 @@ export default function Profile() {
       }
       setIsSubmit(false);
     } catch (error) {
+
       const isWhitelisted = await getProfileMintingStatus(wallet.publicKey);
       setWhitelisted(isWhitelisted);
       if (isWhitelisted) {
+        window.location.href="/";
         createMessage(
           "You have only completed the first transaction, press the Mint button again to receive your Profile.",
           "warning-container",
@@ -415,6 +419,7 @@ export default function Profile() {
       } else {
          createMessage(error, "danger-container");
       }
+
       setIsSubmit(false);
     }
   };
