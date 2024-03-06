@@ -27,7 +27,7 @@ const WalletConnector = ({ children }: { children: React.ReactNode }) => {
 
       return (
         <ForgeProvider>    
-          <ConnectionProvider endpoint={"https://api.metaplex.solana.com/"}>
+          <ConnectionProvider endpoint={"https://api.metaplex.solana.com/"} config={{confirmTransactionInitialTimeout: 150}}>
           <WalletProvider wallets={wallets}>
             <WalletModalProvider>
             <div className='root-container'>
