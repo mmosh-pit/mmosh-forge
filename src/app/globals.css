@@ -70,7 +70,6 @@ input[type="number"] {
 }
 
 .header-container {
-  padding: 15px 30px;
   background: rgba(255, 255, 255, 0.07);
   display: flex;
   justify-content: space-between;
@@ -79,13 +78,14 @@ input[type="number"] {
   left: 0;
   right: 0;
 }
+
 .header-container.active {
   background-color: rgba(2, 1, 18, 1);
   z-index: 1;
 }
 .header-container h1 {
   margin: 0;
-  min-width: 250px;
+  width: 25%;
 }
 .header-container h1 img {
   width: 48px;
@@ -137,6 +137,14 @@ input[type="number"] {
 .forge-menu {
   margin: 0;
   min-width: 250px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.forge-menu a {
+  color: #fff;
+  text-decoration: none;
 }
 
 .forge-menu li {
@@ -154,6 +162,8 @@ input[type="number"] {
 }
 .connect-action {
   display: flex;
+  justify-content: flex-end;
+  width: 25%;
 }
 
 .banner-container {
@@ -180,7 +190,7 @@ input[type="number"] {
   height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: center;
+  margin-top: 2vmax;
   background: radial-gradient(
     circle,
     rgba(2, 1, 18, 0) 0%,
@@ -196,13 +206,38 @@ input[type="number"] {
   font-family: "Avenir LT Std 65 Medium";
 }
 
+.connect-page-buttons {
+  margin-top: 1vmax;
+}
+
+.connect-page-buttons a {
+  margin-left: 0.2vmax;
+  margin-right: 0.2vmax;
+}
+
 .connect-page-inner {
   max-width: 500px;
 }
-.connect-page p {
-  color: rgba(189, 188, 188, 1);
-  margin: 0 0 10px;
+
+.connect-page-inner p {
+  color: #fff;
+  font-weight: 200 !important;
 }
+
+.connect-page-buttons > a > button {
+  padding: 0.5vmax 0.5vmax;
+  background: rgba(205, 6, 142, 1);
+  color: #fff;
+  font-size: 16px;
+  /* font-family: "Avenir LT Std 65 Medium"; */
+  border: none;
+}
+
+.connect-page-buttons > a > button > p {
+  margin-bottom: 0 !important;
+  font-weight: 300 !important;
+}
+
 .connect-page img {
   width: 250px;
   margin: 0 auto;
@@ -212,7 +247,7 @@ input[type="number"] {
   background: rgba(205, 6, 142, 1);
   color: #fff;
   font-size: 16px;
-  font-family: "Avenir LT Std 65 Medium";
+  /* font-family: "Avenir LT Std 65 Medium"; */
 }
 
 .header-container .menu-button {
