@@ -59,7 +59,6 @@ export default function Profile() {
   const [isLoading, setIsLoading] = useState(true);
   const [gensis, setGensis] = useState("");
   const [subToken, setSubToken] = useState("");
-  const [whitelisted, setWhitelisted] = useState(false);
 
   useEffect(() => {
     if (wallet?.publicKey) {
@@ -136,16 +135,6 @@ export default function Profile() {
     }, 5000);
   };
 
-  const getProfileMintingStatus = async (address:string) => {
-    try {
-      const result = await axios.get(`/api/get-whitelist?wallet=`+address);
-      return result.data;
-    } catch (error) {
-      return false
-    }
-  };
-
-
   const validateFields = () => {
     if (subToken == "") {
       createMessage("Invalid activation token", "danger-container");
@@ -168,7 +157,7 @@ export default function Profile() {
       return false;
     }
     
-    if (tokBalance < 20000 && !whitelisted) {
+    if (tokBalance < 20000) {
       createMessage(
         <p>
           Hey! We checked your wallet and you don’t have enough MMOSH to mint.{" "}
@@ -206,7 +195,6 @@ export default function Profile() {
     const seniority = await getTotalMints() + 1;
     const genesisProfile = web3Consts.genesisProfile;
     const activationToken = new anchor.web3.PublicKey(subToken);
-    const commonLut = web3Consts.commonLut;
     const env = new anchor.AnchorProvider(connection.connection, wallet, {
       preflightCommitment: "processed",
     });
@@ -361,7 +349,6 @@ export default function Profile() {
         uriHash: shadowHash,
         activationToken,
         genesisProfile,
-        commonLut,
       });
 
       if (res.Ok) {
@@ -388,33 +375,14 @@ export default function Profile() {
           navigate.push("/invitation");
         }, 4000);
       } else {
-        const isWhitelisted = await getProfileMintingStatus(wallet.publicKey);
-        setWhitelisted(isWhitelisted);
-        if (isWhitelisted) {
-          createMessage(
-            "You have only completed the first transaction, press the Mint button again to receive your Profile.",
-            "warning-container",
-          );
-        } else {
-          createMessage(
-            "We’re sorry, there was an error while trying to mint your profile. Check your wallet and try again.",
-            "danger-container",
-          );
-        }
-
+        createMessage(
+          "We’re sorry, there was an error while trying to mint your profile. Check your wallet and try again.",
+          "danger-container",
+        );
       }
       setIsSubmit(false);
     } catch (error) {
-      const isWhitelisted = await getProfileMintingStatus(wallet.publicKey);
-      setWhitelisted(isWhitelisted);
-      if (isWhitelisted) {
-        createMessage(
-          "You have only completed the first transaction, press the Mint button again to receive your Profile.",
-          "warning-container",
-        );
-      } else {
-         createMessage(error, "danger-container");
-      }
+      createMessage(error, "danger-container");
       setIsSubmit(false);
     }
   };
@@ -450,8 +418,6 @@ export default function Profile() {
       setGeneration(profileInfo.generation);
       setProfileLineage(profileInfo.profilelineage);
     }
-    const isWhitelisted = await getProfileMintingStatus(wallet.publicKey);
-    setWhitelisted(isWhitelisted);
   };
 
   
@@ -619,12 +585,7 @@ export default function Profile() {
             </Button>
           )}
           <div className="price-details">
-            {!whitelisted &&
-              <p>Price: 20000 MMOSH</p>
-            }
-            {whitelisted &&
-              <p>Price: 0 MMOSH</p>
-            }
+            <p>Price: 20000 MMOSH</p>
             <label>Plus at least 0.03 SOL in fees. Note: this amount will be reduced when the protocol is optimized. Sorry for the temporary inconvenience.</label>
           </div>
           <div className="balance-details">

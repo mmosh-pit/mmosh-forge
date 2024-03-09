@@ -33,11 +33,9 @@ export type _MintProfileInput = {
 export type _MintProfileByAtInput = {
   name: string,
   symbol?: string,
-  // uri?: string,
   uriHash?: string,
   activationToken: string | web3.PublicKey
   genesisProfile: string | web3.PublicKey
-  commonLut: string | web3.PublicKey
 }
 
 export type _MintSubscriptionToken = {

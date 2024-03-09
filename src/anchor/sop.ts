@@ -500,135 +500,12 @@ export type Sop = {
           "isSigner": false
         },
         {
-          "name": "newLut",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "addressLookupTableProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "sysvarInstructions",
           "isMut": false,
           "isSigner": false
         },
         {
           "name": "parentProfile",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "name": "symbol",
-          "type": "string"
-        },
-        {
-          "name": "uriHash",
-          "type": "string"
-        },
-        {
-          "name": "recentSlot",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "mintProfileDistribution",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "oposToken",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentProfileState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "parentProfile",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "grandParentProfile",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "greatGrandParentProfile",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "ggreateGrandParentProfile",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "genesisProfile",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentParentProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGrandParentProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGreatGrandParentProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGgreatGrandParentProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGenesisProfileHolderAta",
           "isMut": false,
           "isSigner": false
         },
@@ -688,7 +565,20 @@ export type Sop = {
           "isSigner": false
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "symbol",
+          "type": "string"
+        },
+        {
+          "name": "uriHash",
+          "type": "string"
+        }
+      ]
     },
     {
       "name": "initActivationToken",
@@ -989,105 +879,6 @@ export type Sop = {
           "type": "u64"
         }
       ]
-    },
-    {
-      "name": "mintOffer",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "userProfileAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userOfferAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "offer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "offerMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "offerEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profile",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "profileState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "sysvarInstructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "name": "symbol",
-          "type": "string"
-        },
-        {
-          "name": "uri",
-          "type": "string"
-        }
-      ]
     }
   ],
   "accounts": [
@@ -1178,24 +969,6 @@ export type Sop = {
           },
           {
             "name": "collectionId",
-            "type": "publicKey"
-          }
-        ]
-      }
-    },
-    {
-      "name": "fakeIdState",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "lineage",
-            "type": {
-              "defined": "LineageInfo"
-            }
-          },
-          {
-            "name": "mint",
             "type": "publicKey"
           }
         ]
@@ -1409,10 +1182,6 @@ export type Sop = {
           {
             "name": "uriHash",
             "type": "string"
-          },
-          {
-            "name": "recentSlot",
-            "type": "u64"
           }
         ]
       }
@@ -1979,135 +1748,12 @@ export const IDL: Sop = {
           "isSigner": false
         },
         {
-          "name": "newLut",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "addressLookupTableProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "sysvarInstructions",
           "isMut": false,
           "isSigner": false
         },
         {
           "name": "parentProfile",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "name": "symbol",
-          "type": "string"
-        },
-        {
-          "name": "uriHash",
-          "type": "string"
-        },
-        {
-          "name": "recentSlot",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "mintProfileDistribution",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "oposToken",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentProfileState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "parentProfile",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "grandParentProfile",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "greatGrandParentProfile",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "ggreateGrandParentProfile",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "genesisProfile",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentParentProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGrandParentProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGreatGrandParentProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGgreatGrandParentProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGenesisProfileHolderAta",
           "isMut": false,
           "isSigner": false
         },
@@ -2167,7 +1813,20 @@ export const IDL: Sop = {
           "isSigner": false
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "symbol",
+          "type": "string"
+        },
+        {
+          "name": "uriHash",
+          "type": "string"
+        }
+      ]
     },
     {
       "name": "initActivationToken",
@@ -2468,105 +2127,6 @@ export const IDL: Sop = {
           "type": "u64"
         }
       ]
-    },
-    {
-      "name": "mintOffer",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "userProfileAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userOfferAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "offer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "offerMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "offerEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profile",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "profileState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "sysvarInstructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "name": "symbol",
-          "type": "string"
-        },
-        {
-          "name": "uri",
-          "type": "string"
-        }
-      ]
     }
   ],
   "accounts": [
@@ -2657,24 +2217,6 @@ export const IDL: Sop = {
           },
           {
             "name": "collectionId",
-            "type": "publicKey"
-          }
-        ]
-      }
-    },
-    {
-      "name": "fakeIdState",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "lineage",
-            "type": {
-              "defined": "LineageInfo"
-            }
-          },
-          {
-            "name": "mint",
             "type": "publicKey"
           }
         ]
@@ -2888,10 +2430,6 @@ export const IDL: Sop = {
           {
             "name": "uriHash",
             "type": "string"
-          },
-          {
-            "name": "recentSlot",
-            "type": "u64"
           }
         ]
       }

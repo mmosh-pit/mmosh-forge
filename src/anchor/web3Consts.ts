@@ -19,7 +19,6 @@ export const web3Consts = {
   genesisProfile: new web3.PublicKey(
     "J2tFYfnM4t8XMcaMsR2WyUhaNrkJ26pwKZGq2J9T7rQL",
   ),
-  commonLut: new web3.PublicKey("5D3XazMMpBcQb8FLxTWMB7WoWzU1YeVP3usekchp1xLu"),
   badgeCollection: new web3.PublicKey("147m8aw1hcmyBduQvSJoXCFaLb8wQSe9DNxWVsLTfqec"),
   rootCollection: new web3.PublicKey("9h9c4idX2UnGhFa266dQxMGD5kMk9pigumRAV2x9Hbk2"),
   LAMPORTS_PER_OPOS: 1000_000_000,

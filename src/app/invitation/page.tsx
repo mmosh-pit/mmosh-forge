@@ -88,12 +88,6 @@ export default function Invitation() {
     } else {
       setQuota(1000);
     }
-
-
-    const updatewhitelist1 = await userConn.updateProfileMintingStatus(
-      wallet.publicKey.toBase58(),
-      false,
-    );
   };
 
   const capitalizeString = (str: any) => {

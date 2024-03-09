@@ -111,14 +111,6 @@ export class Connectivity {
     )[0];
   }
 
-  async getProfileMintingStatus(address: string) {
-    try {
-      const result = await axios.get(`/api/get-whitelist?wallet=` + address);
-      return result.data;
-    } catch (error) {
-      return false;
-    }
-  }
 
   async getProfileMetadata(uri: string) {
     try {
@@ -164,14 +156,33 @@ export class Connectivity {
     }
   }
 
-  async updateProfileMintingStatus(address: String, is_available: boolean) {
+  async setupLookupTable(addresses: web3.PublicKey[] = []): Promise<Result<TxPassType<{ lookupTable: string }>, any>> {
     try {
-      await axios.post("/api/update-whitelist", {
-        wallet: address,
-        is_available: is_available,
+      const slot = await this.connection.getSlot();
+      const [lookupTableInst, lookupTableAddress] =
+        web3.AddressLookupTableProgram.createLookupTable({
+          authority: this.provider.publicKey,
+          payer: this.provider.publicKey,
+          recentSlot: slot - 1,
+        });
+
+      const extendInstruction = web3.AddressLookupTableProgram.extendLookupTable({
+        payer: this.provider.publicKey,
+        authority: this.provider.publicKey,
+        lookupTable: lookupTableAddress,
+        addresses,
       });
-    } catch (error) {
-      console.log("error updating total mints ", error);
+      const freezeInstruction = web3.AddressLookupTableProgram.freezeLookupTable({
+        lookupTable: lookupTableAddress, // The address of the lookup table to freeze
+        authority: this.provider.publicKey, // The authority (i.e., the account with permission to modify the lookup table)
+      });
+
+      const transaction = new web3.Transaction().add(lookupTableInst, extendInstruction, freezeInstruction)
+      const signature = await this.provider.sendAndConfirm(transaction as any);
+      return { Ok: { signature, info: { lookupTable: lookupTableAddress.toBase58() } } }
+    } catch (err) {
+      log("Error: ", err)
+      return { Err: err }
     }
   }
 
@@ -183,21 +194,18 @@ export class Connectivity {
       this.baseSpl.__reinit();
       const user = this.provider.publicKey;
       if (!user) throw "Wallet not found";
-      const mintingStatus = await this.getProfileMintingStatus(user.toBase58());
       let {
         name,
         symbol,
         uriHash,
         activationToken,
-        genesisProfile,
-        commonLut,
+        genesisProfile
       } = input;
       if (typeof activationToken == "string")
         activationToken = new web3.PublicKey(activationToken);
       if (typeof genesisProfile == "string")
         genesisProfile = new web3.PublicKey(activationToken);
-      if (typeof commonLut == "string")
-        commonLut = new web3.PublicKey(commonLut);
+
       symbol = symbol ?? "";
       uriHash = uriHash ?? "";
 
@@ -220,8 +228,6 @@ export class Connectivity {
       if (!collection) return { Err: "Collection info not found" };
       const collectionMetadata = BaseMpl.getMetadataAccount(collection);
       const collectionEdition = BaseMpl.getEditionAccount(collection);
-      const collectionAuthorityRecord =
-        BaseMpl.getCollectionAuthorityRecordAccount(collection, this.mainState);
       const mintKp = web3.Keypair.generate();
       const profile = mintKp.publicKey;
       const userProfileAta = getAssociatedTokenAddressSync(profile, user);
@@ -230,15 +236,11 @@ export class Connectivity {
           { mint: activationToken, owner: user },
           this.ixCallBack,
         );
-      const activationTokenMetadata =
-        BaseMpl.getMetadataAccount(activationToken);
       const profileMetadata = BaseMpl.getMetadataAccount(profile);
       const profileEdition = BaseMpl.getEditionAccount(profile);
       const profileState = this.__getProfileStateAccount(profile);
-      const parentProfileMetadata = BaseMpl.getMetadataAccount(parentProfile);
       const parentProfileState = this.__getProfileStateAccount(parentProfile);
-      const subCollectionAuthorityRecord =
-        BaseMpl.getCollectionAuthorityRecordAccount(profile, this.mainState);
+
       const {
         //profiles
         // genesisProfile,
@@ -272,137 +274,89 @@ export class Connectivity {
       const userOposAta = getAssociatedTokenAddressSync(oposToken, user);
 
       const recentSlot = (await this.connection.getSlot()) - 2;
-      const newLut = web3.PublicKey.findProgramAddressSync(
-        [
-          profileState.toBuffer(),
-          new BN(recentSlot).toArrayLike(Buffer, "le", 8),
-        ],
-        addressLookupTableProgram,
-      )[0];
 
-      let cuBudgetIncIx = web3.ComputeBudgetProgram.setComputeUnitLimit({
-        units: 8000_00,
-      });
-      this.txis.push(cuBudgetIncIx);
-      const ix_share = await this.program.methods
-        .mintProfileDistribution()
-        .accounts({
-          user,
-          oposToken,
-          userOposAta,
-          mainState: this.mainState,
-          parentProfileState,
-          mplProgram,
-          tokenProgram,
-          systemProgram,
-          associatedTokenProgram,
-          parentProfile,
-          genesisProfile,
-          grandParentProfile,
-          greatGrandParentProfile,
-          ggreateGrandParentProfile,
-          currentParentProfileHolderAta,
-          currentGrandParentProfileHolderAta,
-          currentGreatGrandParentProfileHolderAta,
-          currentGgreatGrandParentProfileHolderAta,
-          currentGenesisProfileHolderAta,
-          currentParentProfileHolder,
-          currentGrandParentProfileHolder,
-          currentGreatGrandParentProfileHolder,
-          currentGgreatGrandParentProfileHolder,
-          currentGenesisProfileHolder,
-          parentProfileHolderOposAta,
-          grandParentProfileHolderOposAta,
-          greatGrandParentProfileHolderOposAta,
-          ggreatGrandParentProfileHolderOposAta,
-          genesisProfileHolderOposAta,
-        })
-        .instruction();
 
-      const ix = await this.program.methods
-        .mintProfileByAt(name, symbol, uriHash, new BN(recentSlot))
-        .accounts({
-          profile,
-          user,
-          oposToken,
-          userProfileAta,
-          mainState: this.mainState,
-          collection,
-          mplProgram,
-          profileState,
-          tokenProgram,
-          systemProgram,
-          addressLookupTableProgram,
-          profileEdition,
-          activationToken,
-          profileMetadata,
-          collectionEdition,
-          collectionMetadata,
-          newLut,
-          parentProfileState,
-          sysvarInstructions,
-          userActivationTokenAta,
-          associatedTokenProgram,
-          parentProfile,
-        })
-        .instruction();
-      this.txis.push(ix);
+      const lookupResult = await this.setupLookupTable([
+        profile, // 1
+        user, // 2
+        oposToken, // 3
+        userOposAta, // 4
+        userProfileAta, // 5
+        this.mainState, // 6
+        collection, // 7
+        mplProgram, // 8
+        profileState, // 9
+        tokenProgram, // 10
+        systemProgram, // 11
+        profileEdition, // 12
+        activationToken, // 13
+        profileMetadata, // 14
+        collectionEdition, // 15
+        collectionMetadata, // 16
+        parentProfileState, // 17
+        sysvarInstructions, // 18
+        userActivationTokenAta, // 19
+        associatedTokenProgram, // 20
+        parentProfile, 
+        currentParentProfileHolder,
+        currentGrandParentProfileHolder,
+        currentGenesisProfileHolder,
+        parentProfileHolderOposAta,
+        grandParentProfileHolderOposAta,
+        genesisProfileHolderOposAta,
+      ])
 
-      const commonLutInfo = await (
-        await this.connection.getAddressLookupTable(commonLut)
-      ).value;
-      const lutsInfo = [commonLutInfo];
-      if (lut.toBase58() != systemProgram.toBase58()) {
-        const res = await (
-          await this.connection.getAddressLookupTable(lut)
-        ).value;
-        lutsInfo.push(res);
-      }
+      console.log("lookupResult ", lookupResult)
 
-      if (!mintingStatus) {
-        const share_tx = new web3.Transaction().add(ix_share);
-        const sharesignature = await this.provider.sendAndConfirm(share_tx);
-        console.log("sharesignature", sharesignature);
-        const updatewhitelist = await this.updateProfileMintingStatus(
-          user.toBase58(),
-          true,
-        );
-        await this.storeRoyalty(
-          user.toBase58(),
-          currentGenesisProfileHolder.toBase58(),
-          12000,
-        );
-        await this.storeRoyalty(
-          user.toBase58(),
-          currentParentProfileHolder.toBase58(),
-          4000,
-        );
-        await this.storeRoyalty(
-          user.toBase58(),
-          currentGrandParentProfileHolder.toBase58(),
-          2000,
-        );
-        await this.storeRoyalty(
-          user.toBase58(),
-          currentGreatGrandParentProfileHolder.toBase58(),
-          1400,
-        );
-        await this.storeRoyalty(
-          user.toBase58(),
-          currentGgreatGrandParentProfileHolder.toBase58(),
-          600,
-        );
-      }
+      const commonLut= new web3.PublicKey(lookupResult.Ok.info.lookupTable)
 
-      // const signedTx = await this.provider.wallet.signTransaction(tx as any);
-      // const txLen = signedTx.serialize().length;
-      // log({ txLen, luts: lutsInfo.length });
 
-      
+      let cuBudgetIncIx = web3.ComputeBudgetProgram.setComputeUnitLimit({ units: 8000_00 })
+      this.txis.push(cuBudgetIncIx)
 
-      const blockhash = (await this.connection.getLatestBlockhash("finalized"))
-        .blockhash;
-      console.log("recentBlockhash: confirmed ", blockhash);
+      const ix = await this.program.methods.mintProfileByAt(
+        name, symbol, uriHash
+      ).accounts({
+        profile, // 1
+        user, // 2
+        oposToken, // 3
+        userOposAta, // 4
+        userProfileAta, // 5
+        mainState: this.mainState, // 6
+        collection, // 7
+        mplProgram, // 8
+        profileState, // 9
+        tokenProgram, // 10
+        systemProgram, // 11
+        profileEdition, // 12
+        activationToken, // 13
+        profileMetadata, // 14
+        collectionEdition, // 15
+        collectionMetadata, // 16
+        parentProfileState, // 17
+        sysvarInstructions, // 18
+        userActivationTokenAta, // 19
+        associatedTokenProgram, // 20
+        parentProfile, 
+        currentParentProfileHolder,
+        currentGrandParentProfileHolder,
+        currentGreatGrandParentProfileHolder,
+        currentGgreatGrandParentProfileHolder,
+        currentGenesisProfileHolder,
+        parentProfileHolderOposAta,
+        grandParentProfileHolderOposAta,
+        greatGrandParentProfileHolderOposAta,
+        ggreatGrandParentProfileHolderOposAta,
+        genesisProfileHolderOposAta,
+      }).instruction()
+      this.txis.push(ix)
+
+
+      const commonLutInfo = await (await (this.connection.getAddressLookupTable(commonLut))).value
+
+      const lutsInfo = [commonLutInfo]
+
+      const blockhash = (await this.connection.getLatestBlockhash()).blockhash
       const message = new web3.TransactionMessage({
         payerKey: this.provider.publicKey,
         recentBlockhash: blockhash,
@@ -410,22 +364,49 @@ export class Connectivity {
       }).compileToV0Message(lutsInfo);
 
       const tx = new web3.VersionedTransaction(message);
-      tx.sign([mintKp]);
-      this.txis = [];
+      tx.sign([mintKp])
+      this.txis = []
 
+      // const signedTx = await this.provider.wallet.signTransaction(tx as any);
+      // const txLen = signedTx.serialize().length;
+      // log({ txLen, luts: lutsInfo.length });
+
+  
       const signature = await this.provider.sendAndConfirm(tx as any);
 
-      const lineageResult = await this.storeLineage(
+      await this.storeRoyalty(
         user.toBase58(),
-        {
-          promotor: parentProfile.toBase58(),
-          scout: grandParentProfile.toBase58(),
-          recruitor: greatGrandParentProfile.toBase58(),
-          originator: ggreateGrandParentProfile.toBase58(),
-          gensis: genesisProfile.toBase58(),
+        [{
+          receiver: currentGenesisProfileHolder.toBase58(),
+          amount: 12000,
         },
-        profile.toBase58(),
+        {
+          receiver: currentParentProfileHolder.toBase58(),
+          amount: 4000,
+        },
+        {
+          receiver: currentGrandParentProfileHolder.toBase58(),
+          amount: 2000,
+        },
+        {
+          receiver: currentGgreatGrandParentProfileHolder.toBase58(),
+          amount: 600,
+        }]
       );
+    
+      await this.storeLineage(
+      user.toBase58(),
+      {
+        promotor: parentProfile.toBase58(),
+        scout: grandParentProfile.toBase58(),
+        recruitor: greatGrandParentProfile.toBase58(),
+        originator: ggreateGrandParentProfile.toBase58(),
+        gensis: genesisProfile.toBase58(),
+      },
+      profile.toBase58(),
+      );
+
+
       return {
         Ok: {
           signature,
@@ -438,11 +419,10 @@ export class Connectivity {
     }
   }
 
-  async storeRoyalty(sender: string, receiver: string, amount: number) {
+  async storeRoyalty(sender: string, receivers: any) {
     await axios.post("/api/update-royalty", {
       sender,
-      receiver,
-      amount,
+      receivers,
     });
   }
 
@@ -712,8 +692,10 @@ export class Connectivity {
       const signature = await this.provider.sendAndConfirm(tx);
       await this.storeRoyalty(
         user.toBase58(),
-        currentGenesisProfileHolder.toBase58(),
-        Number(amount),
+        [{
+          receiver: currentGenesisProfileHolder.toBase58(),
+          amount: Number(amount),
+        }]
       );
       return { Ok: { signature, info: {} } };
     } catch (error) {
@@ -722,77 +704,6 @@ export class Connectivity {
     }
   }
 
-  async mintOffer(input: {
-    profile: web3.PublicKey | string;
-    name?: string;
-    symbol?: string;
-    uri?: string;
-  }): Promise<Result<TxPassType<{ offer: string }>, any>> {
-    try {
-      const user = this.provider.publicKey;
-      this.reinit();
-      let { profile, name, symbol, uri } = input;
-      symbol = symbol ?? "";
-      uri = uri ?? "";
-
-      if (typeof profile == "string") profile = new web3.PublicKey(profile);
-      const profileState = this.__getProfileStateAccount(profile);
-      const profileMetadata = BaseMpl.getMetadataAccount(profile);
-      const profileEdition = BaseMpl.getEditionAccount(profile);
-      const profileCollectionAuthorityRecord =
-        BaseMpl.getCollectionAuthorityRecordAccount(profile, this.mainState);
-      const { ata: userProfileAta } =
-        await this.baseSpl.__getOrCreateTokenAccountInstruction(
-          { mint: profile, owner: user },
-          this.ixCallBack,
-        );
-      const mintKp = web3.Keypair.generate();
-      const offer = mintKp.publicKey;
-      const offerMetadata = BaseMpl.getMetadataAccount(offer);
-      const offerEdition = BaseMpl.getEditionAccount(offer);
-      const userOfferAta = getAssociatedTokenAddressSync(offer, user);
-
-      const { ixs: mintIxs } = await this.baseSpl.__getCreateTokenInstructions({
-        mintAuthority: user,
-        mintKeypair: mintKp,
-        mintingInfo: {
-          tokenAmount: 1,
-        },
-      });
-      this.txis.push(...mintIxs);
-
-      const ix = await this.program.methods
-        .mintOffer(name, symbol, uri)
-        .accounts({
-          profile,
-          mainState: this.mainState,
-          user,
-          associatedTokenProgram,
-          mplProgram,
-          profileState,
-          tokenProgram,
-          systemProgram,
-          profileEdition,
-          userProfileAta,
-          offer,
-          offerEdition,
-          profileMetadata,
-          sysvarInstructions,
-          userOfferAta,
-          offerMetadata,
-        })
-        .instruction();
-      this.txis.push(ix);
-
-      const tx = new web3.Transaction().add(...this.txis);
-      this.txis = [];
-      const signature = await this.provider.sendAndConfirm(tx, [mintKp]);
-      return { Ok: { signature, info: { offer: offer.toBase58() } } };
-    } catch (e) {
-      log({ error: e });
-      return { Err: e };
-    }
-  }
 
   async getUserNFTs(userKey: any) {
     const filters = [
