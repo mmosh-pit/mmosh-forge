@@ -265,7 +265,7 @@ export default function Invitation() {
       if (result) {
         if (result.data) {
           if (result.data.profile) {
-            return result.data.profile.name;
+            return result.data.profile.username;
           }
         }
       }
