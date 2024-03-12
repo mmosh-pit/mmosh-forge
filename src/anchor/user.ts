@@ -1,7 +1,7 @@
 import * as anchor from "@coral-xyz/anchor";
 import { AnchorProvider, Program, web3, BN } from "@project-serum/anchor";
 import { Wallet } from "@project-serum/anchor/dist/cjs/provider";
-import { utf8 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
+import { bs58, utf8 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
 import { TOKEN_PROGRAM_ID } from "@coral-xyz/anchor/dist/cjs/utils/token";
 import { IDL, Sop } from "./sop";
 import {
@@ -311,11 +311,6 @@ export class Connectivity {
 
       const commonLut = new web3.PublicKey(lookupResult.Ok.info.lookupTable);
 
-      let cuBudgetIncIx = web3.ComputeBudgetProgram.setComputeUnitLimit({
-        units: 8000_00,
-      });
-      this.txis.push(cuBudgetIncIx);
-
       const ix = await this.program.methods
         .mintProfileByAt(name, symbol, uriHash)
         .accounts({
@@ -360,6 +355,9 @@ export class Connectivity {
 
       const lutsInfo = [commonLutInfo];
 
+      const freezeInstruction = await this.calculatePriorityFee(ix,lutsInfo,mintKp);
+      this.txis.push(freezeInstruction);
+
       const blockhash = (await this.connection.getLatestBlockhash()).blockhash;
       const message = new web3.TransactionMessage({
         payerKey: this.provider.publicKey,
@@ -370,6 +368,9 @@ export class Connectivity {
       const tx = new web3.VersionedTransaction(message);
       tx.sign([mintKp]);
       this.txis = [];
+
+
+      
 
       // const signedTx = await this.provider.wallet.signTransaction(tx as any);
       // const txLen = signedTx.serialize().length;
@@ -425,6 +426,66 @@ export class Connectivity {
       sender,
       receivers,
     });
+  }
+
+  async calculatePriorityFee(instructions:any, lutsInfo:any, mintKp:any) {
+    const blockhash = (await this.connection.getLatestBlockhash()).blockhash;
+    const message = new web3.TransactionMessage({
+      payerKey: this.provider.publicKey,
+      recentBlockhash: blockhash,
+      instructions: [...this.txis],
+    }).compileToV0Message(lutsInfo);
+
+    const tx = new web3.VersionedTransaction(message);
+    tx.sign([mintKp]);
+    
+    const feeEstimate = await this.getPriorityFeeEstimate(tx);
+    let feeIns;
+    if(feeEstimate > 0) {
+      feeIns = web3.ComputeBudgetProgram.setComputeUnitPrice({
+        microLamports: feeEstimate,
+      });
+    } else {
+      feeIns = web3.ComputeBudgetProgram.setComputeUnitLimit({
+        units: 1_400_000,
+      });
+    }
+
+
+    return feeIns;
+
+  }
+
+  async getPriorityFeeEstimate(transaction: any) {
+    try {
+      const response = await fetch(Config.rpcURL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          jsonrpc: "2.0",
+          id: "1",
+          method: "getPriorityFeeEstimate",
+          params: [
+            {
+              transaction: bs58.encode(transaction.serialize()),
+              options: { priorityLevel: "High" },
+            },
+          ],
+        }),
+      });
+      const data = await response.json();
+      console.log(
+        "Fee in function for",
+        "HIGH",
+        " :",
+        data.result.priorityFeeEstimate
+      );
+      return data.result.priorityFeeEstimate;
+    } catch (error) {
+      console.log("getPriorityFeeEstimate ", error)
+      return 0
+    }
+
   }
 
   async storeLineage(wallet: string, lineage: any, profile: string) {
