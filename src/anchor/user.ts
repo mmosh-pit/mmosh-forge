@@ -244,7 +244,6 @@ export class Connectivity {
 
       const {
         //profiles
-        // genesisProfile,
         // parentProfile,
         grandParentProfile,
         greatGrandParentProfile,
