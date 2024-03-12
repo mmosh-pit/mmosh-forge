@@ -57,7 +57,6 @@ export class Connectivity {
   baseSpl: BaseSpl;
 
   constructor(provider: AnchorProvider, programId: web3.PublicKey) {
-    // web3.SystemProgram.programId;
     // });
     this.provider = provider;
     this.connection = provider.connection;
@@ -355,7 +354,11 @@ export class Connectivity {
 
       const lutsInfo = [commonLutInfo];
 
-      const freezeInstruction = await this.calculatePriorityFee(ix,lutsInfo,mintKp);
+      const freezeInstruction = await this.calculatePriorityFee(
+        ix,
+        lutsInfo,
+        mintKp,
+      );
       this.txis.push(freezeInstruction);
 
       const blockhash = (await this.connection.getLatestBlockhash()).blockhash;
@@ -368,9 +371,6 @@ export class Connectivity {
       const tx = new web3.VersionedTransaction(message);
       tx.sign([mintKp]);
       this.txis = [];
-
-
-      
 
       // const signedTx = await this.provider.wallet.signTransaction(tx as any);
       // const txLen = signedTx.serialize().length;
@@ -428,7 +428,7 @@ export class Connectivity {
     });
   }
 
-  async calculatePriorityFee(instructions:any, lutsInfo:any, mintKp:any) {
+  async calculatePriorityFee(instructions: any, lutsInfo: any, mintKp: any) {
     const blockhash = (await this.connection.getLatestBlockhash()).blockhash;
     const message = new web3.TransactionMessage({
       payerKey: this.provider.publicKey,
@@ -438,10 +438,10 @@ export class Connectivity {
 
     const tx = new web3.VersionedTransaction(message);
     tx.sign([mintKp]);
-    
+
     const feeEstimate = await this.getPriorityFeeEstimate(tx);
     let feeIns;
-    if(feeEstimate > 0) {
+    if (feeEstimate > 0) {
       feeIns = web3.ComputeBudgetProgram.setComputeUnitPrice({
         microLamports: feeEstimate,
       });
@@ -451,9 +451,7 @@ export class Connectivity {
       });
     }
 
-
     return feeIns;
-
   }
 
   async getPriorityFeeEstimate(transaction: any) {
@@ -478,14 +476,13 @@ export class Connectivity {
         "Fee in function for",
         "HIGH",
         " :",
-        data.result.priorityFeeEstimate
+        data.result.priorityFeeEstimate,
       );
       return data.result.priorityFeeEstimate;
     } catch (error) {
-      console.log("getPriorityFeeEstimate ", error)
-      return 0
+      console.log("getPriorityFeeEstimate ", error);
+      return 0;
     }
-
   }
 
   async storeLineage(wallet: string, lineage: any, profile: string) {
