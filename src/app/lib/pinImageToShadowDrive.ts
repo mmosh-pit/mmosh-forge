@@ -2,6 +2,8 @@ import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 import { ShdwDrive } from "@shadow-drive/sdk";
 import { Connection, Keypair } from "@solana/web3.js";
 import bs58 from "bs58";
+import Config from "./../../anchor/web3Config.json";
+
 
 export const pinImageToShadowDrive = async (file: any) => {
   try {
@@ -14,7 +16,7 @@ export const pinImageToShadowDrive = async (file: any) => {
     );
     const keypair = Keypair.fromSecretKey(private_arrray);
     const drive = await new ShdwDrive(
-      new Connection("https://api.metaplex.solana.com"),
+      new Connection(Config.mainRpcURL),
       new NodeWallet(keypair),
     ).init();
 
