@@ -61,8 +61,8 @@ export default function Invitation() {
     let userConn: UserConn = new UserConn(env, web3Consts.programID);
 
     const profileInfo = await userConn.getUserInfo();
-
-    setName(profileInfo.profiles[0].userinfo.username);
+    const fullname = profileInfo.profiles[0].userinfo.name.split(" ");
+    setName(fullname[0]);
     setProfile(profileInfo.profiles[0].address);
     setSolBalance(profileInfo.solBalance);
     setTokBalance(profileInfo.oposTokenBalance);
@@ -185,11 +185,11 @@ export default function Invitation() {
       });
 
       let desc =
-        "Cordially invites you to join on Moral Panic, the Genesis MMOSH. The favor of a reply is requested.";
+        "Cordially invites you to join on the MMOSH. The favor of a reply is requested.";
       if (name != "") {
         desc =
           capitalizeString(name) +
-          " cordially invites you to join on Moral Panic, the Genesis MMOSH. The favor of a reply is requested.";
+          " cordially invites you to join "+ getPronouns()+" on the MMOSH. The favor of a reply is requested.";
       }
 
       const body = {
@@ -275,6 +275,16 @@ export default function Invitation() {
     }
   };
 
+  const getPronouns = () => {
+    if(forgeContext.userData.pronouns == "they/them") {
+      return "them";
+    } else if(forgeContext.userData.pronouns == "he/him") {
+      return "him";
+    } else {
+      return "her";
+    }
+  }
+
   const createGensisInvitation = async () => {
     const env = new anchor.AnchorProvider(connection.connection, wallet, {
       preflightCommitment: "processed",
@@ -285,11 +295,11 @@ export default function Invitation() {
     let isSuccess = false;
     if (firstTime) {
       let desc =
-        "Cordially invites you to join on Moral Panic, the Genesis MMOSH. The favor of a reply is requested.";
+        "Cordially invites you to join on the MMOSH. The favor of a reply is requested.";
       if (name != "") {
         desc =
           capitalizeString(name) +
-          " cordially invites you to join on Moral Panic, the Genesis MMOSH. The favor of a reply is requested.";
+          " cordially invites you to join "+ getPronouns()+" on the MMOSH. The favor of a reply is requested.";
       }
       const body = {
         name: name != "" ? "Invitation from " + name : "Invitation",
@@ -549,15 +559,13 @@ export default function Invitation() {
 
           {name != "" && (
             <p>
-              {capitalizeString(name)} cordially invites you to join him on
-              Moral Panic, the Genesis MMOSH. The favor of a reply is requested.
+              {capitalizeString(name)} cordially invites you to join {getPronouns()} on the MMOSH. The favor of a reply is requested.
             </p>
           )}
 
           {name == "" && (
             <p>
-              Cordially invites you to join him on Moral Panic, the Genesis
-              MMOSH. The favor of a reply is requested.
+              Cordially invites you to join him on the MMOSH. The favor of a reply is requested.
             </p>
           )}
 

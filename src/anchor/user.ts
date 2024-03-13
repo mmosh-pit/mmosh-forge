@@ -139,7 +139,7 @@ export class Connectivity {
           } else if (element.trait_type == "Noun") {
             userData.nouns = element.value;
           } else if (element.trait_type == "Pronoun") {
-            userData.seniority = element.value;
+            userData.pronouns = element.value;
           }
         }
         return userData;
@@ -244,7 +244,6 @@ export class Connectivity {
 
       const {
         //profiles
-        // parentProfile,
         grandParentProfile,
         greatGrandParentProfile,
         ggreateGrandParentProfile,
@@ -944,10 +943,10 @@ export class Connectivity {
             promoter: this.getAddressString(currentParentProfileHolder),
             scout: this.getAddressString(currentGrandParentProfileHolder),
             recruiter: this.getAddressString(
-              currentGgreatGrandParentProfileHolder,
+              currentGreatGrandParentProfileHolder,
             ),
             originator: this.getAddressString(
-              currentGreatGrandParentProfileHolder,
+              currentGgreatGrandParentProfileHolder,
             ),
           };
         }
@@ -1067,8 +1066,10 @@ export class Connectivity {
       return {
         promoter: this.getAddressString(currentParentProfileHolder),
         scout: this.getAddressString(currentGrandParentProfileHolder),
-        recruiter: this.getAddressString(currentGgreatGrandParentProfileHolder),
-        originator: this.getAddressString(currentGreatGrandParentProfileHolder),
+        recruiter: this.getAddressString(currentGreatGrandParentProfileHolder),
+        originator: this.getAddressString(
+          currentGgreatGrandParentProfileHolder,
+        ),
       };
     } catch (error: any) {
       return {
