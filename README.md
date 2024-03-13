@@ -106,5 +106,7 @@ Go to src/anchor/web3Consts.ts and update variable with given value
     "HLU5hoeXDqn9QSL6qFsPqi2dHXsTmsioYcuNd1CWbedB",
   ),
   commonLut: new web3.PublicKey("A1y1BoDXB5bph8nkiD1oBQb1BksxtSCbzxjH8gwuFf2Q"),
+  badgeCollection: new web3.PublicKey("GX2AC9XPza59gUL7mEeCnLPeD6o7bjRbS8xP2S1hgYjp"),
+  rootCollection: new web3.PublicKey("2YsiCzmKFS6QfNL88goG22qbhzxNM7EhrUD4ghWTTYhS"),
 
 ```
