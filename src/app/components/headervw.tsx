@@ -47,53 +47,59 @@ export default function HeaderVW() {
       { name: "Website", link: "https://mmosh.ai" },
     ]);
   }, []);
-  //
-  // useEffect(() => {
-  //   if (wallet?.publicKey) {
-  //     if (name == "") {
-  //       getProfileInfo();
-  //     }
-  //   } else {
-  //     forgeContext.setLoading(false);
-  //     forgeContext.setConnected(false);
-  //     forgeContext.setUserData({
-  //       _id: "",
-  //       wallet: "",
-  //       username: "",
-  //       bio: "",
-  //       pronouns: "",
-  //       name: "",
-  //       image: "",
-  //       descriptor: "",
-  //       nouns: "",
-  //       seniority: "",
-  //     });
-  //     setName("");
-  //     navigate.push("/");
-  //   }
-  // }, [wallet.publicKey]);
-  //
-  // useEffect(() => {
-  //   if (pathname == "/" && wallet.publicKey) {
-  //     navigate.push("/");
-  //   } else if (pathname != "/" && !wallet.publicKey) {
-  //     navigate.push("/");
-  //   }
-  //   setCurrentLocation(pathname);
-  // }, [pathname]);
-  //
-  // useEffect(() => {
-  //   console.log("forgeContext.userData.name", forgeContext.userData.name);
-  //   setName(forgeContext.userData.name);
-  // }, [forgeContext.connected]);
-  //
-  // useEffect(() => {
-  //   const onScroll = () => setOffset(window.scrollY);
-  //   window.removeEventListener("scroll", onScroll);
-  //   window.addEventListener("scroll", onScroll, { passive: true });
-  //   return () => window.removeEventListener("scroll", onScroll);
-  // }, []);
-  //
+
+  useEffect(() => {
+    if (wallet?.publicKey) {
+      if (name == "") {
+        getProfileInfo();
+      }
+    } else {
+      forgeContext.setLoading(false);
+      forgeContext.setConnected(false);
+      forgeContext.setUserData({
+        _id: "",
+        wallet: "",
+        username: "",
+        bio: "",
+        pronouns: "",
+        name: "",
+        image: "",
+        descriptor: "",
+        nouns: "",
+        seniority: "",
+      });
+      setName("");
+      navigate.push("/");
+    }
+  }, [wallet.publicKey]);
+
+  useEffect(() => {
+    if (pathname == "/" && wallet.publicKey) {
+      navigate.push("/dashboard");
+    } else if (pathname != "/" && !wallet.publicKey) {
+      navigate.push("/");
+    }
+    setCurrentLocation(pathname);
+  }, [pathname]);
+
+  useEffect(() => {
+    console.log("forgeContext.userData.name", forgeContext.userData.name);
+    setName(forgeContext.userData.name);
+  }, [forgeContext.connected]);
+
+  useEffect(() => {
+    const onScroll = () => setOffset(window.scrollY);
+    window.removeEventListener("scroll", onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    if (wallet.wallet) {
+      wallet.connect();
+    }
+  }, [wallet.wallet]);
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -101,7 +107,7 @@ export default function HeaderVW() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  //
+
   const DrawerHeader = styled("div")(({ theme }) => ({
     display: "flex",
     alignItems: "center",
@@ -110,73 +116,73 @@ export default function HeaderVW() {
     ...theme.mixins.toolbar,
     justifyContent: "flex-end",
   }));
-  //
-  // const getUserData = async (hasInvitation: any) => {
-  //   setIsLoading(true);
-  //   const result = await axios.get(
-  //     `/api/get-wallet-data?wallet=${wallet?.publicKey}`,
-  //   );
-  //   if (result) {
-  //     if (result.data) {
-  //       if (result.data.profile) {
-  //         let userData = result.data.profile;
-  //         userData.wallet = wallet.publicKey;
-  //         userData._id = result.data._id;
-  //         if (!userData.seniority) {
-  //           userData.seniority = "";
-  //         }
-  //         forgeContext.setUserData(userData);
-  //         forgeContext.setLoading(false);
-  //         forgeContext.setConnected(true);
-  //         if (hasInvitation) {
-  //           navigate.push("/profile");
-  //         } else {
-  //           navigate.push("/dashboard");
-  //         }
-  //         setIsLoading(false);
-  //         return;
-  //       }
-  //     }
-  //   }
-  //   navigate.push("/dashboard");
-  //   forgeContext.setConnected(true);
-  //   setIsLoading(false);
-  // };
-  //
+
+  const getUserData = async (hasInvitation: any) => {
+    setIsLoading(true);
+    const result = await axios.get(
+      `/api/get-wallet-data?wallet=${wallet?.publicKey}`,
+    );
+    if (result) {
+      if (result.data) {
+        if (result.data.profile) {
+          let userData = result.data.profile;
+          userData.wallet = wallet.publicKey;
+          userData._id = result.data._id;
+          if (!userData.seniority) {
+            userData.seniority = "";
+          }
+          forgeContext.setUserData(userData);
+          forgeContext.setLoading(false);
+          forgeContext.setConnected(true);
+          if (hasInvitation) {
+            navigate.push("/profile");
+          } else {
+            navigate.push("/dashboard");
+          }
+          setIsLoading(false);
+          return;
+        }
+      }
+    }
+    navigate.push("/dashboard");
+    forgeContext.setConnected(true);
+    setIsLoading(false);
+  };
+
   const capitalizeString = (str: any) => {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
-  //
-  // const getProfileInfo = async () => {
-  //   try {
-  //     setIsLoading(true);
-  //     const env = new anchor.AnchorProvider(connection.connection, wallet, {
-  //       preflightCommitment: "processed",
-  //     });
-  //     let userConn: UserConn = new UserConn(env, web3Consts.programID);
-  //     const profileInfo = await userConn.getUserInfo();
-  //     if (profileInfo.profiles.length > 0) {
-  //       navigate.push("/invitation");
-  //       forgeContext.setUserData(profileInfo.profiles[0].userinfo);
-  //       forgeContext.setLoading(false);
-  //       forgeContext.setConnected(true);
-  //     } else if (
-  //       profileInfo.activationTokens.length > 0 &&
-  //       profileInfo.profiles.length == 0
-  //     ) {
-  //       getUserData(true);
-  //     } else {
-  //       getUserData(false);
-  //     }
-  //   } catch (error) {
-  //     getUserData(false);
-  //     console.log("error is ", error);
-  //   }
-  // };
+
+  const getProfileInfo = async () => {
+    try {
+      setIsLoading(true);
+      const env = new anchor.AnchorProvider(connection.connection, wallet, {
+        preflightCommitment: "processed",
+      });
+      let userConn: UserConn = new UserConn(env, web3Consts.programID);
+      const profileInfo = await userConn.getUserInfo();
+      if (profileInfo.profiles.length > 0) {
+        navigate.push("/invitation");
+        forgeContext.setUserData(profileInfo.profiles[0].userinfo);
+        forgeContext.setLoading(false);
+        forgeContext.setConnected(true);
+      } else if (
+        profileInfo.activationTokens.length > 0 &&
+        profileInfo.profiles.length == 0
+      ) {
+        getUserData(true);
+      } else {
+        getUserData(false);
+      }
+    } catch (error) {
+      getUserData(false);
+      console.log("error is ", error);
+    }
+  };
 
   return (
     <>
-      {!forgeContext.connected && (
+      {forgeContext.connected && (
         <>
           <div className="header">
             <div
@@ -197,11 +203,15 @@ export default function HeaderVW() {
                 </Link>
               </h1>
               <div className="forge-menu">
-                {menuData.map((menuDataItem: any, index: any) => (
-                  <a href={menuDataItem.link} target="_blank">
-                    {menuDataItem.name}
-                  </a>
-                ))}
+                <ul>
+                  {menuData.map((menuDataItem: any, index: any) => (
+                    <li key={index}>
+                      <a href={menuDataItem.link} target="_blank">
+                        {menuDataItem.name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
               </div>
               <div className="connect-action">
                 <div className="connect-action-item">
@@ -259,7 +269,11 @@ export default function HeaderVW() {
 
                 <div className="banner-container-inner-item">
                   <img
-                    src={"/images/headerlogo1.png"}
+                    src={
+                      location.pathname == "/dashboard"
+                        ? "/images/headerlogo.png"
+                        : "/images/headerlogo1.png"
+                    }
                     alt="banner"
                     key={"banner"}
                   />
@@ -302,7 +316,7 @@ export default function HeaderVW() {
         </>
       )}
 
-      {forgeContext.connected && (
+      {!forgeContext.connected && (
         <div className="header">
           <div className="guest-header-container header-container">
             <h1>

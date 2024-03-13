@@ -59,7 +59,6 @@ export default function Profile() {
   const [isLoading, setIsLoading] = useState(true);
   const [gensis, setGensis] = useState("");
   const [subToken, setSubToken] = useState("");
-  const [whitelisted, setWhitelisted] = useState(false);
 
   useEffect(() => {
     if (wallet?.publicKey) {
@@ -80,7 +79,7 @@ export default function Profile() {
       setGender(forgeContext.userData.pronouns);
 
       setFirstName(fullname[0]);
-      if(fullname.length>1) {
+      if (fullname.length > 1) {
         setLastName(fullname[1]);
       }
 
@@ -102,21 +101,20 @@ export default function Profile() {
       const result = await axios.get(`/api/get-option?name=totalmints`);
       return result.data != "" ? parseInt(result.data) : 0;
     } catch (error) {
-      return 0
+      return 0;
     }
   };
 
-  const updateTotalMints = async (totalMints:any) => {
+  const updateTotalMints = async (totalMints: any) => {
     try {
       await axios.post("/api/set-option", {
         name: "totalmints",
-        value: totalMints
+        value: totalMints,
       });
     } catch (error) {
-      console.log("error updating total mints ", error)
+      console.log("error updating total mints ", error);
     }
   };
-  
 
   const updateUserData = async (params: any) => {
     await axios.put("/api/update-wallet-data", {
@@ -127,7 +125,7 @@ export default function Profile() {
   };
 
   const createMessage = (message: any, type: any) => {
-    window.location.href="/";
+    window.location.href = "/";
     window.scrollTo(0, 0);
     setMsgText(message);
     setMsgClass(type);
@@ -136,16 +134,6 @@ export default function Profile() {
       setShowMsg(false);
     }, 5000);
   };
-
-  const getProfileMintingStatus = async (address:string) => {
-    try {
-      const result = await axios.get(`/api/get-whitelist?wallet=`+address);
-      return result.data;
-    } catch (error) {
-      return false
-    }
-  };
-
 
   const validateFields = () => {
     if (subToken == "") {
@@ -168,8 +156,8 @@ export default function Profile() {
       );
       return false;
     }
-    
-    if (tokBalance < 20000 && !whitelisted) {
+
+    if (tokBalance < 20000) {
       createMessage(
         <p>
           Hey! We checked your wallet and you don’t have enough MMOSH to mint.{" "}
@@ -204,17 +192,15 @@ export default function Profile() {
       return;
     }
     setIsSubmit(true);
-    const seniority = await getTotalMints() + 1;
+    const seniority = (await getTotalMints()) + 1;
     const genesisProfile = web3Consts.genesisProfile;
     const activationToken = new anchor.web3.PublicKey(subToken);
-    const commonLut = web3Consts.commonLut;
     const env = new anchor.AnchorProvider(connection.connection, wallet, {
       preflightCommitment: "processed",
     });
 
-
     let fullname = firstName;
-    if(lastName.length > 0) {
+    if (lastName.length > 0) {
       fullname = fullname + " " + lastName;
     }
 
@@ -280,7 +266,7 @@ export default function Profile() {
           value: profileLineage.promoter,
         });
       }
-    } 
+    }
 
     // get scout name
     if (profileLineage.scout.length > 0) {
@@ -296,7 +282,7 @@ export default function Profile() {
           value: profileLineage.scout,
         });
       }
-    } 
+    }
 
     // get recruiter name
     if (profileLineage.recruiter.length > 0) {
@@ -312,7 +298,7 @@ export default function Profile() {
           value: profileLineage.recruiter,
         });
       }
-    } 
+    }
 
     // get originator name
     if (profileLineage.originator.length > 0) {
@@ -362,7 +348,6 @@ export default function Profile() {
         uriHash: shadowHash,
         activationToken,
         genesisProfile,
-        commonLut,
       });
 
       if (res.Ok) {
@@ -374,7 +359,7 @@ export default function Profile() {
           image: body.image,
           descriptor: descriptor,
           nouns: nouns,
-          seniority: seniority
+          seniority: seniority,
         };
         await updateUserData(params);
         await updateTotalMints(seniority);
@@ -389,37 +374,14 @@ export default function Profile() {
           navigate.push("/invitation");
         }, 4000);
       } else {
-        const isWhitelisted = await getProfileMintingStatus(wallet.publicKey);
-        setWhitelisted(isWhitelisted);
-        if (isWhitelisted) {
-          window.location.href="/";
-          createMessage(
-            "You have only completed the first transaction, press the Mint button again to receive your Profile.",
-            "warning-container",
-          );
-        } else {
-          createMessage(
-            "We’re sorry, there was an error while trying to mint your profile. Check your wallet and try again.",
-            "danger-container",
-          );
-        }
-
+        createMessage(
+          "We’re sorry, there was an error while trying to mint your profile. Check your wallet and try again.",
+          "danger-container",
+        );
       }
       setIsSubmit(false);
     } catch (error) {
-
-      const isWhitelisted = await getProfileMintingStatus(wallet.publicKey);
-      setWhitelisted(isWhitelisted);
-      if (isWhitelisted) {
-        window.location.href="/";
-        createMessage(
-          "You have only completed the first transaction, press the Mint button again to receive your Profile.",
-          "warning-container",
-        );
-      } else {
-         createMessage(error, "danger-container");
-      }
-
+      createMessage(error, "danger-container");
       setIsSubmit(false);
     }
   };
@@ -430,7 +392,7 @@ export default function Profile() {
       if (result) {
         if (result.data) {
           if (result.data.profile) {
-            return result.data.profile.name;
+            return result.data.profile.username;
           }
         }
       }
@@ -455,11 +417,7 @@ export default function Profile() {
       setGeneration(profileInfo.generation);
       setProfileLineage(profileInfo.profilelineage);
     }
-    const isWhitelisted = await getProfileMintingStatus(wallet.publicKey);
-    setWhitelisted(isWhitelisted);
   };
-
-  
 
   const closeImageAction = () => {
     setImageFile([]);
@@ -612,7 +570,10 @@ export default function Profile() {
       </div>
       {!isLoading && (
         <div className="profile-container-action">
-          <p>First transaction distributes MMOSH, second gets NFT. To mint your Profile you will need to accept BOTH transactions.</p>
+          <p>
+            First transaction distributes MMOSH, second gets NFT. To mint your
+            Profile you will need to accept BOTH transactions.
+          </p>
           {isSubmit && (
             <Button variant="primary" size="lg">
               Minting Your Profile...
@@ -624,13 +585,12 @@ export default function Profile() {
             </Button>
           )}
           <div className="price-details">
-            {!whitelisted &&
-              <p>Price: 20000 MMOSH</p>
-            }
-            {whitelisted &&
-              <p>Price: 0 MMOSH</p>
-            }
-            <label>Plus at least 0.03 SOL in fees. Note: this amount will be reduced when the protocol is optimized. Sorry for the temporary inconvenience.</label>
+            <p>Price: 20000 MMOSH</p>
+            <label>
+              Plus at least 0.03 SOL in fees. Note: this amount will be reduced
+              when the protocol is optimized. Sorry for the temporary
+              inconvenience.
+            </label>
           </div>
           <div className="balance-details">
             <p>Current Balance: {tokBalance} MMOSH</p>

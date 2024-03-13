@@ -21,6 +21,7 @@ import {
 import { BaseMpl } from "./base/baseMpl";
 import { web3Consts } from "./web3Consts";
 import { BaseSpl } from "./base/baseSpl";
+import { Metaplex } from "@metaplex-foundation/js";
 
 const {
   systemProgram,
@@ -48,12 +49,12 @@ export class Connectivity {
   mainState: web3.PublicKey;
   connection: web3.Connection;
   baseSpl: BaseSpl;
+  metaplex: Metaplex;
 
   // constructor(wallet: anchor.Wallet) {
   constructor(provider: AnchorProvider, programId: web3.PublicKey) {
     // web3.SystemProgram.programId;
     // this.connection = new web3.Connection(Config.rpcURL);
-    // this.provider = new anchor.AnchorProvider(this.connection, wallet, {
     //   commitment: "confirmed",
     // });
     this.provider = provider;
@@ -62,6 +63,7 @@ export class Connectivity {
     this.programId = programId;
     this.program = new Program(IDL, programId, this.provider);
     this.owner = this.provider.publicKey;
+    this.metaplex = new Metaplex(this.connection);
     this.mainState = web3.PublicKey.findProgramAddressSync(
       [Seeds.mainState],
       this.programId,
@@ -174,14 +176,16 @@ export class Connectivity {
     }
   }
 
-  async createProfileCollection(input: {
+  async createCollection(input: {
     name?: string;
     symbol?: string;
     uri?: string;
+    parrentCollection?: web3.PublicKey;
+    collectionType: string;
   }): Promise<Result<TxPassType<{ collection: string }>, any>> {
     try {
       this.reinit();
-      let { name, symbol, uri } = input;
+      let { name, symbol, uri, parrentCollection, collectionType } = input;
       name = name ?? "";
       symbol = symbol ?? "";
       uri = uri ?? "";
@@ -195,6 +199,14 @@ export class Connectivity {
       const collectionAuthorityRecord =
         BaseMpl.getCollectionAuthorityRecordAccount(mint, this.mainState);
       const collectionState = this.__getCollectionStateAccount(mint);
+
+      const rootCollection = parrentCollection
+        ? parrentCollection
+        : mintKp.publicKey;
+
+      const parentCollectionMetadata =
+        BaseMpl.getMetadataAccount(rootCollection);
+      const parentCollectionEdition = BaseMpl.getEditionAccount(rootCollection);
 
       const { ixs: mintIxs } = await this.baseSpl.__getCreateTokenInstructions({
         mintAuthority: admin,
@@ -215,7 +227,7 @@ export class Connectivity {
       this.txis.push(cuBudgetIncIx);
 
       const ix = await this.program.methods
-        .createProfileCollection(name, symbol, uri)
+        .createCollection(name, symbol, uri, collectionType)
         .accounts({
           admin,
           adminAta,
@@ -226,6 +238,75 @@ export class Connectivity {
           collectionMetadata: metadata,
           collectionAuthorityRecord,
           collectionState,
+          parentCollection: rootCollection,
+          parentCollectionEdition: parentCollectionEdition,
+          parentCollectionMetadata: parentCollectionMetadata,
+          mplProgram,
+          tokenProgram,
+          systemProgram,
+          sysvarInstructions,
+        })
+        .instruction();
+      this.txis.push(ix);
+
+      const tx = new web3.Transaction().add(...this.txis);
+      this.txis = [];
+      const signature = await this.provider.sendAndConfirm(tx);
+
+      return {
+        Ok: { signature, info: { collection: mint.toBase58() } },
+      };
+    } catch (e) {
+      log({ error: e });
+      return { Err: e };
+    }
+  }
+
+  async updateCollection(input: {
+    name?: string;
+    symbol?: string;
+    uri?: string;
+    mint?: web3.PublicKey;
+    parrentCollection?: web3.PublicKey;
+  }): Promise<Result<TxPassType<{ collection: string }>, any>> {
+    try {
+      this.reinit();
+      let { name, symbol, uri, mint, parrentCollection } = input;
+      name = name ?? "";
+      symbol = symbol ?? "";
+      uri = uri ?? "";
+      const admin = this.provider.publicKey;
+      if (!admin) throw "Wallet not found";
+
+      const adminAta = getAssociatedTokenAddressSync(mint, admin);
+      const metadata = BaseMpl.getMetadataAccount(mint);
+      const edition = BaseMpl.getEditionAccount(mint);
+      const collectionAuthorityRecord =
+        BaseMpl.getCollectionAuthorityRecordAccount(mint, this.mainState);
+      const collectionState = this.__getCollectionStateAccount(mint);
+
+      const rootCollection = parrentCollection ? parrentCollection : mint;
+      const parentCollectionMetadata =
+        BaseMpl.getMetadataAccount(rootCollection);
+      const parentCollectionEdition = BaseMpl.getEditionAccount(rootCollection);
+
+      const cuBudgetIncIx = web3.ComputeBudgetProgram.setComputeUnitLimit({
+        units: 3000_00,
+      });
+      this.txis.push(cuBudgetIncIx);
+
+      const ix = await this.program.methods
+        .updateCollection(name, symbol, uri)
+        .accounts({
+          admin,
+          mainState: this.mainState,
+          associatedTokenProgram,
+          collection: mint,
+          collectionEdition: edition,
+          collectionMetadata: metadata,
+          parentCollection: rootCollection,
+          parentCollectionEdition,
+          parentCollectionMetadata,
           mplProgram,
           tokenProgram,
           systemProgram,
@@ -359,6 +440,29 @@ export class Connectivity {
     }
   }
 
+  async isCreatorInvitation(mintAddress: web3.PublicKey, userAddress: string) {
+    try {
+      const mintData = await this.metaplex.nfts().findByMint({ mintAddress });
+      if (
+        mintData.collection.address.toBase58() !=
+        web3Consts.badgeCollection.toBase58()
+      ) {
+        return false;
+      }
+      if (mintData.creators.length == 0) {
+        return false;
+      }
+      for (let index = 0; index < mintData.creators.length; index++) {
+        if (mintData.creators[index].address.toBase58() == userAddress) {
+          return true;
+        }
+      }
+      return false;
+    } catch (error) {
+      return false;
+    }
+  }
+
   async initActivationToken(input: {
     name?: string;
     symbol?: string;
@@ -384,16 +488,23 @@ export class Connectivity {
       const profileState = this.__getProfileStateAccount(profile);
       const profileStateInfo =
         await this.program.account.profileState.fetch(profileState);
-      if (profileStateInfo.activationToken)
-        return {
-          Ok: {
-            signature: "",
-            info: {
-              activationToken: profileStateInfo.activationToken.toBase58(),
-              new: false,
+      if (profileStateInfo.activationToken) {
+        let hasInvitation = await this.isCreatorInvitation(
+          profileStateInfo.activationToken,
+          user.toBase58(),
+        );
+        if (hasInvitation) {
+          return {
+            Ok: {
+              signature: "",
+              info: {
+                activationToken: profileStateInfo.activationToken.toBase58(),
+                new: false,
+              },
             },
-          },
-        };
+          };
+        }
+      }
 
       // const mainStateInfo = await this.program.account.mainState.fetch(this.mainState)
       // const collectionStateAccount = this.__getCollectionStateAccount(mainStateInfo.profileCollection)
@@ -422,6 +533,12 @@ export class Connectivity {
         user,
       );
 
+      const parentCollection = web3Consts.badgeCollection;
+      const parentCollectionMetadata =
+        BaseMpl.getMetadataAccount(parentCollection);
+      const parentCollectionEdition =
+        BaseMpl.getEditionAccount(parentCollection);
+
       let { name, symbol, uri } = input;
       symbol = symbol ?? "";
       uri = uri ?? "";
@@ -445,6 +562,9 @@ export class Connectivity {
           userActivationTokenAta,
           activationTokenMetadata,
           profileCollectionAuthorityRecord,
+          parentCollection,
+          parentCollectionMetadata,
+          parentCollectionEdition,
         })
         .instruction();
       this.txis.push(ix);

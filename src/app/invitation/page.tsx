@@ -14,6 +14,7 @@ import { ShdwDrive } from "@shadow-drive/sdk";
 import { Connection, Keypair } from "@solana/web3.js";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 import { ForgeContext } from "../context/ForgeContext";
+import Config from "./../../anchor/web3Config.json";
 
 export default function Invitation() {
   const forgeContext = React.useContext(ForgeContext);
@@ -88,12 +89,6 @@ export default function Invitation() {
     } else {
       setQuota(1000);
     }
-
-
-    const updatewhitelist1 = await userConn.updateProfileMintingStatus(
-      wallet.publicKey.toBase58(),
-      false,
-    );
   };
 
   const capitalizeString = (str: any) => {
@@ -270,7 +265,7 @@ export default function Invitation() {
       if (result) {
         if (result.data) {
           if (result.data.profile) {
-            return result.data.profile.name;
+            return result.data.profile.username;
           }
         }
       }
@@ -511,7 +506,7 @@ export default function Invitation() {
       );
       const keypair = Keypair.fromSecretKey(private_arrray);
       const drive = await new ShdwDrive(
-        new Connection("https://api.metaplex.solana.com"),
+        new Connection(Config.mainRpcURL),
         new NodeWallet(keypair),
       ).init();
 

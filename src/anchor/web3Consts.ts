@@ -16,6 +16,12 @@ export const web3Consts = {
   rootProfile: new web3.PublicKey(process.env.NEXT_PUBLIC_ROOT_PROFILE!),
   genesisProfile: new web3.PublicKey(process.env.NEXT_PUBLIC_GENESIS_PROFILE!),
   commonLut: new web3.PublicKey(process.env.NEXT_PUBLIC_COMMON_LUT!),
+
+  badgeCollection: new web3.PublicKey(
+    process.env.NEXT_PUBLIC_BADGE_COLLECTION!,
+  ),
+  rootCollection: new web3.PublicKey(process.env.NEXT_PUBLIC_ROOT_COLLECTION!),
+
   LAMPORTS_PER_OPOS: 1000_000_000,
   Seeds: {
     mainState: utf8.encode("main_state4"),
