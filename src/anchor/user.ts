@@ -244,7 +244,6 @@ export class Connectivity {
 
       const {
         //profiles
-        // parentProfile,
         grandParentProfile,
         greatGrandParentProfile,
         ggreateGrandParentProfile,
@@ -1068,7 +1067,9 @@ export class Connectivity {
         promoter: this.getAddressString(currentParentProfileHolder),
         scout: this.getAddressString(currentGrandParentProfileHolder),
         recruiter: this.getAddressString(currentGreatGrandParentProfileHolder),
-        originator: this.getAddressString(currentGgreatGrandParentProfileHolder ),
+        originator: this.getAddressString(
+          currentGgreatGrandParentProfileHolder,
+        ),
       };
     } catch (error: any) {
       return {
