@@ -501,7 +501,7 @@ export class Connectivity {
         " :",
         data.result.priorityFeeEstimate,
       );
-      return data.result.priorityFeeEstimate;
+      return Math.floor(data.result.priorityFeeEstimate);
     } catch (error) {
       console.log("getPriorityFeeEstimate ", error);
       return 0;
