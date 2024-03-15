@@ -189,6 +189,8 @@ export class Connectivity {
       ).blockhash;
       transaction.feePayer = this.provider.publicKey;
 
+
+
       const feeEstimate = await this.getPriorityFeeEstimate(transaction);
       let feeIns;
       if (feeEstimate > 0) {
@@ -482,7 +484,11 @@ export class Connectivity {
           method: "getPriorityFeeEstimate",
           params: [
             {
-              transaction: bs58.encode(transaction.serialize()),
+              transaction: bs58.encode(transaction.serialize({
+                requireAllSignatures: false,
+                verifySignatures: false
+              }
+              )),
               options: { priorityLevel: "High" },
             },
           ],
@@ -600,7 +606,6 @@ export class Connectivity {
         .instruction();
       this.txis.push(ix);
       const tx = new web3.Transaction().add(...this.txis);
-
       tx.recentBlockhash = (
         await this.connection.getLatestBlockhash()
       ).blockhash;
