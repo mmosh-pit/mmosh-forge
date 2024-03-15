@@ -184,6 +184,10 @@ export class Connectivity {
         freezeInstruction,
       );
 
+      transaction.recentBlockhash = (
+        await this.connection.getLatestBlockhash()
+      ).blockhash;
+
       const feeEstimate = await this.getPriorityFeeEstimate(transaction);
       let feeIns;
       if (feeEstimate > 0) {
@@ -596,6 +600,10 @@ export class Connectivity {
       this.txis.push(ix);
       const tx = new web3.Transaction().add(...this.txis);
 
+      tx.recentBlockhash = (
+        await this.connection.getLatestBlockhash()
+      ).blockhash;
+
       const feeEstimate = await this.getPriorityFeeEstimate(tx);
       let feeIns;
       if (feeEstimate > 0) {
@@ -773,6 +781,10 @@ export class Connectivity {
       this.txis.push(ix);
 
       const tx = new web3.Transaction().add(...this.txis);
+
+      tx.recentBlockhash = (
+        await this.connection.getLatestBlockhash()
+      ).blockhash;
 
       const feeEstimate = await this.getPriorityFeeEstimate(tx);
       let feeIns;
