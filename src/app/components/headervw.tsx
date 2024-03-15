@@ -94,12 +94,6 @@ export default function HeaderVW() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => {
-    if (wallet.wallet) {
-      wallet.connect();
-    }
-  }, [wallet.wallet]);
-
   const handleDrawerOpen = () => {
     setOpen(true);
   };
