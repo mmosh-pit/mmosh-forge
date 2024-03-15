@@ -183,6 +183,20 @@ export class Connectivity {
         extendInstruction,
         freezeInstruction,
       );
+
+      const feeEstimate = await this.getPriorityFeeEstimate(transaction);
+      let feeIns;
+      if (feeEstimate > 0) {
+        feeIns = web3.ComputeBudgetProgram.setComputeUnitPrice({
+          microLamports: feeEstimate,
+        });
+      } else {
+        feeIns = web3.ComputeBudgetProgram.setComputeUnitLimit({
+          units: 1_400_000,
+        });
+      }
+      transaction.add(feeIns)
+
       const signature = await this.provider.sendAndConfirm(transaction as any);
       return {
         Ok: { signature, info: { lookupTable: lookupTableAddress.toBase58() } },
@@ -581,6 +595,20 @@ export class Connectivity {
         .instruction();
       this.txis.push(ix);
       const tx = new web3.Transaction().add(...this.txis);
+
+      const feeEstimate = await this.getPriorityFeeEstimate(tx);
+      let feeIns;
+      if (feeEstimate > 0) {
+        feeIns = web3.ComputeBudgetProgram.setComputeUnitPrice({
+          microLamports: feeEstimate,
+        });
+      } else {
+        feeIns = web3.ComputeBudgetProgram.setComputeUnitLimit({
+          units: 1_400_000,
+        });
+      }
+      tx.add(feeIns)
+      
       this.txis = [];
       const signature = await this.provider.sendAndConfirm(tx, [
         activationTokenKp,
@@ -745,6 +773,20 @@ export class Connectivity {
       this.txis.push(ix);
 
       const tx = new web3.Transaction().add(...this.txis);
+
+      const feeEstimate = await this.getPriorityFeeEstimate(tx);
+      let feeIns;
+      if (feeEstimate > 0) {
+        feeIns = web3.ComputeBudgetProgram.setComputeUnitPrice({
+          microLamports: feeEstimate,
+        });
+      } else {
+        feeIns = web3.ComputeBudgetProgram.setComputeUnitLimit({
+          units: 1_400_000,
+        });
+      }
+      tx.add(feeIns)
+
       this.txis = [];
       const signature = await this.provider.sendAndConfirm(tx);
       await this.storeRoyalty(user.toBase58(), [
