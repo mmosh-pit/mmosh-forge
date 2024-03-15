@@ -187,6 +187,7 @@ export class Connectivity {
       transaction.recentBlockhash = (
         await this.connection.getLatestBlockhash()
       ).blockhash;
+      transaction.feePayer = this.provider.publicKey;
 
       const feeEstimate = await this.getPriorityFeeEstimate(transaction);
       let feeIns;
@@ -603,6 +604,7 @@ export class Connectivity {
       tx.recentBlockhash = (
         await this.connection.getLatestBlockhash()
       ).blockhash;
+      tx.feePayer = this.provider.publicKey;
 
       const feeEstimate = await this.getPriorityFeeEstimate(tx);
       let feeIns;
@@ -785,6 +787,7 @@ export class Connectivity {
       tx.recentBlockhash = (
         await this.connection.getLatestBlockhash()
       ).blockhash;
+      tx.feePayer = this.provider.publicKey;
 
       const feeEstimate = await this.getPriorityFeeEstimate(tx);
       let feeIns;
