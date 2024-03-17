@@ -373,12 +373,16 @@ export class Connectivity {
 
       const lutsInfo = [commonLutInfo];
 
-      const freezeInstruction = await this.calculatePriorityFee(
+      const freezeInstructions = await this.calculatePriorityFee(
         ix,
         lutsInfo,
         mintKp,
       );
-      this.txis.push(freezeInstruction);
+
+      for (let index = 0; index < freezeInstructions.length; index++) {
+        const element = freezeInstructions[index];
+        this.txis.push(element);
+      }
 
       const blockhash = (await this.connection.getLatestBlockhash()).blockhash;
       const message = new web3.TransactionMessage({
@@ -459,15 +463,18 @@ export class Connectivity {
     tx.sign([mintKp]);
 
     const feeEstimate = await this.getPriorityFeeEstimate(tx);
-    let feeIns;
+    let feeIns:any = [];
     if (feeEstimate > 0) {
-      feeIns = web3.ComputeBudgetProgram.setComputeUnitPrice({
+      feeIns.push(web3.ComputeBudgetProgram.setComputeUnitPrice({
         microLamports: feeEstimate,
-      });
-    } else {
-      feeIns = web3.ComputeBudgetProgram.setComputeUnitLimit({
+      }));
+      feeIns.push(web3.ComputeBudgetProgram.setComputeUnitLimit({
         units: 1_400_000,
-      });
+      }));
+    } else {
+      feeIns.push(web3.ComputeBudgetProgram.setComputeUnitLimit({
+        units: 1_400_000,
+      }));
     }
 
     return feeIns;
@@ -964,6 +971,7 @@ export class Connectivity {
             profileStateInfo.activationToken,
             user.toBase58(),
           );
+          console.log("hasInvitation ", hasInvitation);
           if (hasInvitation) {
             const userActivationAta = getAssociatedTokenAddressSync(
               profileStateInfo.activationToken,
@@ -979,7 +987,7 @@ export class Connectivity {
 
         for (let i of _userNfts) {
           const collectionInfo = i?.collection;
-          if (collectionInfo?.address.toBase58() == genesisProfile.toBase58()) {
+          if (collectionInfo?.address.toBase58() == web3Consts.badgeCollection.toBase58() && hasInvitation) {
             activationTokens.push({
               name: i.name,
               genesis: genesisProfile.toBase58(),

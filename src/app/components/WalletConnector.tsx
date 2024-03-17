@@ -21,7 +21,7 @@ const WalletConnector = ({ children }: { children: React.ReactNode }) => {
 
   const wallets = useMemo(
     () => [
-      new PhantomWalletAdapter(),
+      new PhantomWalletAdapter({ network: WalletAdapterNetwork.Mainnet }),
       new SolflareWalletAdapter({ network: WalletAdapterNetwork.Mainnet }),
       new TorusWalletAdapter(),
     ],
@@ -30,7 +30,7 @@ const WalletConnector = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <ForgeProvider>
-      <ConnectionProvider endpoint={endpoint}>
+      <ConnectionProvider endpoint={endpoint} config={{confirmTransactionInitialTimeout:120000}}>
         <WalletProvider wallets={wallets}>
           <WalletModalProvider>
             <div className="root-container">
