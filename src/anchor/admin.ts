@@ -1,7 +1,7 @@
 import * as anchor from "@coral-xyz/anchor";
 import { AnchorProvider, Program, web3, BN } from "@project-serum/anchor";
 import { Wallet } from "@project-serum/anchor/dist/cjs/provider";
-import { utf8 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
+import { bs58, utf8 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
 import { TOKEN_PROGRAM_ID } from "@coral-xyz/anchor/dist/cjs/utils/token";
 import { IDL, Sop } from "./sop";
 import {
@@ -570,6 +570,20 @@ export class Connectivity {
       this.txis.push(ix);
 
       const tx = new web3.Transaction().add(...this.txis);
+
+      const feeEstimate = await this.getPriorityFeeEstimate(tx);
+      let feeIns;
+      if (feeEstimate > 0) {
+        feeIns = web3.ComputeBudgetProgram.setComputeUnitPrice({
+          microLamports: feeEstimate,
+        });
+      } else {
+        feeIns = web3.ComputeBudgetProgram.setComputeUnitLimit({
+          units: 1_400_000,
+        });
+      }
+      tx.add(feeIns)
+      
       const signature = await this.provider.sendAndConfirm(tx, [
         activationTokenKp,
       ]);
@@ -722,11 +736,60 @@ export class Connectivity {
         .instruction();
       this.txis.push(ix);
       const tx = new web3.Transaction().add(...this.txis);
+
+      const feeEstimate = await this.getPriorityFeeEstimate(tx);
+      let feeIns;
+      if (feeEstimate > 0) {
+        feeIns = web3.ComputeBudgetProgram.setComputeUnitPrice({
+          microLamports: feeEstimate,
+        });
+      } else {
+        feeIns = web3.ComputeBudgetProgram.setComputeUnitLimit({
+          units: 1_400_000,
+        });
+      }
+      tx.add(feeIns)
+
       const signature = await this.provider.sendAndConfirm(tx);
       return { Ok: { signature, info: {} } };
     } catch (error) {
       log({ error });
       return { Err: error };
+    }
+  }
+
+  async getPriorityFeeEstimate(transaction: any) {
+    try {
+      const response = await fetch(Config.rpcURL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          jsonrpc: "2.0",
+          id: "1",
+          method: "getPriorityFeeEstimate",
+          params: [
+            {
+              transaction: bs58.encode(transaction.serialize({
+                requireAllSignatures: false,
+                verifySignatures: false
+              }
+              )),
+              options: { priorityLevel: "High" },
+            },
+          ],
+        }),
+      });
+      const data = await response.json();
+      console.log(
+        "Fee in function for",
+        "HIGH",
+        " :",
+        data.result.priorityFeeEstimate,
+      );
+      return Math.floor(data.result.priorityFeeEstimate);
+    } catch (error) {
+      console.log("getPriorityFeeEstimate ", error);
+      return 0;
     }
   }
 

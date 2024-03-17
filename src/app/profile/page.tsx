@@ -125,7 +125,6 @@ export default function Profile() {
   };
 
   const createMessage = (message: any, type: any) => {
-    window.location.href = "/";
     window.scrollTo(0, 0);
     setMsgText(message);
     setMsgClass(type);

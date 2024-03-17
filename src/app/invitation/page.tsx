@@ -104,6 +104,7 @@ export default function Invitation() {
 
     let isSuccess = false;
     if (firstTime) {
+      console.log("first time invitation")
       let attributes = [];
       // get promoter name
       if (profileLineage.promoter.length > 0) {
@@ -221,10 +222,16 @@ export default function Invitation() {
         uri,
         profile: profile,
       });
+
+      console.log("first time invitation result ", res)
+
       const res1 = await userConn.mintSubscriptionToken({
         amount: inputValue,
         subscriptionToken: res.Ok.info.subscriptionToken,
       });
+
+      console.log("first time invitation result1 ", res1)
+
       if (res1.Ok) {
         isSuccess = true;
       }
@@ -233,10 +240,19 @@ export default function Invitation() {
         name: "Invitation",
         profile: profile,
       });
+
+      console.log("invitation result ", res)
+
+
       const res1 = await userConn.mintSubscriptionToken({
         amount: inputValue,
         subscriptionToken: res.Ok.info.subscriptionToken,
       });
+
+
+
+      console.log("invitation result1 ", res1)
+
       if (res1.Ok) {
         isSuccess = true;
       }
@@ -327,11 +343,12 @@ export default function Invitation() {
         symbol,
         uri,
       });
-      console.log("res ", res);
+      console.log("invitation gensis 1 ", res);
       const res1 = await userConn.mintActivationToken(
         inputValue,
         wallet.publicKey,
       );
+      console.log("invitation gensis 2 ", res1);
       if (res1.Ok) {
         isSuccess = true;
       }
@@ -340,6 +357,7 @@ export default function Invitation() {
         inputValue,
         wallet.publicKey,
       );
+      console.log("invitation gensis 2 ", res1);
       if (res1.Ok) {
         isSuccess = true;
       }
