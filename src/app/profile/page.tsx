@@ -569,10 +569,6 @@ export default function Profile() {
       </div>
       {!isLoading && (
         <div className="profile-container-action">
-          <p>
-            First transaction distributes MMOSH, second gets NFT. To mint your
-            Profile you will need to accept BOTH transactions.
-          </p>
           {isSubmit && (
             <Button variant="primary" size="lg">
               Minting Your Profile...
@@ -586,9 +582,7 @@ export default function Profile() {
           <div className="price-details">
             <p>Price: 20000 MMOSH</p>
             <label>
-              Plus at least 0.03 SOL in fees. Note: this amount will be reduced
-              when the protocol is optimized. Sorry for the temporary
-              inconvenience.
+                 Plus a small amount of SOL for transaction fees
             </label>
           </div>
           <div className="balance-details">

@@ -120,7 +120,7 @@ export class Connectivity {
           bio: "",
           pronouns: "",
           name: "",
-          image: "",
+          image: result.data.image,
           descriptor: "",
           nouns: "",
           seniority: "",
@@ -646,6 +646,81 @@ export class Connectivity {
       return { Err: e };
     }
   }
+
+  async initCoins(input: {
+    name?: string;
+    symbol?: string;
+    uri?: string;
+    amount?: number
+  }): Promise<Result<TxPassType<{ coinToken: string }>, any>> {
+    try {
+      const user = this.provider.publicKey;
+      this.reinit();
+      let { amount, name, symbol, uri } = input;
+      symbol = symbol ?? "";
+      uri = uri ?? "";
+
+      const coinTokenKp = web3.Keypair.generate();
+      const coinToken = coinTokenKp.publicKey;
+      const coinTokenMetadata =
+        BaseMpl.getMetadataAccount(coinToken);
+
+      const userCoinTokenAta = getAssociatedTokenAddressSync(
+        coinToken,
+        user,
+      );
+
+      const ix = await this.program.methods
+        .initCoinToken(name, symbol, uri, new BN(amount))
+        .accounts({
+          mainState: this.mainState,
+          user,
+          associatedTokenProgram,
+          mplProgram,
+          tokenProgram,
+          systemProgram,
+          coinToken,
+          sysvarInstructions,
+          userCoinTokenAta,
+          coinTokenMetadata,
+        })
+        .instruction();
+      this.txis.push(ix);
+      const tx = new web3.Transaction().add(...this.txis);
+      tx.recentBlockhash = (
+        await this.connection.getLatestBlockhash()
+      ).blockhash;
+      tx.feePayer = this.provider.publicKey;
+
+      const feeEstimate = await this.getPriorityFeeEstimate(tx);
+      let feeIns;
+      if (feeEstimate > 0) {
+        feeIns = web3.ComputeBudgetProgram.setComputeUnitPrice({
+          microLamports: feeEstimate,
+        });
+      } else {
+        feeIns = web3.ComputeBudgetProgram.setComputeUnitLimit({
+          units: 1_400_000,
+        });
+      }
+      tx.add(feeIns)
+      
+      this.txis = [];
+      const signature = await this.provider.sendAndConfirm(tx, [
+        coinTokenKp,
+      ]);
+      return {
+        Ok: {
+          signature,
+          info: { coinToken: coinToken.toBase58() },
+        },
+      };
+    } catch (e) {
+      log({ error: e });
+      return { Err: e };
+    }
+  }
+
 
   async mintSubscriptionToken(
     input: _MintSubscriptionToken,
