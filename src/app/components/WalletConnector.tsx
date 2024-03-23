@@ -21,7 +21,7 @@ const WalletConnector = ({ children }: { children: React.ReactNode }) => {
 
   const wallets = useMemo(
     () => [
-      new PhantomWalletAdapter({ network: WalletAdapterNetwork.Mainnet }),
+      new PhantomWalletAdapter(),
       new SolflareWalletAdapter({ network: WalletAdapterNetwork.Mainnet }),
       new TorusWalletAdapter(),
     ],

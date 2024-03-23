@@ -753,6 +753,30 @@ input[type="number"] {
 .bars-loading {
   justify-content: center;
 }
+
+.exchange-coin-box {display: flex;   justify-content: center;}
+.exchange-coin-box input {
+  background: rgba(199, 199, 199, 0.17);
+  color: rgba(226, 226, 226, 1);
+  height: 25px;
+  text-align: center;
+  border: 0 none;
+  font-size: 13px;
+  width: auto;
+  width: 40px;
+  padding: 0px;
+  border-radius: 0;
+  margin: 0 10px;
+}
+
+.exchange-coin-box input:focus, .exchange-coin-box input:active {
+  background: rgba(199, 199, 199, 0.17);
+  color: rgba(226, 226, 226, 1);
+}
+.exchange-coin-box p {
+  padding: 0;
+}
+
 @media (min-width: 576px) {
   .header-container {
     padding: 15px 30px;

@@ -15,7 +15,6 @@ export const web3Consts = {
   oposToken: new web3.PublicKey(process.env.NEXT_PUBLIC_OPOS_TOKEN!),
   rootProfile: new web3.PublicKey(process.env.NEXT_PUBLIC_ROOT_PROFILE!),
   genesisProfile: new web3.PublicKey(process.env.NEXT_PUBLIC_GENESIS_PROFILE!),
-  commonLut: new web3.PublicKey(process.env.NEXT_PUBLIC_COMMON_LUT!),
 
   badgeCollection: new web3.PublicKey(
     process.env.NEXT_PUBLIC_BADGE_COLLECTION!,

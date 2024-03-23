@@ -7,6 +7,7 @@ import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import { Connectivity as UserConn } from "../../anchor/user";
+import { Connectivity as CurveConn } from "../../anchor/curve/bonding";
 import { useDropzone } from "react-dropzone";
 import { Bars } from "react-loader-spinner";
 import { pinImageToShadowDrive } from "../lib/pinImageToShadowDrive";
@@ -16,8 +17,13 @@ import { ShdwDrive } from "@shadow-drive/sdk";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 import Config from "./../../anchor/web3Config.json";
 import { v4 as uuidv4 } from "uuid";
+import { ExponentialCurve, ExponentialCurveConfig } from "@/anchor/curve/curves";
+import { percent } from "@strata-foundation/spl-utils";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 export default function CreateCoin() {
+    const navigate = useRouter();
     const [isLoading, setIsLoading] = useState(true);
     const connection = useConnection();
     const wallet: any = useAnchorWallet();
@@ -49,6 +55,8 @@ export default function CreateCoin() {
     const [name, setName] = useState("")
     const [symbol, setSymbol] = useState("")
     const [desc, setDesc] = useState("")
+    const [supply, setSupply] = useState("")
+    const [mintingStatus, setMintingStatus] = useState("Minting...")
 
     const [isSubmit, setIsSubmit] = useState(false);
 
@@ -87,14 +95,14 @@ export default function CreateCoin() {
       if (!validateFields()) {
          return;
       }
-
       setIsSubmit(true)
+
 
       const env = new anchor.AnchorProvider(connection.connection, wallet, {
         preflightCommitment: "processed",
       });
       anchor.setProvider(env);
-      let userConn: UserConn = new UserConn(env, web3Consts.programID);
+      let curveConn: CurveConn = new CurveConn(env, web3Consts.programID);
   
 
       const body = {
@@ -104,60 +112,139 @@ export default function CreateCoin() {
         image: "",
       };
 
-      if (imageFile[0].file != null) {
-        const imageUri = await pinImageToShadowDrive(imageFile[0].file);
-        body.image = imageUri;
-        if (imageUri === "") {
+      try {
+        setMintingStatus("Vaidating Symbol...")
+        const symbolResult = await axios.get(`/api/get-token?symbol=${symbol}`);
+        if(symbolResult.data) {
+          createMessage("Symbol already exist. please choose different symbol and try again", "danger-container");
+          setMintingStatus("Minting...")
+          setIsSubmit(false)
+          return;
+        }
+        
+        if (imageFile[0].file != null) {
+          setMintingStatus("Uploading Image...")
+          const imageUri = await pinImageToShadowDrive(imageFile[0].file);
+          body.image = imageUri;
+          if (imageUri === "") {
+            setMintingStatus("Minting...")
+            setIsSubmit(false);
+            createMessage(
+              "We’re sorry, there was an error while trying to uploading image. please try again later.",
+              "danger-container",
+            );
+            return;
+          }
+        } else {
+          body.image = imageFile[0].preview;
+        }
+        setMintingStatus("Uploading Metadata...")
+        const shdwHash: any = await pinFileToShadowDrive(body);
+        if (shdwHash === "") {
+          setMintingStatus("Minting...")
           setIsSubmit(false);
           createMessage(
-            "We’re sorry, there was an error while trying to uploading image. please try again later.",
+            "We’re sorry, there was an error while trying to prepare meta url. please try again later.",
             "danger-container",
           );
           return;
         }
-      } else {
-        body.image = imageFile[0].preview;
-      }
+        const intialPrice = 1000000000000;
+        const basePrice = calculatePrice(intialPrice);
+        const coinValue = Number(supply) / basePrice * intialPrice;
 
-      const shdwHash: any = await pinFileToShadowDrive(body);
-      if (shdwHash === "") {
-        setIsSubmit(false);
-        createMessage(
-          "We’re sorry, there was an error while trying to prepare meta url. please try again later.",
-          "danger-container",
+        // const targetMint = await curveConn.createTargetMint(
+        //   name,
+        //   symbol,
+        //   shdwHash
+        // )
+
+        // console.log("createTargetMint", targetMint);
+
+       
+        const curveConfig = new ExponentialCurve(
+          {
+            c: new anchor.BN(coinValue), // c = 1
+            b: new anchor.BN(0),
+            // @ts-ignore
+            pow: 1,
+            // @ts-ignore
+            frac: 1,
+          },
+          0,
+          0
         );
-        return;
-      }
+        
+        setMintingStatus("Creating Curve Config...")
+        let curve = await curveConn.initializeCurve({
+          config: new ExponentialCurveConfig(curveConfig),
+        });
+        
+        setMintingStatus("Creating Token...")
+        const targetMint = await curveConn.createTargetMint(
+          name,
+          symbol,
+          shdwHash,
+        );
+        console.log("target mint ", targetMint)
+        // setIsSubmit(false);
+        // return 
+        
+        setMintingStatus("Creating Bonding Curve...")
+        const res = await curveConn.createTokenBonding({
+          name,
+          symbol,
+          url: shdwHash,
+          curve:curve,
+          baseMint: web3Consts.oposToken,
+          generalAuthority: wallet?.publicKey,
+          reserveAuthority: wallet?.publicKey,
+          buyBaseRoyaltyPercentage: 0,
+          buyTargetRoyaltyPercentage: 0,
+          sellBaseRoyaltyPercentage: 0,
+          sellTargetRoyaltyPercentage: 0,
+          targetMint:new anchor.web3.PublicKey(targetMint)
+        });
 
-      const res: any = await userConn.initCoins({
-        name,
-        symbol,
-        uri: shdwHash,
-        amount: 1000
-      });
-      setIsSubmit(false);
+        console.log("createTokenBonding",res)
 
-
-      if (res.Ok) {
+        setMintingStatus("Swaping Token...")
+        const buyres = await curveConn.buy({
+          tokenBonding: res.tokenBonding,
+          desiredTargetAmount: new anchor.BN(Number(supply) * web3Consts.LAMPORTS_PER_OPOS),
+          slippage: 0.5
+        });
+  
+        if (buyres) {
+            setMintingStatus("Saving Token...")
+            await storeToken(name,symbol,body.image, res.targetMint.toBase58(),res.tokenBonding.toBase58());
+            createMessage(
+              <p>Congrats! You coin is  minted and tradable in <a href="javascript:void(0)" onClick={()=>{navigate.push("/swap/"+res.tokenBonding)}}>Swap</a></p>,
+              "success-container",
+            );
+            setName("");
+            setSymbol("")
+            setSupply("")
+            setDesc("");
+            getProfileInfo();
+        } else {
           createMessage(
-            <p>Congrats! You coin is  minted and tradable in <a href="javascript:void(0)">Swap</a></p>,
-            "success-container",
-          );
-          setName("");
-          setSymbol("")
-          setDesc("");
-          getProfileInfo();
-      } else {
-        createMessage(
-            "We’re sorry, there was an error while trying to mint. Check your wallet and try again.",
-            "danger-container",
-          );
+              "We’re sorry, there was an error while trying to mint. Check your wallet and try again.",
+              "danger-container",
+            );
+        }
+        setMintingStatus("Minting...")
+        setIsSubmit(false);
+      } catch (error) {
+        console.log("error on creeating coin",error)
+        setMintingStatus("Minting...")
+        setIsSubmit(false);
       }
 
 
    }
 
-   const validateFields = () => {
+  const validateFields = () => {
     if (solBalance == 0) {
       createMessage(
         <p>
@@ -183,6 +270,7 @@ export default function CreateCoin() {
       return false;
     }
 
+
     if (name.length == 0) {
       createMessage("Name is required", "danger-container");
       return false;
@@ -191,6 +279,19 @@ export default function CreateCoin() {
     if (symbol.length == 0) {
       createMessage("Symbol is required", "danger-container");
       return false;
+    }
+
+
+    if (supply === "") {
+      createMessage("Supply is required", "danger-container");
+      return false;
+    }
+
+    if (supply !== "") {
+      if(parseInt(supply) < 1000 ) {
+          createMessage("Minimum atleast 1000 $MMOSH need to spend", "danger-container");
+          return false; 
+      }
     }
 
     return true;
@@ -231,14 +332,50 @@ export default function CreateCoin() {
   };
 
 
-   const createMessage = (message: any, type: any) => {
+  const createMessage = (message: any, type: any) => {
+    window.scrollTo(0, 0);
     setMsgText(message);
     setMsgClass(type);
     setShowMsg(true);
-    setTimeout(() => {
-      setShowMsg(false);
-    }, 4000);
-   };
+    if(type == "success-container") {
+      setTimeout(() => {
+        setShowMsg(false);
+      }, 20000);
+    } else {
+      setTimeout(() => {
+        setShowMsg(false);
+      }, 4000);
+    }
+
+  };
+
+
+  const calculatePrice = (coinValue: any) => {
+      const curveConfig = new ExponentialCurve(
+        {
+          c: new anchor.BN(coinValue), // c = 1
+          b: new anchor.BN(0),
+          // @ts-ignore
+          pow: 1,
+          // @ts-ignore
+          frac: 1,
+        },
+        0,
+        0
+      );
+
+      return curveConfig.buyTargetAmount(Number(supply), percent(0), percent(0));
+  }
+
+  const storeToken  = async(nameStr:any, symbolStr:any, imageuri:any, tokenaddress:any, bondingaddress:any) =>  {
+    await axios.post("/api/save-token", {
+      name: nameStr,
+      symbol: symbolStr,
+      image: imageuri,
+      tokenaddress: tokenaddress,
+      bondingaddress: bondingaddress
+    });
+  }
 
   return (
     <div className="invitation-page create-coin-page">
@@ -345,7 +482,7 @@ export default function CreateCoin() {
              <>
                {isSubmit &&
                     <Button variant="primary" size="lg">
-                        Minting...
+                        {mintingStatus}
                     </Button>
                }
                {!isSubmit &&
@@ -356,10 +493,28 @@ export default function CreateCoin() {
                 <p>Minimum 1,000 initial purchase</p>
                 <div className="price-details">
                     {symbol == "" &&
-                        <p>Exchange {tokBalance} $MMOSH for {tokBalance} $Coins </p>
+                        <div className="exchange-coin-box">
+                          <p>Exchange</p> 
+                           <Form.Control
+                            type="number"
+                            placeholder="0"
+                            onChange={(event) => setSupply(event.target.value)}
+                            value={supply}
+                            />
+                          <p>$MMOSH for {supply=="" ? 0 : supply} $Coins </p>
+                        </div>
                     }
                     {symbol != "" &&
-                        <p>Exchange {tokBalance} $MMOSH for {tokBalance} ${symbol} </p>
+                      <div className="exchange-coin-box">
+                        <p>Exchange</p> 
+                          <Form.Control
+                          type="number"
+                          placeholder=""
+                          onChange={(event) => setSupply(event.target.value)}
+                          value={supply}
+                          />
+                        <p>$MMOSH for {supply=="" ? 0 : supply} ${symbol} </p>
+                      </div>
                     }
 
                     <label>

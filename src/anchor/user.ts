@@ -1,13 +1,10 @@
 import * as anchor from "@coral-xyz/anchor";
 import { AnchorProvider, Program, web3, BN } from "@project-serum/anchor";
-import { Wallet } from "@project-serum/anchor/dist/cjs/provider";
-import { bs58, utf8 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
+import { bs58 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
 import { TOKEN_PROGRAM_ID } from "@coral-xyz/anchor/dist/cjs/utils/token";
 import { IDL, Sop } from "./sop";
 import {
   LineageInfo,
-  MainState,
-  MainStateInput,
   Result,
   TxPassType,
   _MintProfileByAtInput,
@@ -18,13 +15,11 @@ import Config from "./web3Config.json";
 import { BaseMpl } from "./base/baseMpl";
 import { web3Consts } from "./web3Consts";
 import {
-  getAssociatedTokenAddress,
   getAssociatedTokenAddressSync,
   unpackAccount,
-} from "@solana/spl-token";
+} from "./forge-spl-token";
 import { Metaplex, Metadata as MetadataM } from "@metaplex-foundation/js";
 import { BaseSpl } from "./base/baseSpl";
-import { info } from "console";
 import axios from "axios";
 
 const {

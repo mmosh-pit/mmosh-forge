@@ -15,9 +15,8 @@ import {
 import Config from "./web3Config.json";
 import {
   getAssociatedTokenAddressSync,
-  getNonTransferable,
   unpackAccount,
-} from "@solana/spl-token";
+} from "./forge-spl-token";
 import { BaseMpl } from "./base/baseMpl";
 import { web3Consts } from "./web3Consts";
 import { BaseSpl } from "./base/baseSpl";
