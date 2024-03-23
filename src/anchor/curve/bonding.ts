@@ -11,12 +11,12 @@ import { BondingPricing, IBuyArgs, ICreateTokenBondingArgs, ICreateTokenBondingO
 import { InstructionResult, TypedAccountParser, amountAsNum, createMintInstructions, getMintInfo, getTokenAccount, percent, toBN } from "@strata-foundation/spl-utils";
 import { IdlAccounts, Idl } from '@project-serum/anchor';
 
-import { Token } from "./spl-token-curve/lib/index.esm";
+import { Token } from "./spl-token-curve/index";
 import { BondingHierarchy } from "./bondingHierarchy";
 import { asDecimal, toNumber } from "./utils";
 import { AssetData, PROGRAM_ID, TokenStandard, createCreateMetadataAccountV3Instruction } from "@metaplex-foundation/mpl-token-metadata";
 import Config from "./../web3Config.json";
-import { createInitializeMintInstruction, createAssociatedTokenAccountInstruction, MINT_SIZE, getAssociatedTokenAddress, createMintToInstruction, getMinimumBalanceForRentExemptAccount, createSetAuthorityInstruction, AuthorityType } from "../forge-spl-token";
+import { createInitializeMintInstruction, createAssociatedTokenAccountInstruction, MINT_SIZE, getAssociatedTokenAddress, createMintToInstruction, getMinimumBalanceForRentExemptAccount, createSetAuthorityInstruction, AuthorityType } from "forge-spl-token";
 
 export type ProgramStateV0 = IdlAccounts<Sop>["programStateV0"]
 export type CurveV0 = IdlAccounts<Sop>["curveV0"]

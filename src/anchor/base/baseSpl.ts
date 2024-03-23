@@ -9,7 +9,7 @@ import {
   getAccount as getTokenAccountInfo,
   unpackAccount as unpackTokenAccount,
   createBurnInstruction,
-} from "./../forge-spl-token";
+} from "forge-spl-token";
 import { web3 } from "@project-serum/anchor";
 
 const log = console.log;

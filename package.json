@@ -42,7 +42,8 @@
     "react-dropzone": "^14.2.3",
     "react-loader-spinner": "^6.1.6",
     "tweetnacl": "^1.0.3",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "forge-spl-token" : "git+https://github.com/mmosh-pit/forge-spl-token.git"
   },
   "devDependencies": {
     "@types/node": "^20",

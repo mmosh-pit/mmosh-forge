@@ -153,14 +153,6 @@ export default function CreateCoin() {
         const basePrice = calculatePrice(intialPrice);
         const coinValue = Number(supply) / basePrice * intialPrice;
 
-        // const targetMint = await curveConn.createTargetMint(
-        //   name,
-        //   symbol,
-        //   shdwHash
-        // )
-
-        // console.log("createTargetMint", targetMint);
-
        
         const curveConfig = new ExponentialCurve(
           {
@@ -208,33 +200,35 @@ export default function CreateCoin() {
 
         console.log("createTokenBonding",res)
 
-        setMintingStatus("Swaping Token...")
-        const buyres = await curveConn.buy({
-          tokenBonding: res.tokenBonding,
-          desiredTargetAmount: new anchor.BN(Number(supply) * web3Consts.LAMPORTS_PER_OPOS),
-          slippage: 0.5
-        });
-  
-        if (buyres) {
-            setMintingStatus("Saving Token...")
-            await storeToken(name,symbol,body.image, res.targetMint.toBase58(),res.tokenBonding.toBase58());
+        setTimeout(async() => {
+          setMintingStatus("Swaping Token...")
+          const buyres = await curveConn.buy({
+            tokenBonding: res.tokenBonding,
+            desiredTargetAmount: new anchor.BN(Number(supply) * web3Consts.LAMPORTS_PER_OPOS),
+            slippage: 0.5
+          });
+    
+          if (buyres) {
+              setMintingStatus("Saving Token...")
+              await storeToken(name,symbol,body.image, res.targetMint.toBase58(),res.tokenBonding.toBase58());
+              createMessage(
+                <p>Congrats! You coin is  minted and tradable in <a href="javascript:void(0)" onClick={()=>{navigate.push("/swap/"+res.tokenBonding)}}>Swap</a></p>,
+                "success-container",
+              );
+              setName("");
+              setSymbol("")
+              setSupply("")
+              setDesc("");
+              getProfileInfo();
+          } else {
             createMessage(
-              <p>Congrats! You coin is  minted and tradable in <a href="javascript:void(0)" onClick={()=>{navigate.push("/swap/"+res.tokenBonding)}}>Swap</a></p>,
-              "success-container",
-            );
-            setName("");
-            setSymbol("")
-            setSupply("")
-            setDesc("");
-            getProfileInfo();
-        } else {
-          createMessage(
-              "We’re sorry, there was an error while trying to mint. Check your wallet and try again.",
-              "danger-container",
-            );
-        }
-        setMintingStatus("Minting...")
-        setIsSubmit(false);
+                "We’re sorry, there was an error while trying to mint. Check your wallet and try again.",
+                "danger-container",
+              );
+          }
+          setMintingStatus("Minting...")
+          setIsSubmit(false);
+        }, 5000);
       } catch (error) {
         console.log("error on creeating coin",error)
         setMintingStatus("Minting...")

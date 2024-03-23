@@ -17,7 +17,7 @@ import { web3Consts } from "./web3Consts";
 import {
   getAssociatedTokenAddressSync,
   unpackAccount,
-} from "./forge-spl-token";
+} from "forge-spl-token";
 import { Metaplex, Metadata as MetadataM } from "@metaplex-foundation/js";
 import { BaseSpl } from "./base/baseSpl";
 import axios from "axios";
