@@ -14,10 +14,7 @@ import {
 import Config from "./web3Config.json";
 import { BaseMpl } from "./base/baseMpl";
 import { web3Consts } from "./web3Consts";
-import {
-  getAssociatedTokenAddressSync,
-  unpackAccount,
-} from "forge-spl-token";
+import { getAssociatedTokenAddressSync, unpackAccount } from "forge-spl-token";
 import { Metaplex, Metadata as MetadataM } from "@metaplex-foundation/js";
 import { BaseSpl } from "./base/baseSpl";
 import axios from "axios";
@@ -52,7 +49,6 @@ export class Connectivity {
   baseSpl: BaseSpl;
 
   constructor(provider: AnchorProvider, programId: web3.PublicKey) {
-    // });
     this.provider = provider;
     this.connection = provider.connection;
     this.programId = programId;
@@ -184,8 +180,6 @@ export class Connectivity {
       ).blockhash;
       transaction.feePayer = this.provider.publicKey;
 
-
-
       const feeEstimate = await this.getPriorityFeeEstimate(transaction);
       let feeIns;
       if (feeEstimate > 0) {
@@ -197,7 +191,7 @@ export class Connectivity {
           units: 1_400_000,
         });
       }
-      transaction.add(feeIns)
+      transaction.add(feeIns);
 
       const signature = await this.provider.sendAndConfirm(transaction as any);
       return {
@@ -458,18 +452,24 @@ export class Connectivity {
     tx.sign([mintKp]);
 
     const feeEstimate = await this.getPriorityFeeEstimate(tx);
-    let feeIns:any = [];
+    let feeIns: any = [];
     if (feeEstimate > 0) {
-      feeIns.push(web3.ComputeBudgetProgram.setComputeUnitPrice({
-        microLamports: feeEstimate,
-      }));
-      feeIns.push(web3.ComputeBudgetProgram.setComputeUnitLimit({
-        units: 1_400_000,
-      }));
+      feeIns.push(
+        web3.ComputeBudgetProgram.setComputeUnitPrice({
+          microLamports: feeEstimate,
+        }),
+      );
+      feeIns.push(
+        web3.ComputeBudgetProgram.setComputeUnitLimit({
+          units: 1_400_000,
+        }),
+      );
     } else {
-      feeIns.push(web3.ComputeBudgetProgram.setComputeUnitLimit({
-        units: 1_400_000,
-      }));
+      feeIns.push(
+        web3.ComputeBudgetProgram.setComputeUnitLimit({
+          units: 1_400_000,
+        }),
+      );
     }
 
     return feeIns;
@@ -486,11 +486,12 @@ export class Connectivity {
           method: "getPriorityFeeEstimate",
           params: [
             {
-              transaction: bs58.encode(transaction.serialize({
-                requireAllSignatures: false,
-                verifySignatures: false
-              }
-              )),
+              transaction: bs58.encode(
+                transaction.serialize({
+                  requireAllSignatures: false,
+                  verifySignatures: false,
+                }),
+              ),
               options: { priorityLevel: "High" },
             },
           ],
@@ -624,8 +625,8 @@ export class Connectivity {
           units: 1_400_000,
         });
       }
-      tx.add(feeIns)
-      
+      tx.add(feeIns);
+
       this.txis = [];
       const signature = await this.provider.sendAndConfirm(tx, [
         activationTokenKp,
@@ -646,7 +647,7 @@ export class Connectivity {
     name?: string;
     symbol?: string;
     uri?: string;
-    amount?: number
+    amount?: number;
   }): Promise<Result<TxPassType<{ coinToken: string }>, any>> {
     try {
       const user = this.provider.publicKey;
@@ -657,13 +658,9 @@ export class Connectivity {
 
       const coinTokenKp = web3.Keypair.generate();
       const coinToken = coinTokenKp.publicKey;
-      const coinTokenMetadata =
-        BaseMpl.getMetadataAccount(coinToken);
+      const coinTokenMetadata = BaseMpl.getMetadataAccount(coinToken);
 
-      const userCoinTokenAta = getAssociatedTokenAddressSync(
-        coinToken,
-        user,
-      );
+      const userCoinTokenAta = getAssociatedTokenAddressSync(coinToken, user);
 
       const ix = await this.program.methods
         .initCoinToken(name, symbol, uri, new BN(amount))
@@ -698,12 +695,10 @@ export class Connectivity {
           units: 1_400_000,
         });
       }
-      tx.add(feeIns)
-      
+      tx.add(feeIns);
+
       this.txis = [];
-      const signature = await this.provider.sendAndConfirm(tx, [
-        coinTokenKp,
-      ]);
+      const signature = await this.provider.sendAndConfirm(tx, [coinTokenKp]);
       return {
         Ok: {
           signature,
@@ -715,7 +710,6 @@ export class Connectivity {
       return { Err: e };
     }
   }
-
 
   async mintSubscriptionToken(
     input: _MintSubscriptionToken,
@@ -882,7 +876,7 @@ export class Connectivity {
           units: 1_400_000,
         });
       }
-      tx.add(feeIns)
+      tx.add(feeIns);
 
       this.txis = [];
       const signature = await this.provider.sendAndConfirm(tx);
@@ -1057,7 +1051,11 @@ export class Connectivity {
 
         for (let i of _userNfts) {
           const collectionInfo = i?.collection;
-          if (collectionInfo?.address.toBase58() == web3Consts.badgeCollection.toBase58() && hasInvitation) {
+          if (
+            collectionInfo?.address.toBase58() ==
+              web3Consts.badgeCollection.toBase58() &&
+            hasInvitation
+          ) {
             activationTokens.push({
               name: i.name,
               genesis: genesisProfile.toBase58(),
