@@ -5,23 +5,62 @@ import { bs58, utf8 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
 import { TOKEN_PROGRAM_ID } from "@coral-xyz/anchor/dist/cjs/utils/token";
 import { IDL, Sop } from "../sop";
 
-import { ASSOCIATED_TOKEN_PROGRAM_ID, AccountLayout, NATIVE_MINT} from "@solana/spl-token";
-import { Metaplex, Metadata as MetadataM } from '@metaplex-foundation/js'
-import { BondingPricing, IBuyArgs, ICreateTokenBondingArgs, ICreateTokenBondingOutput, ICurve, IInitializeCurveArgs, IPricingCurve, ISellArgs, fromCurve } from "./curves";
-import { InstructionResult, TypedAccountParser, amountAsNum, createMintInstructions, getMintInfo, getTokenAccount, percent, toBN } from "@strata-foundation/spl-utils";
-import { IdlAccounts, Idl } from '@project-serum/anchor';
+import {
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+  AccountLayout,
+  NATIVE_MINT,
+} from "@solana/spl-token";
+import { Metaplex, Metadata as MetadataM } from "@metaplex-foundation/js";
+import {
+  BondingPricing,
+  IBuyArgs,
+  ICreateTokenBondingArgs,
+  ICreateTokenBondingOutput,
+  ICurve,
+  IInitializeCurveArgs,
+  IPricingCurve,
+  ISellArgs,
+  fromCurve,
+} from "./curves";
+import {
+  InstructionResult,
+  TypedAccountParser,
+  amountAsNum,
+  createMintInstructions,
+  getMintInfo,
+  getTokenAccount,
+  percent,
+  toBN,
+} from "@strata-foundation/spl-utils";
+import { IdlAccounts, Idl } from "@project-serum/anchor";
 
 import { Token } from "./spl-token-curve/index";
 import { BondingHierarchy } from "./bondingHierarchy";
 import { asDecimal, toNumber } from "./utils";
-import { AssetData, PROGRAM_ID, TokenStandard, createCreateMetadataAccountV3Instruction } from "@metaplex-foundation/mpl-token-metadata";
+import {
+  AssetData,
+  PROGRAM_ID,
+  TokenStandard,
+  createCreateMetadataAccountV3Instruction,
+} from "@metaplex-foundation/mpl-token-metadata";
 import Config from "./../web3Config.json";
-import { createInitializeMintInstruction, createAssociatedTokenAccountInstruction, MINT_SIZE, getAssociatedTokenAddress, createMintToInstruction, getMinimumBalanceForRentExemptAccount, createSetAuthorityInstruction, AuthorityType, getAssociatedTokenAddressSync, unpackAccount } from "forge-spl-token";
+import {
+  createInitializeMintInstruction,
+  createAssociatedTokenAccountInstruction,
+  MINT_SIZE,
+  getAssociatedTokenAddress,
+  createMintToInstruction,
+  getMinimumBalanceForRentExemptAccount,
+  createSetAuthorityInstruction,
+  AuthorityType,
+  getAssociatedTokenAddressSync,
+  unpackAccount,
+} from "forge-spl-token";
 import { web3Consts } from "../web3Consts";
 
-export type ProgramStateV0 = IdlAccounts<Sop>["programStateV0"]
-export type CurveV0 = IdlAccounts<Sop>["curveV0"]
-export type TokenBondingV0 = IdlAccounts<Sop>["tokenBondingV0"]
+export type ProgramStateV0 = IdlAccounts<Sop>["programStateV0"];
+export type CurveV0 = IdlAccounts<Sop>["curveV0"];
+export type TokenBondingV0 = IdlAccounts<Sop>["tokenBondingV0"];
 
 export interface IProgramState extends ProgramStateV0 {
   publicKey: anchor.web3.PublicKey;
@@ -35,8 +74,6 @@ export interface ICurveConfig {
   toRawConfig(): CurveV0;
 }
 
-
-
 export class Connectivity {
   programId: web3.PublicKey;
   provider: AnchorProvider;
@@ -46,17 +83,17 @@ export class Connectivity {
   program: Program<Sop>;
   mainState: web3.PublicKey;
   connection: web3.Connection;
-  metaplex: Metaplex
+  metaplex: Metaplex;
   state: IProgramState | undefined;
-  account
+  account;
 
   tokenBondingDecoder: TypedAccountParser<ITokenBonding> = (
     pubkey,
-    account
+    account,
   ) => {
     const coded = this.program.coder.accounts.decode<ITokenBonding>(
       "tokenBondingV0",
-      account.data
+      account.data,
     );
 
     return {
@@ -68,8 +105,8 @@ export class Connectivity {
   constructor(provider: AnchorProvider, programId: web3.PublicKey) {
     web3.SystemProgram.programId;
     this.provider = provider;
-    this.connection = provider.connection
-    this.programId = programId
+    this.connection = provider.connection;
+    this.programId = programId;
     this.program = new Program(IDL, programId, this.provider);
     this.metaplex = new Metaplex(this.connection);
     this.account = this.program.account;
@@ -78,7 +115,7 @@ export class Connectivity {
   curveDecoder: TypedAccountParser<ICurve> = (pubkey, account) => {
     const coded = this.program.coder.accounts.decode<CurveV0>(
       "curveV0",
-      account.data
+      account.data,
     );
 
     return {
@@ -95,161 +132,172 @@ export class Connectivity {
 
   ixCallBack = (ixs?: web3.TransactionInstruction[]) => {
     if (ixs) {
-      this.txis.push(...ixs)
+      this.txis.push(...ixs);
     }
-  }
+  };
 
-
-    /**
+  /**
    * This is an admin function run once to initialize the smart contract.
    *
    * @returns Instructions needed to create sol storage
    */
-    async initializeSolStorageInstructions({
-      mintKeypair,
-    }: {
-      mintKeypair: anchor.web3.Keypair;
-    }): Promise<InstructionResult<null>> {
-      const exists = await this.getState();
-  
-      if (exists) {
-        return {
-          output: null,
-          instructions: [],
-          signers: [],
-        };
-      }
-  
-      console.log("Sol storage does not exist, creating...");
-      const [state, bumpSeed] = anchor.web3.PublicKey.findProgramAddressSync(
-        [Buffer.from("state", "utf-8")],
-        this.programId
-      );
-      const [solStorage, solStorageBumpSeed] = anchor.web3.PublicKey.findProgramAddressSync(
-        [Buffer.from("sol-storage", "utf-8")],
-        this.programId
-      );
-      const [wrappedSolAuthority, mintAuthorityBumpSeed] =
-        anchor.web3.PublicKey.findProgramAddressSync(
-          [Buffer.from("wrapped-sol-authority", "utf-8")],
-          this.programId
-      );
+  async initializeSolStorageInstructions({
+    mintKeypair,
+  }: {
+    mintKeypair: anchor.web3.Keypair;
+  }): Promise<InstructionResult<null>> {
+    const exists = await this.getState();
 
-      const instructions: anchor.web3.TransactionInstruction[] = [];
-      const signers: anchor.web3.Signer[] = [];
-      signers.push(mintKeypair);
-  
-      instructions.push(
-        ...[
-          anchor.web3.SystemProgram.createAccount({
-            fromPubkey: this.provider.publicKey,
-            newAccountPubkey: mintKeypair.publicKey,
-            space: 82,
-            lamports:
-              await this.provider.connection.getMinimumBalanceForRentExemption(
-                82
-              ),
-            programId: TOKEN_PROGRAM_ID,
-          }),
-          Token.createInitMintInstruction(
-            TOKEN_PROGRAM_ID,
-            mintKeypair.publicKey,
-            9,
-            this.provider.publicKey,
-            wrappedSolAuthority
-          ),
-        ]
-      );
-  
-      instructions.push(
-        Token.createSetAuthorityInstruction(
-          TOKEN_PROGRAM_ID,
-          mintKeypair.publicKey,
-          wrappedSolAuthority,
-          "MintTokens",
-          this.provider.publicKey,
-          []
-        )
-      );
-
-  
-      instructions.push(
-        await this.program.methods.initializeSolStorageV0(
-          {
-            solStorageBumpSeed,
-            bumpSeed,
-            mintAuthorityBumpSeed,
-          }).accounts(
-          {
-              state,
-              payer: this.provider.publicKey,
-              solStorage,
-              mintAuthority: wrappedSolAuthority,
-              wrappedSolMint: mintKeypair.publicKey,
-              tokenProgram: TOKEN_PROGRAM_ID,
-              systemProgram: anchor.web3.SystemProgram.programId,
-              rent: anchor.web3.SYSVAR_RENT_PUBKEY,
-          }
-        ).instruction()
-      );
-  
+    if (exists) {
       return {
-        instructions,
-        signers,
         output: null,
+        instructions: [],
+        signers: [],
       };
     }
-  
-    /**
-     * Admin command run once to initialize the smart contract
-     */
-    async initializeSolStorage({
-      mintKeypair,
-    }: {
-      mintKeypair: anchor.web3.Keypair;
-    }): Promise<string> {
 
-      try {
-        const tokenObj = await this.initializeSolStorageInstructions({ mintKeypair })
-        const tx = new web3.Transaction().add(...tokenObj.instructions)
-        const feeEstimate = await this.getPriorityFeeEstimate(tx);
-        let feeIns;
-        if (feeEstimate > 0) {
-          feeIns = web3.ComputeBudgetProgram.setComputeUnitPrice({
-            microLamports: feeEstimate,
-          });
-        } else {
-          feeIns = web3.ComputeBudgetProgram.setComputeUnitLimit({
-            units: 1_400_000,
-          });
-        }
-        tx.add(feeIns)
-        const signature = await this.provider.sendAndConfirm(tx,tokenObj.signers)
-  
-        return signature;
-      } catch (error) {
-        console.log(error);
-      }
+    console.log("Sol storage does not exist, creating...");
+    const [state, bumpSeed] = anchor.web3.PublicKey.findProgramAddressSync(
+      [Buffer.from("state", "utf-8")],
+      this.programId,
+    );
+    const [solStorage, solStorageBumpSeed] =
+      anchor.web3.PublicKey.findProgramAddressSync(
+        [Buffer.from("sol-storage", "utf-8")],
+        this.programId,
+      );
+    const [wrappedSolAuthority, mintAuthorityBumpSeed] =
+      anchor.web3.PublicKey.findProgramAddressSync(
+        [Buffer.from("wrapped-sol-authority", "utf-8")],
+        this.programId,
+      );
 
-    }
-
-
-
-  async createTargetMint(name:any, symbol:any, url:any): Promise<string>  {
-    const lamports = await getMinimumBalanceForRentExemptAccount(this.connection);
-    const targetMintKeypair = web3.Keypair.generate();
-    const tokenATA = await getAssociatedTokenAddress(targetMintKeypair.publicKey, this.provider.publicKey);
     const instructions: anchor.web3.TransactionInstruction[] = [];
-    const index = 0
+    const signers: anchor.web3.Signer[] = [];
+    signers.push(mintKeypair);
+
+    instructions.push(
+      ...[
+        anchor.web3.SystemProgram.createAccount({
+          fromPubkey: this.provider.publicKey,
+          newAccountPubkey: mintKeypair.publicKey,
+          space: 82,
+          lamports:
+            await this.provider.connection.getMinimumBalanceForRentExemption(
+              82,
+            ),
+          programId: TOKEN_PROGRAM_ID,
+        }),
+        Token.createInitMintInstruction(
+          TOKEN_PROGRAM_ID,
+          mintKeypair.publicKey,
+          9,
+          this.provider.publicKey,
+          wrappedSolAuthority,
+        ),
+      ],
+    );
+
+    instructions.push(
+      Token.createSetAuthorityInstruction(
+        TOKEN_PROGRAM_ID,
+        mintKeypair.publicKey,
+        wrappedSolAuthority,
+        "MintTokens",
+        this.provider.publicKey,
+        [],
+      ),
+    );
+
+    instructions.push(
+      await this.program.methods
+        .initializeSolStorageV0({
+          solStorageBumpSeed,
+          bumpSeed,
+          mintAuthorityBumpSeed,
+        })
+        .accounts({
+          state,
+          payer: this.provider.publicKey,
+          solStorage,
+          mintAuthority: wrappedSolAuthority,
+          wrappedSolMint: mintKeypair.publicKey,
+          tokenProgram: TOKEN_PROGRAM_ID,
+          systemProgram: anchor.web3.SystemProgram.programId,
+          rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+        })
+        .instruction(),
+    );
+
+    return {
+      instructions,
+      signers,
+      output: null,
+    };
+  }
+
+  /**
+   * Admin command run once to initialize the smart contract
+   */
+  async initializeSolStorage({
+    mintKeypair,
+  }: {
+    mintKeypair: anchor.web3.Keypair;
+  }): Promise<string> {
+    try {
+      const tokenObj = await this.initializeSolStorageInstructions({
+        mintKeypair,
+      });
+      const tx = new web3.Transaction().add(...tokenObj.instructions);
+      const feeEstimate = await this.getPriorityFeeEstimate(tx);
+      let feeIns;
+      if (feeEstimate > 0) {
+        feeIns = web3.ComputeBudgetProgram.setComputeUnitPrice({
+          microLamports: feeEstimate,
+        });
+      } else {
+        feeIns = web3.ComputeBudgetProgram.setComputeUnitLimit({
+          units: 1_400_000,
+        });
+      }
+      tx.add(feeIns);
+      const signature = await this.provider.sendAndConfirm(
+        tx,
+        tokenObj.signers,
+      );
+
+      return signature;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async createTargetMint(name: any, symbol: any, url: any): Promise<string> {
+    const lamports = await getMinimumBalanceForRentExemptAccount(
+      this.connection,
+    );
+    const targetMintKeypair = web3.Keypair.generate();
+    const tokenATA = await getAssociatedTokenAddress(
+      targetMintKeypair.publicKey,
+      this.provider.publicKey,
+    );
+    const instructions: anchor.web3.TransactionInstruction[] = [];
+    const index = 0;
 
     // Find the proper bonding index to use that isn't taken.
     let indexToUse = index || 0;
-    const getTokenBonding: () => Promise<[anchor.web3.PublicKey, Number]> = () => {
-      return this.tokenBondingKey(targetMintKeypair.publicKey!, indexToUse, this.programId);
+    const getTokenBonding: () => Promise<
+      [anchor.web3.PublicKey, Number]
+    > = () => {
+      return this.tokenBondingKey(
+        targetMintKeypair.publicKey!,
+        indexToUse,
+        this.programId,
+      );
     };
     const getTokenBondingAccount = async () => {
       return this.provider.connection.getAccountInfo(
-        (await getTokenBonding())[0]
+        (await getTokenBonding())[0],
       );
     };
     if (!index) {
@@ -264,10 +312,10 @@ export class Connectivity {
     const [tokenBonding, bumpSeed] = await this.tokenBondingKey(
       targetMintKeypair.publicKey!,
       indexToUse,
-      this.programId
+      this.programId,
     );
 
-    console.log("token boding is ", tokenBonding.toBase58())
+    console.log("token boding is ", tokenBonding.toBase58());
 
     instructions.push(
       anchor.web3.SystemProgram.createAccount({
@@ -278,11 +326,12 @@ export class Connectivity {
         programId: TOKEN_PROGRAM_ID,
       }),
       createInitializeMintInstruction(
-        targetMintKeypair.publicKey, 
-        9, 
-        this.provider.publicKey, 
-        this.provider.publicKey, 
-        TOKEN_PROGRAM_ID)
+        targetMintKeypair.publicKey,
+        9,
+        this.provider.publicKey,
+        this.provider.publicKey,
+        TOKEN_PROGRAM_ID,
+      ),
     );
 
     const createMetadataInstruction = createCreateMetadataAccountV3Instruction(
@@ -325,7 +374,7 @@ export class Connectivity {
         AuthorityType.MintTokens,
         tokenBonding,
         [],
-        TOKEN_PROGRAM_ID
+        TOKEN_PROGRAM_ID,
       ),
       createSetAuthorityInstruction(
         targetMintKeypair.publicKey,
@@ -333,34 +382,11 @@ export class Connectivity {
         AuthorityType.FreezeAccount,
         tokenBonding,
         [],
-        TOKEN_PROGRAM_ID
+        TOKEN_PROGRAM_ID,
       ),
     );
 
-    
-
-      const tx = new web3.Transaction().add(...instructions)
-      const feeEstimate = await this.getPriorityFeeEstimate(tx);
-      let feeIns;
-      if (feeEstimate > 0) {
-        feeIns = web3.ComputeBudgetProgram.setComputeUnitPrice({
-          microLamports: feeEstimate,
-        });
-      } else {
-        feeIns = web3.ComputeBudgetProgram.setComputeUnitLimit({
-          units: 1_400_000,
-        });
-      }
-      tx.add(feeIns)
-      const signature = await this.provider.sendAndConfirm(tx,[targetMintKeypair])
-
-      return targetMintKeypair.publicKey.toBase58()
-  }  
-  async createTokenBonding(
-    args: ICreateTokenBondingArgs,
-  ): Promise<ICreateTokenBondingOutput> {
-    const tokenObj = await this.createTokenBondingInstructions(args)
-    const tx = new web3.Transaction().add(...tokenObj.instructions)
+    const tx = new web3.Transaction().add(...instructions);
     const feeEstimate = await this.getPriorityFeeEstimate(tx);
     let feeIns;
     if (feeEstimate > 0) {
@@ -372,19 +398,42 @@ export class Connectivity {
         units: 1_400_000,
       });
     }
-    tx.add(feeIns)
-    const signature = await this.provider.sendAndConfirm(tx,tokenObj.signers)
+    tx.add(feeIns);
+    const signature = await this.provider.sendAndConfirm(tx, [
+      targetMintKeypair,
+    ]);
 
-    console.log("createTokenBonding ",signature)
+    return targetMintKeypair.publicKey.toBase58();
+  }
+  async createTokenBonding(
+    args: ICreateTokenBondingArgs,
+  ): Promise<ICreateTokenBondingOutput> {
+    const tokenObj = await this.createTokenBondingInstructions(args);
+    const tx = new web3.Transaction().add(...tokenObj.instructions);
+    const feeEstimate = await this.getPriorityFeeEstimate(tx);
+    let feeIns;
+    if (feeEstimate > 0) {
+      feeIns = web3.ComputeBudgetProgram.setComputeUnitPrice({
+        microLamports: feeEstimate,
+      });
+    } else {
+      feeIns = web3.ComputeBudgetProgram.setComputeUnitLimit({
+        units: 1_400_000,
+      });
+    }
+    tx.add(feeIns);
+    const signature = await this.provider.sendAndConfirm(tx, tokenObj.signers);
+
+    console.log("createTokenBonding ", signature);
     return tokenObj.output;
   }
 
-    /**
- * Create a bonding curve
- *
- * @param param0
- * @returns
- */
+  /**
+   * Create a bonding curve
+   *
+   * @param param0
+   * @returns
+   */
   async createTokenBondingInstructions({
     name,
     symbol,
@@ -429,7 +478,7 @@ export class Connectivity {
     if (!targetMint) {
       if (sellTargetRoyalties || buyTargetRoyalties) {
         throw new Error(
-          "Cannot define target royalties if mint is not defined"
+          "Cannot define target royalties if mint is not defined",
         );
       }
 
@@ -445,9 +494,8 @@ export class Connectivity {
 
     const provider = this.provider;
     const state = (await this.getState())!;
-    
+
     // let isNative =
-    //   baseMint.equals(NATIVE_MINT) || baseMint.equals(state.wrappedSolMint);
     let isNative = false;
     if (isNative) {
       baseMint = state.wrappedSolMint;
@@ -464,12 +512,14 @@ export class Connectivity {
 
     // Find the proper bonding index to use that isn't taken.
     let indexToUse = index || 0;
-    const getTokenBonding: () => Promise<[anchor.web3.PublicKey, Number]> = () => {
+    const getTokenBonding: () => Promise<
+      [anchor.web3.PublicKey, Number]
+    > = () => {
       return this.tokenBondingKey(targetMint!, indexToUse, this.programId);
     };
     const getTokenBondingAccount = async () => {
       return this.provider.connection.getAccountInfo(
-        (await getTokenBonding())[0]
+        (await getTokenBonding())[0],
       );
     };
     if (!index) {
@@ -484,11 +534,13 @@ export class Connectivity {
     const [tokenBonding, bumpSeed] = await this.tokenBondingKey(
       targetMint!,
       indexToUse,
-      this.programId
+      this.programId,
     );
 
     if (shouldCreateMint) {
-      const lamports = await getMinimumBalanceForRentExemptAccount(this.connection);
+      const lamports = await getMinimumBalanceForRentExemptAccount(
+        this.connection,
+      );
       const targetMintKeypair = web3.Keypair.generate();
       instructions.push(
         // ...(await createMintInstructions(
@@ -505,11 +557,12 @@ export class Connectivity {
           programId: TOKEN_PROGRAM_ID,
         }),
         createInitializeMintInstruction(
-          targetMintKeypair.publicKey, 
-          9, 
-          tokenBonding, 
-          tokenBonding, 
-          TOKEN_PROGRAM_ID),
+          targetMintKeypair.publicKey,
+          9,
+          tokenBonding,
+          tokenBonding,
+          TOKEN_PROGRAM_ID,
+        ),
       );
 
       // const createMetadataInstruction = createCreateMetadataAccountV3Instruction(
@@ -546,19 +599,15 @@ export class Connectivity {
 
       // instructions.push(createMetadataInstruction);
     }
-    
-
-
-
 
     const baseStorageKeypair = anchor.web3.Keypair.generate();
     signers.push(baseStorageKeypair);
     const baseStorage = baseStorageKeypair.publicKey;
 
-    console.log("baseMint ",baseMint.toBase58())
-    console.log("baseStorage ",baseStorage.toBase58())
-    console.log("tokenBonding ",tokenBonding.toBase58())
-    console.log("targetMint ",targetMint.toBase58())
+    console.log("baseMint ", baseMint.toBase58());
+    console.log("baseStorage ", baseStorage.toBase58());
+    console.log("tokenBonding ", tokenBonding.toBase58());
+    console.log("targetMint ", targetMint.toBase58());
 
     instructions.push(
       anchor.web3.SystemProgram.createAccount({
@@ -568,18 +617,18 @@ export class Connectivity {
         programId: TOKEN_PROGRAM_ID,
         lamports:
           await this.provider.connection.getMinimumBalanceForRentExemption(
-            AccountLayout.span
+            AccountLayout.span,
           ),
       }),
       Token.createInitAccountInstruction(
         TOKEN_PROGRAM_ID,
         baseMint,
         baseStorage,
-        tokenBonding
-      )
+        tokenBonding,
+      ),
     );
 
-    console.log("createInitAccountInstruction completed")
+    console.log("createInitAccountInstruction completed");
 
     if (isNative) {
       buyBaseRoyalties =
@@ -599,7 +648,7 @@ export class Connectivity {
         TOKEN_PROGRAM_ID,
         targetMint,
         buyTargetRoyaltiesOwner,
-        true
+        true,
       );
 
       // If sell target royalties are undefined, we'll do this in the next step
@@ -615,8 +664,8 @@ export class Connectivity {
             targetMint,
             buyTargetRoyalties,
             buyTargetRoyaltiesOwner,
-            payer
-          )
+            payer,
+          ),
         );
         createdAccts.add(buyTargetRoyalties.toBase58());
       }
@@ -628,7 +677,7 @@ export class Connectivity {
         TOKEN_PROGRAM_ID,
         targetMint,
         sellTargetRoyaltiesOwner,
-        true
+        true,
       );
 
       if (
@@ -643,8 +692,8 @@ export class Connectivity {
             targetMint,
             sellTargetRoyalties,
             sellTargetRoyaltiesOwner,
-            payer
-          )
+            payer,
+          ),
         );
         createdAccts.add(buyTargetRoyalties!.toBase58());
       }
@@ -656,7 +705,7 @@ export class Connectivity {
         TOKEN_PROGRAM_ID,
         baseMint,
         buyBaseRoyaltiesOwner,
-        true
+        true,
       );
 
       // If sell base royalties are undefined, we'll do this in the next step
@@ -672,8 +721,8 @@ export class Connectivity {
             baseMint,
             buyBaseRoyalties,
             buyBaseRoyaltiesOwner,
-            payer
-          )
+            payer,
+          ),
         );
         createdAccts.add(buyBaseRoyalties.toBase58());
       }
@@ -685,7 +734,7 @@ export class Connectivity {
         TOKEN_PROGRAM_ID,
         baseMint,
         sellBaseRoyaltiesOwner,
-        true
+        true,
       );
 
       if (
@@ -700,8 +749,8 @@ export class Connectivity {
             baseMint,
             sellBaseRoyalties,
             sellBaseRoyaltiesOwner,
-            payer
-          )
+            payer,
+          ),
         );
         createdAccts.add(sellBaseRoyalties.toBase58());
       }
@@ -710,7 +759,7 @@ export class Connectivity {
       initialReservesPad: advanced.initialReservesPad
         ? toBN(
             advanced.initialReservesPad,
-            await getMintInfo(this.provider, baseMint)
+            await getMintInfo(this.provider, baseMint),
           )
         : new BN(0),
       initialSupplyPad: advanced.initialSupplyPad
@@ -718,61 +767,63 @@ export class Connectivity {
             advanced.initialSupplyPad,
             typeof targetMintDecimals == "undefined"
               ? (await getMintInfo(this.provider, targetMint)).decimals
-              : targetMintDecimals
+              : targetMintDecimals,
           )
         : new BN(0),
     };
 
-    const ix = await this.program.methods.initializeTokenBondingV0({
-      index: indexToUse,
-      goLiveUnixTime: new BN(Math.floor(goLiveDate.valueOf() / 1000)),
-      freezeBuyUnixTime: freezeBuyDate
-        ? new BN(Math.floor(freezeBuyDate.valueOf() / 1000))
-        : null,
-      buyBaseRoyaltyPercentage: percent(buyBaseRoyaltyPercentage) || 0,
-      buyTargetRoyaltyPercentage: percent(buyTargetRoyaltyPercentage) || 0,
-      sellBaseRoyaltyPercentage: percent(sellBaseRoyaltyPercentage) || 0,
-      sellTargetRoyaltyPercentage:
-        percent(sellTargetRoyaltyPercentage) || 0,
-      mintCap: mintCap || null,
-      purchaseCap: purchaseCap || null,
-      generalAuthority,
-      curveAuthority,
-      reserveAuthority,
-      bumpSeed,
-      buyFrozen,
-      ignoreExternalReserveChanges,
-      ignoreExternalSupplyChanges,
-      sellFrozen,
-      ...pads,
-    }).accounts({
-      payer: payer,
-      curve,
-      tokenBonding,
-      baseMint,
-      targetMint,
-      baseStorage,
-      buyBaseRoyalties:
-        buyBaseRoyalties === null
-          ? this.provider.publicKey // Default to this wallet, it just needs a system program acct
-          : buyBaseRoyalties,
-      buyTargetRoyalties:
-        buyTargetRoyalties === null
-          ? this.provider.publicKey // Default to this wallet, it just needs a system program acct
-          : buyTargetRoyalties,
-      sellBaseRoyalties:
-        sellBaseRoyalties === null
-          ? this.provider.publicKey // Default to this wallet, it just needs a system program acct
-          : sellBaseRoyalties,
-      sellTargetRoyalties:
-        sellTargetRoyalties === null
-          ? this.provider.publicKey // Default to this wallet, it just needs a system program acct
-          : sellTargetRoyalties,
-      tokenProgram: TOKEN_PROGRAM_ID,
-      systemProgram: anchor.web3.SystemProgram.programId,
-      rent: anchor.web3.SYSVAR_RENT_PUBKEY,
-      clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
-    }).instruction();
+    const ix = await this.program.methods
+      .initializeTokenBondingV0({
+        index: indexToUse,
+        goLiveUnixTime: new BN(Math.floor(goLiveDate.valueOf() / 1000)),
+        freezeBuyUnixTime: freezeBuyDate
+          ? new BN(Math.floor(freezeBuyDate.valueOf() / 1000))
+          : null,
+        buyBaseRoyaltyPercentage: percent(buyBaseRoyaltyPercentage) || 0,
+        buyTargetRoyaltyPercentage: percent(buyTargetRoyaltyPercentage) || 0,
+        sellBaseRoyaltyPercentage: percent(sellBaseRoyaltyPercentage) || 0,
+        sellTargetRoyaltyPercentage: percent(sellTargetRoyaltyPercentage) || 0,
+        mintCap: mintCap || null,
+        purchaseCap: purchaseCap || null,
+        generalAuthority,
+        curveAuthority,
+        reserveAuthority,
+        bumpSeed,
+        buyFrozen,
+        ignoreExternalReserveChanges,
+        ignoreExternalSupplyChanges,
+        sellFrozen,
+        ...pads,
+      })
+      .accounts({
+        payer: payer,
+        curve,
+        tokenBonding,
+        baseMint,
+        targetMint,
+        baseStorage,
+        buyBaseRoyalties:
+          buyBaseRoyalties === null
+            ? this.provider.publicKey // Default to this wallet, it just needs a system program acct
+            : buyBaseRoyalties,
+        buyTargetRoyalties:
+          buyTargetRoyalties === null
+            ? this.provider.publicKey // Default to this wallet, it just needs a system program acct
+            : buyTargetRoyalties,
+        sellBaseRoyalties:
+          sellBaseRoyalties === null
+            ? this.provider.publicKey // Default to this wallet, it just needs a system program acct
+            : sellBaseRoyalties,
+        sellTargetRoyalties:
+          sellTargetRoyalties === null
+            ? this.provider.publicKey // Default to this wallet, it just needs a system program acct
+            : sellTargetRoyalties,
+        tokenProgram: TOKEN_PROGRAM_ID,
+        systemProgram: anchor.web3.SystemProgram.programId,
+        rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+        clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+      })
+      .instruction();
 
     instructions.push(ix);
 
@@ -795,8 +846,8 @@ export class Connectivity {
   async initializeCurve(
     args: IInitializeCurveArgs,
   ): Promise<anchor.web3.PublicKey> {
-    const tokenObj = await this.initializeCurveInstructions(args)
-    const tx = new web3.Transaction().add(...tokenObj.instructions)
+    const tokenObj = await this.initializeCurveInstructions(args);
+    const tx = new web3.Transaction().add(...tokenObj.instructions);
     const feeEstimate = await this.getPriorityFeeEstimate(tx);
     let feeIns;
     if (feeEstimate > 0) {
@@ -808,10 +859,10 @@ export class Connectivity {
         units: 1_400_000,
       });
     }
-    tx.add(feeIns)
-    const signature = await this.provider.sendAndConfirm(tx,tokenObj.signers)
-    console.log("initializeCurve ",signature)
-    console.log("initializeCurve ",tokenObj.output.curve.toBase58())
+    tx.add(feeIns);
+    const signature = await this.provider.sendAndConfirm(tx, tokenObj.signers);
+    console.log("initializeCurve ", signature);
+    console.log("initializeCurve ", tokenObj.output.curve.toBase58());
     return tokenObj.output.curve;
   }
 
@@ -819,8 +870,9 @@ export class Connectivity {
     payer = this.provider.publicKey,
     config: curveConfig,
     curveKeypair = anchor.web3.Keypair.generate(),
-  }: IInitializeCurveArgs): Promise<InstructionResult<{ curve: anchor.web3.PublicKey }>> {
-
+  }: IInitializeCurveArgs): Promise<
+    InstructionResult<{ curve: anchor.web3.PublicKey }>
+  > {
     const curve = curveConfig.toRawConfig();
     return {
       output: {
@@ -834,27 +886,26 @@ export class Connectivity {
           space: 500,
           lamports:
             await this.provider.connection.getMinimumBalanceForRentExemption(
-              500
+              500,
             ),
           programId: this.programId,
         }),
-        await this.program.methods.createCurveV0(curve).accounts({
+        await this.program.methods
+          .createCurveV0(curve)
+          .accounts({
             payer,
             curve: curveKeypair.publicKey,
             systemProgram: anchor.web3.SystemProgram.programId,
             rent: anchor.web3.SYSVAR_RENT_PUBKEY,
-        }).instruction(),
+          })
+          .instruction(),
       ],
     };
-
   }
 
-
-  async buy(
-    args: IBuyArgs,
-  ): Promise<string> {
-    const tokenObj = await this.buyInstructions(args)
-    const tx = new web3.Transaction().add(...tokenObj.instructions)
+  async buy(args: IBuyArgs): Promise<string> {
+    const tokenObj = await this.buyInstructions(args);
+    const tx = new web3.Transaction().add(...tokenObj.instructions);
     const feeEstimate = await this.getPriorityFeeEstimate(tx);
     let feeIns;
     if (feeEstimate > 0) {
@@ -866,9 +917,9 @@ export class Connectivity {
         units: 1_400_000,
       });
     }
-    tx.add(feeIns)
-    const signature = await this.provider.sendAndConfirm(tx,tokenObj.signers)
-    console.log("buy ",signature)
+    tx.add(feeIns);
+    const signature = await this.provider.sendAndConfirm(tx, tokenObj.signers);
+    console.log("buy ", signature);
     return signature;
   }
 
@@ -891,10 +942,10 @@ export class Connectivity {
     payer = this.provider.publicKey,
   }: IBuyArgs): Promise<InstructionResult<null>> {
     const state = (await this.getState())!;
-    console.log("tokenBondingAcct",tokenBonding.toBase58())
+    console.log("tokenBondingAcct", tokenBonding.toBase58());
     const tokenBondingAcct = (await this.getTokenBonding(tokenBonding))!;
-    console.log("tokenBondingAcct",tokenBondingAcct.baseMint.toBase58())
-    console.log("tokenBondingAcct",tokenBondingAcct.targetMint.toBase58())
+    console.log("tokenBondingAcct", tokenBondingAcct.baseMint.toBase58());
+    console.log("tokenBondingAcct", tokenBondingAcct.targetMint.toBase58());
     // const isNative =
     //   tokenBondingAcct.baseMint.equals(NATIVE_MINT) ||
     //   tokenBondingAcct.baseMint.equals(state.wrappedSolMint);
@@ -904,17 +955,17 @@ export class Connectivity {
     // @ts-ignore
     const targetMint = await getMintInfo(
       this.provider,
-      tokenBondingAcct.targetMint
+      tokenBondingAcct.targetMint,
     );
 
     const baseMint = await getMintInfo(
       this.provider,
-      tokenBondingAcct.baseMint
+      tokenBondingAcct.baseMint,
     );
 
     const baseStorage = await getTokenAccount(
       this.provider,
-      tokenBondingAcct.baseStorage
+      tokenBondingAcct.baseStorage,
     );
 
     const curve = await this.getPricingCurve(
@@ -923,15 +974,15 @@ export class Connectivity {
         tokenBondingAcct.ignoreExternalReserveChanges
           ? tokenBondingAcct.reserveBalanceFromBonding
           : baseStorage.amount,
-        baseMint
+        baseMint,
       ),
       amountAsNum(
         tokenBondingAcct.ignoreExternalSupplyChanges
           ? tokenBondingAcct.supplyFromBonding
           : targetMint.supply,
-        targetMint
+        targetMint,
       ),
-      tokenBondingAcct.goLiveUnixTime.toNumber()
+      tokenBondingAcct.goLiveUnixTime.toNumber(),
     );
 
     const instructions: anchor.web3.TransactionInstruction[] = [];
@@ -944,7 +995,7 @@ export class Connectivity {
         TOKEN_PROGRAM_ID,
         tokenBondingAcct.targetMint,
         sourceAuthority,
-        true
+        true,
       );
 
       if (!(await this.accountExists(destination))) {
@@ -956,8 +1007,8 @@ export class Connectivity {
             tokenBondingAcct.targetMint,
             destination,
             sourceAuthority,
-            payer
-          )
+            payer,
+          ),
         );
       }
     }
@@ -981,14 +1032,14 @@ export class Connectivity {
             desiredTargetAmountNum,
             tokenBondingAcct.buyBaseRoyaltyPercentage,
             tokenBondingAcct.buyTargetRoyaltyPercentage,
-            unixTime
+            unixTime,
           );
 
       maxPrice = min * (1 + slippage);
 
       buyTargetAmount = {
         targetAmount: new BN(
-          Math.floor(neededAmount * Math.pow(10, targetMint.decimals))
+          Math.floor(neededAmount * Math.pow(10, targetMint.decimals)),
         ),
         maximumPrice: toBN(maxPrice, baseMint),
       };
@@ -1004,13 +1055,13 @@ export class Connectivity {
             baseAmountNum,
             tokenBondingAcct.buyBaseRoyaltyPercentage,
             tokenBondingAcct.buyTargetRoyaltyPercentage,
-            unixTime
+            unixTime,
           );
 
       buyWithBase = {
         baseAmount: toBN(baseAmount, baseMint),
         minimumTargetAmount: new BN(
-          Math.ceil(min * (1 - slippage) * Math.pow(10, targetMint.decimals))
+          Math.ceil(min * (1 - slippage) * Math.pow(10, targetMint.decimals)),
         ),
       };
     }
@@ -1024,12 +1075,12 @@ export class Connectivity {
           TOKEN_PROGRAM_ID,
           tokenBondingAcct.baseMint,
           sourceAuthority,
-          true
+          true,
         );
 
         if (!(await this.accountExists(source))) {
           console.warn(
-            "Source account for bonding buy does not exist, if it is not created in an earlier instruction this can cause an error"
+            "Source account for bonding buy does not exist, if it is not created in an earlier instruction this can cause an error",
           );
         }
       }
@@ -1058,7 +1109,9 @@ export class Connectivity {
 
     if (isNative) {
       instructions.push(
-        await this.program.methods.buyNativeV0(args).accounts({
+        await this.program.methods
+          .buyNativeV0(args)
+          .accounts({
             common,
             state: state.publicKey,
             wrappedSolMint: state.wrappedSolMint,
@@ -1068,16 +1121,20 @@ export class Connectivity {
             solStorage: state.solStorage,
             systemProgram: anchor.web3.SystemProgram.programId,
             source,
-        }).instruction()
+          })
+          .instruction(),
       );
     } else {
       instructions.push(
-        await this.program.methods.buyV1(args).accounts({
+        await this.program.methods
+          .buyV1(args)
+          .accounts({
             common,
             state: state.publicKey,
             source,
             sourceAuthority,
-        }).instruction()
+          })
+          .instruction(),
       );
     }
 
@@ -1088,12 +1145,9 @@ export class Connectivity {
     };
   }
 
-
-  async sell(
-    args: ISellArgs,
-  ): Promise<string> {
-    const tokenObj = await this.sellInstructions(args)
-    const tx = new web3.Transaction().add(...tokenObj.instructions)
+  async sell(args: ISellArgs): Promise<string> {
+    const tokenObj = await this.sellInstructions(args);
+    const tx = new web3.Transaction().add(...tokenObj.instructions);
     const feeEstimate = await this.getPriorityFeeEstimate(tx);
     let feeIns;
     if (feeEstimate > 0) {
@@ -1105,19 +1159,19 @@ export class Connectivity {
         units: 1_400_000,
       });
     }
-    tx.add(feeIns)
-    const signature = await this.provider.sendAndConfirm(tx,tokenObj.signers)
-    console.log("sell ",signature)
+    tx.add(feeIns);
+    const signature = await this.provider.sendAndConfirm(tx, tokenObj.signers);
+    console.log("sell ", signature);
     return signature;
   }
-  
+
   /**
    * Instructions to burn `targetMint` tokens in exchange for `baseMint` tokens
    *
    * @param param0
    * @returns
    */
-   async sellInstructions({
+  async sellInstructions({
     tokenBonding,
     source,
     sourceAuthority = this.provider.publicKey,
@@ -1140,15 +1194,15 @@ export class Connectivity {
     // @ts-ignore
     const targetMint = await getMintInfo(
       this.provider,
-      tokenBondingAcct.targetMint
+      tokenBondingAcct.targetMint,
     );
     const baseMint = await getMintInfo(
       this.provider,
-      tokenBondingAcct.baseMint
+      tokenBondingAcct.baseMint,
     );
     const baseStorage = await getTokenAccount(
       this.provider,
-      tokenBondingAcct.baseStorage
+      tokenBondingAcct.baseStorage,
     );
     // @ts-ignore
     const curve = await this.getPricingCurve(
@@ -1157,15 +1211,15 @@ export class Connectivity {
         tokenBondingAcct.ignoreExternalReserveChanges
           ? tokenBondingAcct.reserveBalanceFromBonding
           : baseStorage.amount,
-        baseMint
+        baseMint,
       ),
       amountAsNum(
         tokenBondingAcct.ignoreExternalSupplyChanges
           ? tokenBondingAcct.supplyFromBonding
           : targetMint.supply,
-        targetMint
+        targetMint,
       ),
-      tokenBondingAcct.goLiveUnixTime.toNumber()
+      tokenBondingAcct.goLiveUnixTime.toNumber(),
     );
 
     const instructions: anchor.web3.TransactionInstruction[] = [];
@@ -1177,12 +1231,12 @@ export class Connectivity {
         TOKEN_PROGRAM_ID,
         tokenBondingAcct.targetMint,
         sourceAuthority,
-        true
+        true,
       );
 
       if (!(await this.accountExists(source))) {
         console.warn(
-          "Source account for bonding buy does not exist, if it is not created in an earlier instruction this can cause an error"
+          "Source account for bonding buy does not exist, if it is not created in an earlier instruction this can cause an error",
         );
       }
     }
@@ -1196,7 +1250,7 @@ export class Connectivity {
           TOKEN_PROGRAM_ID,
           tokenBondingAcct.baseMint,
           sourceAuthority,
-          true
+          true,
         );
 
         if (!(await this.accountExists(destination))) {
@@ -1208,8 +1262,8 @@ export class Connectivity {
               tokenBondingAcct.baseMint,
               destination,
               sourceAuthority,
-              payer
-            )
+              payer,
+            ),
           );
         }
       }
@@ -1224,13 +1278,13 @@ export class Connectivity {
           targetAmountNum,
           tokenBondingAcct.sellBaseRoyaltyPercentage,
           tokenBondingAcct.sellTargetRoyaltyPercentage,
-          unixTime
+          unixTime,
         );
 
     const args: anchor.IdlTypes<Sop>["SellV0Args"] = {
       targetAmount: toBN(targetAmount, targetMint),
       minimumPrice: new BN(
-        Math.ceil(min * (1 - slippage) * Math.pow(10, baseMint.decimals))
+        Math.ceil(min * (1 - slippage) * Math.pow(10, baseMint.decimals)),
       ),
     };
 
@@ -1250,25 +1304,31 @@ export class Connectivity {
     };
     if (isNative) {
       instructions.push(
-        await this.program.methods.sellNativeV0(args).accounts({
-          common,
-          destination,
-          state: state.publicKey,
-          wrappedSolMint: state.wrappedSolMint,
-          mintAuthority: (
-            await this.wrappedSolMintAuthorityKey(this.programId)
-          )[0],
-          solStorage: state.solStorage,
-          systemProgram: anchor.web3.SystemProgram.programId,
-        }).instruction()
+        await this.program.methods
+          .sellNativeV0(args)
+          .accounts({
+            common,
+            destination,
+            state: state.publicKey,
+            wrappedSolMint: state.wrappedSolMint,
+            mintAuthority: (
+              await this.wrappedSolMintAuthorityKey(this.programId)
+            )[0],
+            solStorage: state.solStorage,
+            systemProgram: anchor.web3.SystemProgram.programId,
+          })
+          .instruction(),
       );
     } else {
       instructions.push(
-        await this.program.methods.sellV1(args).accounts({
+        await this.program.methods
+          .sellV1(args)
+          .accounts({
             common,
             state: state.publicKey,
             destination,
-        }).instruction()
+          })
+          .instruction(),
       );
     }
 
@@ -1277,8 +1337,7 @@ export class Connectivity {
       signers: [],
       instructions,
     };
-   }
-
+  }
 
   async getUnixTime(): Promise<number> {
     const acc = await this.provider.connection.getAccountInfo(
@@ -1288,21 +1347,20 @@ export class Connectivity {
     return Number(acc!.data.readBigInt64LE(8 * 4));
   }
 
-  async getState(): Promise<(IProgramState & { publicKey: anchor.web3.PublicKey }) | null> {
+  async getState(): Promise<
+    (IProgramState & { publicKey: anchor.web3.PublicKey }) | null
+  > {
     if (this.state) {
       return this.state;
     }
 
-    const stateAddress = (
-      anchor.web3.PublicKey.findProgramAddressSync(
-        [Buffer.from("state", "utf-8")],
-        this.programId
-      )
+    const stateAddress = anchor.web3.PublicKey.findProgramAddressSync(
+      [Buffer.from("state", "utf-8")],
+      this.programId,
     )[0];
 
-    const stateRaw = await this.program.account.programStateV0.fetchNullable(
-      stateAddress
-    );
+    const stateRaw =
+      await this.program.account.programStateV0.fetchNullable(stateAddress);
 
     const state: IProgramState | null = stateRaw
       ? {
@@ -1319,7 +1377,7 @@ export class Connectivity {
 
   async getAccount<T>(
     key: anchor.web3.PublicKey,
-    decoder: TypedAccountParser<T>
+    decoder: TypedAccountParser<T>,
   ): Promise<T | null> {
     const account = await this.provider.connection.getAccountInfo(key);
 
@@ -1330,24 +1388,25 @@ export class Connectivity {
     return null;
   }
 
-  getTokenBonding(tokenBondingKey: anchor.web3.PublicKey): Promise<ITokenBonding | null> {
+  getTokenBonding(
+    tokenBondingKey: anchor.web3.PublicKey,
+  ): Promise<ITokenBonding | null> {
     return this.getAccount(tokenBondingKey, this.tokenBondingDecoder);
   }
 
   async tokenBondingKey(
     targetMint: anchor.web3.PublicKey,
     index: number = 0,
-    programId: anchor.web3.PublicKey
+    programId: anchor.web3.PublicKey,
   ): Promise<[anchor.web3.PublicKey, number]> {
     const pad = Buffer.alloc(2);
     new BN(index, 16, "le").toArrayLike(Buffer).copy(pad);
     return anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from("token-bonding", "utf-8"), targetMint!.toBuffer(), pad],
-      programId
+      programId,
     );
   }
 
-  
   async accountExists(account: anchor.web3.PublicKey): Promise<boolean> {
     return Boolean(await this.provider.connection.getAccountInfo(account));
   }
@@ -1369,14 +1428,14 @@ export class Connectivity {
     key: anchor.web3.PublicKey,
     baseAmount: number,
     targetSupply: number,
-    goLiveUnixTime: number
+    goLiveUnixTime: number,
   ): Promise<IPricingCurve> {
     const curve = await this.getCurve(key);
     return fromCurve(curve, baseAmount, targetSupply, goLiveUnixTime);
   }
 
   async getPricing(
-    tokenBondingKey: anchor.web3.PublicKey | undefined
+    tokenBondingKey: anchor.web3.PublicKey | undefined,
   ): Promise<BondingPricing | undefined> {
     const hierarchy = await this.getBondingHierarchy(tokenBondingKey);
     if (hierarchy) {
@@ -1385,11 +1444,10 @@ export class Connectivity {
       });
     }
   }
-  
 
   async getBondingHierarchy(
     tokenBondingKey: anchor.web3.PublicKey | undefined,
-    stopAtMint?: anchor.web3.PublicKey | undefined
+    stopAtMint?: anchor.web3.PublicKey | undefined,
   ): Promise<BondingHierarchy | undefined> {
     if (!tokenBondingKey) {
       return;
@@ -1411,7 +1469,7 @@ export class Connectivity {
     const pricingCurve = await this.getBondingPricingCurve(tokenBondingKey);
 
     const parentKey = (
-      await this.tokenBondingKey(tokenBonding.baseMint,0,this.programId)
+      await this.tokenBondingKey(tokenBonding.baseMint, 0, this.programId)
     )[0];
     const ret = new BondingHierarchy({
       parent: stopAtMint?.equals(tokenBonding.baseMint)
@@ -1425,115 +1483,121 @@ export class Connectivity {
     return ret;
   }
 
-    /**
+  /**
    * Get a class capable of displaying pricing information or this token bonding at its current reserve and supply
    *
    * @param tokenBonding
    * @returns
    */
-    async getBondingPricingCurve(
-      tokenBonding: anchor.web3.PublicKey
-    ): Promise<IPricingCurve> {
-      const tokenBondingAcct = (await this.getTokenBonding(tokenBonding))!;
-      const targetMint = await getMintInfo(
-        this.provider,
-        tokenBondingAcct.targetMint
-      );
-      const baseMint = await getMintInfo(
-        this.provider,
-        tokenBondingAcct.baseMint
-      );
-      const baseStorage = await getTokenAccount(
-        this.provider,
-        tokenBondingAcct.baseStorage
-      );
-  
-      return await this.getPricingCurve(
-        tokenBondingAcct.curve,
-        amountAsNum(
-          tokenBondingAcct.ignoreExternalReserveChanges
-            ? tokenBondingAcct.reserveBalanceFromBonding
-            : baseStorage.amount,
-          baseMint
-        ),
-        amountAsNum(
-          tokenBondingAcct.ignoreExternalSupplyChanges
-            ? tokenBondingAcct.supplyFromBonding
-            : targetMint.supply,
-          targetMint
-        ),
-        tokenBondingAcct.goLiveUnixTime.toNumber()
-      );
-    }
+  async getBondingPricingCurve(
+    tokenBonding: anchor.web3.PublicKey,
+  ): Promise<IPricingCurve> {
+    const tokenBondingAcct = (await this.getTokenBonding(tokenBonding))!;
+    const targetMint = await getMintInfo(
+      this.provider,
+      tokenBondingAcct.targetMint,
+    );
+    const baseMint = await getMintInfo(
+      this.provider,
+      tokenBondingAcct.baseMint,
+    );
+    const baseStorage = await getTokenAccount(
+      this.provider,
+      tokenBondingAcct.baseStorage,
+    );
 
-    async wrappedSolMintAuthorityKey(
-      programId: anchor.web3.PublicKey = this.programId
-    ): Promise<[ anchor.web3.PublicKey, number]> {
-      return  anchor.web3.PublicKey.findProgramAddressSync(
-        [Buffer.from("wrapped-sol-authority", "utf-8")],
-        programId
-      );
-    }
+    return await this.getPricingCurve(
+      tokenBondingAcct.curve,
+      amountAsNum(
+        tokenBondingAcct.ignoreExternalReserveChanges
+          ? tokenBondingAcct.reserveBalanceFromBonding
+          : baseStorage.amount,
+        baseMint,
+      ),
+      amountAsNum(
+        tokenBondingAcct.ignoreExternalSupplyChanges
+          ? tokenBondingAcct.supplyFromBonding
+          : targetMint.supply,
+        targetMint,
+      ),
+      tokenBondingAcct.goLiveUnixTime.toNumber(),
+    );
+  }
 
-    async getPriorityFeeEstimate(transaction: any) {
-      try {
-        const response = await fetch(Config.rpcURL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            jsonrpc: "2.0",
-            id: "1",
-            method: "getPriorityFeeEstimate",
-            params: [
-              {
-                transaction: bs58.encode(transaction.serialize({
+  async wrappedSolMintAuthorityKey(
+    programId: anchor.web3.PublicKey = this.programId,
+  ): Promise<[anchor.web3.PublicKey, number]> {
+    return anchor.web3.PublicKey.findProgramAddressSync(
+      [Buffer.from("wrapped-sol-authority", "utf-8")],
+      programId,
+    );
+  }
+
+  async getPriorityFeeEstimate(transaction: any) {
+    try {
+      const response = await fetch(Config.rpcURL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          jsonrpc: "2.0",
+          id: "1",
+          method: "getPriorityFeeEstimate",
+          params: [
+            {
+              transaction: bs58.encode(
+                transaction.serialize({
                   requireAllSignatures: false,
-                  verifySignatures: false
-                }
-                )),
-                options: { priorityLevel: "High" },
-              },
-            ],
-          }),
-        });
-        const data = await response.json();
-        console.log(
-          "Fee in function for",
-          "HIGH",
-          " :",
-          data.result.priorityFeeEstimate,
-        );
-        return Math.floor(data.result.priorityFeeEstimate);
-      } catch (error) {
-        return 0;
-      }
+                  verifySignatures: false,
+                }),
+              ),
+              options: { priorityLevel: "High" },
+            },
+          ],
+        }),
+      });
+      const data = await response.json();
+      console.log(
+        "Fee in function for",
+        "HIGH",
+        " :",
+        data.result.priorityFeeEstimate,
+      );
+      return Math.floor(data.result.priorityFeeEstimate);
+    } catch (error) {
+      return 0;
     }
+  }
 
-    async getTokenBalance(baseAddress:string, targetAddress:any) {
-      try {
-        const userbasetokenAta = getAssociatedTokenAddressSync(new anchor.web3.PublicKey(baseAddress), this.provider.publicKey);
-        const usertargettokenAta = getAssociatedTokenAddressSync(new anchor.web3.PublicKey(targetAddress), this.provider.publicKey);
-        const infoes = await this.connection.getMultipleAccountsInfo([
-          new anchor.web3.PublicKey(userbasetokenAta.toBase58()),
-          new anchor.web3.PublicKey(usertargettokenAta.toBase58()),
-        ]);
-        console.log("getTokenBalance ", infoes);
-        const tokenBaseAccount = unpackAccount(userbasetokenAta, infoes[0]);
-        const tokenTargetAccount = unpackAccount(usertargettokenAta, infoes[1]);
-        return {
-          base: (parseInt(tokenBaseAccount?.amount?.toString()) ?? 0) / web3Consts.LAMPORTS_PER_OPOS,
-          target: (parseInt(tokenTargetAccount?.amount?.toString()) ?? 0) / web3Consts.LAMPORTS_PER_OPOS,
-        }
-      } catch (error) {
-        return {
-          base:  0,
-          target: 0
-        }
-      }
-
-
+  async getTokenBalance(baseAddress: string, targetAddress: any) {
+    try {
+      const userbasetokenAta = getAssociatedTokenAddressSync(
+        new anchor.web3.PublicKey(baseAddress),
+        this.provider.publicKey,
+      );
+      const usertargettokenAta = getAssociatedTokenAddressSync(
+        new anchor.web3.PublicKey(targetAddress),
+        this.provider.publicKey,
+      );
+      const infoes = await this.connection.getMultipleAccountsInfo([
+        new anchor.web3.PublicKey(userbasetokenAta.toBase58()),
+        new anchor.web3.PublicKey(usertargettokenAta.toBase58()),
+      ]);
+      console.log("getTokenBalance ", infoes);
+      const tokenBaseAccount = unpackAccount(userbasetokenAta, infoes[0]);
+      const tokenTargetAccount = unpackAccount(usertargettokenAta, infoes[1]);
+      return {
+        base:
+          (parseInt(tokenBaseAccount?.amount?.toString()) ?? 0) /
+          web3Consts.LAMPORTS_PER_OPOS,
+        target:
+          (parseInt(tokenTargetAccount?.amount?.toString()) ?? 0) /
+          web3Consts.LAMPORTS_PER_OPOS,
+      };
+    } catch (error) {
+      return {
+        base: 0,
+        target: 0,
+      };
     }
-
-
+  }
 }
-
