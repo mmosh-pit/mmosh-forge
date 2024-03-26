@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
   } else {
      tokenCollection.insertOne({
         name,
-        symbol,
+        symbol: symbol.toLowerCase(),
         image,
         token: tokenaddress,
         bonding: bondingaddress,

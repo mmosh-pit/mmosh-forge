@@ -212,7 +212,7 @@ export default function CreateCoin() {
               setMintingStatus("Saving Token...")
               await storeToken(name,symbol,body.image, res.targetMint.toBase58(),res.tokenBonding.toBase58());
               createMessage(
-                <p>Congrats! You coin is  minted and tradable in <a href="javascript:void(0)" onClick={()=>{navigate.push("/swap/"+res.tokenBonding)}}>Swap</a></p>,
+                <p>Congrats! You coin is  minted and tradable in <a href="javascript:void(0)" onClick={()=>{navigate.push("/swap")}}>Swap</a></p>,
                 "success-container",
               );
               setName("");

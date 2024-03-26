@@ -16,7 +16,8 @@ import { BondingHierarchy } from "./bondingHierarchy";
 import { asDecimal, toNumber } from "./utils";
 import { AssetData, PROGRAM_ID, TokenStandard, createCreateMetadataAccountV3Instruction } from "@metaplex-foundation/mpl-token-metadata";
 import Config from "./../web3Config.json";
-import { createInitializeMintInstruction, createAssociatedTokenAccountInstruction, MINT_SIZE, getAssociatedTokenAddress, createMintToInstruction, getMinimumBalanceForRentExemptAccount, createSetAuthorityInstruction, AuthorityType } from "forge-spl-token";
+import { createInitializeMintInstruction, createAssociatedTokenAccountInstruction, MINT_SIZE, getAssociatedTokenAddress, createMintToInstruction, getMinimumBalanceForRentExemptAccount, createSetAuthorityInstruction, AuthorityType, getAssociatedTokenAddressSync, unpackAccount } from "forge-spl-token";
+import { web3Consts } from "../web3Consts";
 
 export type ProgramStateV0 = IdlAccounts<Sop>["programStateV0"]
 export type CurveV0 = IdlAccounts<Sop>["curveV0"]
@@ -1507,6 +1508,32 @@ export class Connectivity {
         return 0;
       }
     }
+
+    async getTokenBalance(baseAddress:string, targetAddress:any) {
+      try {
+        const userbasetokenAta = getAssociatedTokenAddressSync(new anchor.web3.PublicKey(baseAddress), this.provider.publicKey);
+        const usertargettokenAta = getAssociatedTokenAddressSync(new anchor.web3.PublicKey(targetAddress), this.provider.publicKey);
+        const infoes = await this.connection.getMultipleAccountsInfo([
+          new anchor.web3.PublicKey(userbasetokenAta.toBase58()),
+          new anchor.web3.PublicKey(usertargettokenAta.toBase58()),
+        ]);
+        console.log("getTokenBalance ", infoes);
+        const tokenBaseAccount = unpackAccount(userbasetokenAta, infoes[0]);
+        const tokenTargetAccount = unpackAccount(usertargettokenAta, infoes[1]);
+        return {
+          base: (parseInt(tokenBaseAccount?.amount?.toString()) ?? 0) / web3Consts.LAMPORTS_PER_OPOS,
+          target: (parseInt(tokenTargetAccount?.amount?.toString()) ?? 0) / web3Consts.LAMPORTS_PER_OPOS,
+        }
+      } catch (error) {
+        return {
+          base:  0,
+          target: 0
+        }
+      }
+
+
+    }
+
 
 }
 

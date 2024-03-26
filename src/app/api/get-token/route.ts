@@ -5,7 +5,7 @@ export async function GET(req: NextRequest) {
   const collection = db.collection("mmosh-app-tokens");
 
   const { searchParams } = new URL(req.url);
-  const param = searchParams.get("symbol");
+  const param = searchParams.get("symbol").toLowerCase();
 
   const token = await collection.findOne(
     {
