@@ -52,7 +52,7 @@ export default function Swap() {
 
     const [keyword,setKeyword] = useState("")
     const [tokenList, setTokenList] = useState([]);
-    const [recentTokens, setRecentTokenList] = useState(localStorage.getItem("recenttokens") ? JSON.parse(localStorage.getItem("recenttokens")) : []);
+    const [recentTokens, setRecentTokenList] = useState([]);
     const [tokenLoading, setTokenLoading] = useState(false);
     const [switcher, setSwitcher] = useState(false);
 
@@ -78,6 +78,7 @@ export default function Swap() {
        } else {
           SetConnectionStatus("notconnected")
        }
+       setRecentTokenList(localStorage.getItem("recenttokens") ? JSON.parse(localStorage.getItem("recenttokens")) : [])
     },[])
 
     const createMessage = (message: any, type: any) => {
