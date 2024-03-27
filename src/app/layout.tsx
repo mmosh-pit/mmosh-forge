@@ -5,8 +5,12 @@ import WalletConnector from "./components/WalletConnector";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  description: "Welcome to the MMOSH Forge App",
-  title: "Forge | MMOSH",
+  description:
+    "MMOSH: The Stoked Token. Join us for an epic adventure beyond time, space and the death-grip of global civilization. Let’s make money fun!",
+  title: "MMOSH App Forge",
+  openGraph: {
+    images: ["https://storage.googleapis.com/mmosh-assets/metadata_image.png"],
+  },
 };
 
 export default function RootLayout({
@@ -14,18 +18,14 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
-
   return (
     <html lang="en">
       <body className={inter.className}>
-              <div className='root-container'>
-                  <div className='content-container'>
-                  <WalletConnector>
-                    {children}
-                  </WalletConnector>
-                  </div>
-              </div>
+        <div className="root-container">
+          <div className="content-container">
+            <WalletConnector>{children}</WalletConnector>
+          </div>
+        </div>
       </body>
     </html>
   );
