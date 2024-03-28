@@ -228,7 +228,7 @@ export default function CreateCoin() {
           }
           setMintingStatus("Minting...")
           setIsSubmit(false);
-        }, 5000);
+        }, 15000);
       } catch (error) {
         console.log("error on creeating coin",error)
         setMintingStatus("Minting...")
