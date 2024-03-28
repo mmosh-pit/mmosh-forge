@@ -86,12 +86,6 @@ export default function HeaderVW() {
     setCurrentLocation(pathname);
   }, [pathname]);
 
-  useEffect(()=>{
-    if(wallet.wallet && !wallet.connected) {
-        wallet.connect();
-    }
-  },[wallet.wallet])
-
   useEffect(() => {
     console.log("forgeContext.userData.name", forgeContext.userData.name);
     setName(forgeContext.userData.name);
