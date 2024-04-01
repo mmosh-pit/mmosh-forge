@@ -229,16 +229,35 @@ export default function Invitation() {
 
       console.log("first time invitation result ", res)
 
-      const res1 = await userConn.mintSubscriptionToken({
-        amount: inputValue,
-        subscriptionToken: res.Ok.info.subscriptionToken,
-      });
+      setTimeout(async() => {
+        const res1 = await userConn.mintSubscriptionToken({
+          amount: inputValue,
+          subscriptionToken: res.Ok.info.subscriptionToken,
+        });
+  
+        console.log("first time invitation result1 ", res1)
+        if (res1.Ok) {
+          isSuccess = true;
+        }
 
-      console.log("first time invitation result1 ", res1)
+        if (isSuccess) {
+          createMessage(
+            "Congrats! You have minted your Invitation(s) successfully.",
+            "success-container",
+          );
+        } else {
+          createMessage(
+            "We’re sorry, there was an error while trying to mint your Invitation Badge(s). Check your wallet and try again.",
+            "danger-container",
+          );
+        }
+    
+        setButtonText("Mint");
+        getProfileInfo();
+      }, 15000);
 
-      if (res1.Ok) {
-        isSuccess = true;
-      }
+
+  
     } else {
       const res = await userConn.initSubscriptionBadge({
         name: "Invitation",
@@ -253,28 +272,28 @@ export default function Invitation() {
         subscriptionToken: res.Ok.info.subscriptionToken,
       });
 
-
-
       console.log("invitation result1 ", res1)
 
       if (res1.Ok) {
         isSuccess = true;
       }
-    }
-    if (isSuccess) {
-      createMessage(
-        "Congrats! You have minted your Invitation(s) successfully.",
-        "success-container",
-      );
-    } else {
-      createMessage(
-        "We’re sorry, there was an error while trying to mint your Invitation Badge(s). Check your wallet and try again.",
-        "danger-container",
-      );
+
+      if (isSuccess) {
+        createMessage(
+          "Congrats! You have minted your Invitation(s) successfully.",
+          "success-container",
+        );
+      } else {
+        createMessage(
+          "We’re sorry, there was an error while trying to mint your Invitation Badge(s). Check your wallet and try again.",
+          "danger-container",
+        );
+      }
+  
+      setButtonText("Mint");
+      getProfileInfo();
     }
 
-    setButtonText("Mint");
-    getProfileInfo();
   };
 
   const getUserName = async (pubKey: any) => {
@@ -348,14 +367,31 @@ export default function Invitation() {
         uri,
       });
       console.log("invitation gensis 1 ", res);
-      const res1 = await userConn.mintActivationToken(
-        inputValue,
-        wallet.publicKey,
-      );
-      console.log("invitation gensis 2 ", res1);
-      if (res1.Ok) {
-        isSuccess = true;
-      }
+      setTimeout(async() => {
+        const res1 = await userConn.mintActivationToken(
+          inputValue,
+          wallet.publicKey,
+        );
+        console.log("invitation gensis 2 ", res1);
+        if (res1.Ok) {
+          isSuccess = true;
+        }
+        if (isSuccess) {
+          createMessage(
+            "Congrats! You have minted your Invitation(s) successfully.",
+            "success-container",
+          );
+        } else {
+          createMessage(
+            "We’re sorry, there was an error while trying to mint your Invitation Badge(s). Check your wallet and try again.",
+            "danger-container",
+          );
+        }
+    
+        setButtonText("Mint");
+        getProfileInfo();
+      }, 15000);
+
     } else {
       const res1 = await userConn.mintActivationToken(
         inputValue,
@@ -365,21 +401,23 @@ export default function Invitation() {
       if (res1.Ok) {
         isSuccess = true;
       }
-    }
-    if (isSuccess) {
-      createMessage(
-        "Congrats! You have minted your Invitation(s) successfully.",
-        "success-container",
-      );
-    } else {
-      createMessage(
-        "We’re sorry, there was an error while trying to mint your Invitation Badge(s). Check your wallet and try again.",
-        "danger-container",
-      );
+
+      if (isSuccess) {
+        createMessage(
+          "Congrats! You have minted your Invitation(s) successfully.",
+          "success-container",
+        );
+      } else {
+        createMessage(
+          "We’re sorry, there was an error while trying to mint your Invitation Badge(s). Check your wallet and try again.",
+          "danger-container",
+        );
+      }
+  
+      setButtonText("Mint");
+      getProfileInfo();
     }
 
-    setButtonText("Mint");
-    getProfileInfo();
   };
 
   const calcNonDecimalValue = (value: number, decimals: number) => {
@@ -473,6 +511,15 @@ export default function Invitation() {
     // const res5 = await userConn.provider.sendAndConfirm(tx3);
     userConn.txis = [];
   };
+
+  const registerAction = async () => {
+    const env = new anchor.AnchorProvider(connection.connection, wallet, {
+      preflightCommitment: "processed",
+    });
+    anchor.setProvider(env);
+    let userConn: UserConn = new UserConn(env, web3Consts.programID);
+    await userConn.registerCommonLut()
+  }
 
   const mintInvitationAction = () => {
     if (solBalance == 0) {

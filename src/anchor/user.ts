@@ -10,6 +10,7 @@ import {
   _MintProfileByAtInput,
   _MintProfileInput,
   _MintSubscriptionToken,
+  _RegisterCommonLut,
 } from "./web3Types";
 import Config from "./web3Config.json";
 import { BaseMpl } from "./base/baseMpl";
@@ -211,7 +212,7 @@ export class Connectivity {
       this.baseSpl.__reinit();
       const user = this.provider.publicKey;
       if (!user) throw "Wallet not found";
-      let { name, symbol, uriHash, activationToken, genesisProfile } = input;
+      let { name, symbol, uriHash, activationToken, genesisProfile, commonLut } = input;
       if (typeof activationToken == "string")
         activationToken = new web3.PublicKey(activationToken);
       if (typeof genesisProfile == "string")
@@ -282,41 +283,6 @@ export class Connectivity {
       );
       const userOposAta = getAssociatedTokenAddressSync(oposToken, user);
 
-      const recentSlot = (await this.connection.getSlot()) - 2;
-
-      const lookupResult = await this.setupLookupTable([
-        profile, // 1
-        user, // 2
-        oposToken, // 3
-        userOposAta, // 4
-        userProfileAta, // 5
-        this.mainState, // 6
-        collection, // 7
-        mplProgram, // 8
-        profileState, // 9
-        tokenProgram, // 10
-        systemProgram, // 11
-        profileEdition, // 12
-        activationToken, // 13
-        profileMetadata, // 14
-        collectionEdition, // 15
-        collectionMetadata, // 16
-        parentProfileState, // 17
-        sysvarInstructions, // 18
-        userActivationTokenAta, // 19
-        associatedTokenProgram, // 20
-        parentProfile,
-        currentParentProfileHolder,
-        currentGrandParentProfileHolder,
-        currentGenesisProfileHolder,
-        parentProfileHolderOposAta,
-        grandParentProfileHolderOposAta,
-        genesisProfileHolderOposAta,
-      ]);
-
-      console.log("lookupResult ", lookupResult);
-
-      const commonLut = new web3.PublicKey(lookupResult.Ok.info.lookupTable);
 
       const ix = await this.program.methods
         .mintProfileByAt(name, symbol, uriHash)
@@ -432,6 +398,27 @@ export class Connectivity {
       return { Err: error };
     }
   }
+
+  async registerCommonLut() {
+    const collection = web3Consts.profileCollection
+    const collectionMetadata = BaseMpl.getMetadataAccount(collection);
+    const collectionEdition = BaseMpl.getEditionAccount(collection);
+    const lookupResult = await this.setupLookupTable([
+      oposToken, // 1
+      this.mainState, // 2
+      collection, // 3
+      mplProgram, // 4
+      tokenProgram, // 5
+      systemProgram, // 6
+      collectionEdition, // 7
+      collectionMetadata, // 8
+      sysvarInstructions, // 9
+      associatedTokenProgram, // 10
+    ]);
+    
+    console.log("register CommonLut",lookupResult)
+  }
+
 
   async storeRoyalty(sender: string, receivers: any) {
     await axios.post("/api/update-royalty", {
@@ -977,9 +964,13 @@ export class Connectivity {
     }
     let profilelineage = {
       promoter: "",
+      promoterprofile:"",
       scout: "",
+      scoutprofile:"",
       recruiter: "",
+      recruiterprofile: "",
       originator: "",
+      originatorprofile: "",
     };
     let generation = "0";
 
@@ -1068,6 +1059,10 @@ export class Connectivity {
 
         if (this.getAddressString(profileState) != "") {
           const {
+            parentProfile,
+            grandParentProfile,
+            greatGrandParentProfile,
+            ggreateGrandParentProfile,
             currentGreatGrandParentProfileHolder,
             currentGgreatGrandParentProfileHolder,
             currentGrandParentProfileHolder,
@@ -1079,13 +1074,17 @@ export class Connectivity {
           );
           profilelineage = {
             promoter: this.getAddressString(currentParentProfileHolder),
+            promoterprofile: this.getAddressString(parentProfile),
             scout: this.getAddressString(currentGrandParentProfileHolder),
+            scoutprofile:  this.getAddressString(grandParentProfile),
             recruiter: this.getAddressString(
               currentGreatGrandParentProfileHolder,
             ),
+            recruiterprofile:  this.getAddressString(greatGrandParentProfile),
             originator: this.getAddressString(
               currentGgreatGrandParentProfileHolder,
             ),
+            originatorprofile:  this.getAddressString(ggreateGrandParentProfile),
           };
         }
       } else {
@@ -1175,6 +1174,7 @@ export class Connectivity {
     }
   }
 
+
   getAddressString(pubKey: web3.PublicKey) {
     try {
       return pubKey.toBase58();
@@ -1183,42 +1183,55 @@ export class Connectivity {
     }
   }
 
-  async getProfileLineage(parentProfile: web3.PublicKey) {
+  async getProfileLineage(currentParentProfile: web3.PublicKey) {
     try {
       const profileStateInfo = await this.program.account.profileState.fetch(
-        this.__getProfileStateAccount(parentProfile),
+        this.__getProfileStateAccount(currentParentProfile),
       );
       console.log("getProfileLineage ", profileStateInfo);
 
       const {
+        parentProfile,
+        grandParentProfile,
+        greatGrandParentProfile,
+        ggreateGrandParentProfile,
         currentGreatGrandParentProfileHolder,
         currentGgreatGrandParentProfileHolder,
         currentGrandParentProfileHolder,
         currentParentProfileHolder,
       } = await this.__getProfileHoldersInfo(
         profileStateInfo.lineage,
-        parentProfile,
+        currentParentProfile,
         web3Consts.genesisProfile,
       );
 
       return {
         promoter: this.getAddressString(currentParentProfileHolder),
+        promoterprofile: this.getAddressString(parentProfile),
         scout: this.getAddressString(currentGrandParentProfileHolder),
+        scoutprofile: this.getAddressString(grandParentProfile),
         recruiter: this.getAddressString(currentGreatGrandParentProfileHolder),
+        recruiterprofile: this.getAddressString(greatGrandParentProfile),
         originator: this.getAddressString(
           currentGgreatGrandParentProfileHolder,
+        ),
+        originatorprofile: this.getAddressString(
+          ggreateGrandParentProfile,
         ),
       };
     } catch (error: any) {
       return {
         promoter: "",
+        promoterprofile:"",
         scout: "",
+        scoutprofile:"",
         recruiter: "",
+        recruiterprofile:"",
         originator: "",
+        originatorprofile:""
       };
     }
   }
-
   async getActivationTokenBalance(userActivationAta: web3.PublicKey) {
     try {
       const infoes = await this.connection.getTokenSupply(userActivationAta);
