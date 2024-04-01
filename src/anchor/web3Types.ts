@@ -36,7 +36,14 @@ export type _MintProfileByAtInput = {
   uriHash?: string,
   activationToken: string | web3.PublicKey
   genesisProfile: string | web3.PublicKey
+  commonLut: web3.PublicKey
 }
+
+export type _RegisterCommonLut = {
+  activationToken: string | web3.PublicKey
+  genesisProfile: string | web3.PublicKey
+}
+
 
 export type _MintSubscriptionToken = {
   parentProfile?: web3.PublicKey | string,

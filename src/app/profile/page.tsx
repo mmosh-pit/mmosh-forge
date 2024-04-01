@@ -22,9 +22,13 @@ export default function Profile() {
   const [generation, setGeneration] = useState("0");
   const [profileLineage, setProfileLineage] = useState({
     promoter: "",
+    promoterprofile:"",
     scout: "",
+    scoutprofile:"",
     recruiter: "",
+    recruiterprofile:"",
     originator: "",
+    originatorprofile:""
   });
   const connection = useConnection();
   const wallet: any = useAnchorWallet();
@@ -145,7 +149,7 @@ export default function Profile() {
       return false;
     }
 
-    if (solBalance == 0) {
+    if (solBalance < 0.04) {
       createMessage(
         <p>
           Hey! We checked your wallet and you don’t have enough SOL for the gas
@@ -265,6 +269,10 @@ export default function Profile() {
           value: profileLineage.promoter,
         });
       }
+      body.attributes.push({
+        trait_type: "Promoter_Profile",
+        value: profileLineage.promoterprofile,
+      });
     }
 
     // get scout name
@@ -281,6 +289,10 @@ export default function Profile() {
           value: profileLineage.scout,
         });
       }
+      body.attributes.push({
+        trait_type: "Scout_Profile",
+        value: profileLineage.scoutprofile,
+      });
     }
 
     // get recruiter name
@@ -297,6 +309,10 @@ export default function Profile() {
           value: profileLineage.recruiter,
         });
       }
+      body.attributes.push({
+        trait_type: "Recruiter_Profile",
+        value: profileLineage.recruiterprofile,
+      });
     }
 
     // get originator name
@@ -313,7 +329,13 @@ export default function Profile() {
           value: profileLineage.originator,
         });
       }
+      body.attributes.push({
+        trait_type: "Originator_Profile",
+        value: profileLineage.originatorprofile,
+      });
     }
+
+
 
     if (imageFile[0].file != null) {
       const imageUri = await pinImageToShadowDrive(imageFile[0].file);
@@ -347,6 +369,7 @@ export default function Profile() {
         uriHash: shadowHash,
         activationToken,
         genesisProfile,
+        commonLut: web3Consts.commonLut 
       });
 
       if (res.Ok) {
@@ -379,6 +402,12 @@ export default function Profile() {
         );
       }
       setIsSubmit(false);
+
+
+      setTimeout(async() => {
+
+      }, 5000);
+
     } catch (error) {
       createMessage(error, "danger-container");
       setIsSubmit(false);
@@ -582,7 +611,7 @@ export default function Profile() {
           <div className="price-details">
             <p>Price: 20000 MMOSH</p>
             <label>
-                 Plus a small amount of SOL for transaction fees
+               Plus at least 0.04 SOL in fees. Note: this amount is reduced when the protocol is optimized. sorry for the temporary inconvenience
             </label>
           </div>
           <div className="balance-details">

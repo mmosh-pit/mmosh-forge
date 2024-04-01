@@ -90,6 +90,8 @@ go to src/anchor/web3Consts.ts and update variable with given value
   ),
   badgeCollection: new web3.PublicKey("147m8aw1hcmyBduQvSJoXCFaLb8wQSe9DNxWVsLTfqec"),
   rootCollection: new web3.PublicKey("9h9c4idX2UnGhFa266dQxMGD5kMk9pigumRAV2x9Hbk2"),
+  profileCollection: new web3.PublicKey("28tSBSVvfGJXWdhrwRJM45ZcefyfwBEZgqDs5T2k7TLL"),
+  commonlut: new web3.PublicKey("G2ywjqhzR9U3mvuKBeTByDGEw7rMjnyDUexeZe19WNSF"),
 
 ```
 
