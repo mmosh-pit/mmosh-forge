@@ -1583,17 +1583,25 @@ export class Connectivity {
         new anchor.web3.PublicKey(usertargettokenAta.toBase58()),
       ]);
       console.log("getTokenBalance ", infoes);
-      const tokenBaseAccount = unpackAccount(userbasetokenAta, infoes[0]);
-      const tokenTargetAccount = unpackAccount(usertargettokenAta, infoes[1]);
+      let baseBalance = 0
+      let targetBalance = 0
+      if(infoes[0]) {
+        const tokenBaseAccount = unpackAccount(userbasetokenAta, infoes[0]);
+        baseBalance = (parseInt(tokenBaseAccount?.amount?.toString()) ?? 0) / web3Consts.LAMPORTS_PER_OPOS
+      }
+
+      if(infoes[1]) {
+        const tokenTargetAccount = unpackAccount(usertargettokenAta, infoes[1]);
+        targetBalance = (parseInt(tokenTargetAccount?.amount?.toString()) ?? 0) / web3Consts.LAMPORTS_PER_OPOS
+      }
+    
+
       return {
-        base:
-          (parseInt(tokenBaseAccount?.amount?.toString()) ?? 0) /
-          web3Consts.LAMPORTS_PER_OPOS,
-        target:
-          (parseInt(tokenTargetAccount?.amount?.toString()) ?? 0) /
-          web3Consts.LAMPORTS_PER_OPOS,
+        base:baseBalance,
+        target:targetBalance,
       };
     } catch (error) {
+      console.log("erorror ",error)
       return {
         base: 0,
         target: 0,

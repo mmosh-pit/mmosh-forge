@@ -136,6 +136,9 @@ export default function Swap() {
 
         anchor.setProvider(env);
         let curveConn: CurveConn = new CurveConn(env, web3Consts.programID);
+
+        console.log("token.token ",token.token)
+        console.log("web3Consts.oposToken.toBase58() ",web3Consts.oposToken.toBase58())
     
         let balances = await curveConn.getTokenBalance(token.token,web3Consts.oposToken.toBase58())
 
@@ -274,7 +277,7 @@ export default function Swap() {
 
             setTimeout(async () => {
                 createMessage(
-                    <p>Congrats!. You have completed your swap.</p>,
+                    <p>Congrats! Your token have been swapped successfully</p>,
                     "success-container",
                 );
                 if(targeToken.token != web3Consts.oposToken.toBase58()) {
@@ -288,7 +291,7 @@ export default function Swap() {
 
         } catch (error) {
             createMessage(
-                "We’re sorry, there was an error while trying to swap. Check your wallet and try again.",
+                "There was an error while swapping your tokens. Please, try again.",
                 "danger-container",
             );
             setSwapSubmit(false)
@@ -332,10 +335,26 @@ export default function Swap() {
                                {!swapLoading &&
                                     <>
                                         {(connectionStatus == "connected" && !swapSubmit) &&
-                                            <Button variant="primary" size="lg" disabled={!(targeToken.value <= targeToken.balance && targeToken.balance!=0 && targeToken.value!=0)} onClick={actionSwap}>
-                                                    Swap
-                                            </Button>
+                                           <>
+                                          <>
+                                            {(targeToken.value <= targeToken.balance) &&
+                                                <Button variant="primary" size="lg" onClick={actionSwap} disabled={!(targeToken.value <= targeToken.balance && targeToken.balance!=0 && targeToken.value!=0)} >
+                                                        Swap
+                                                </Button>
+                                            }
+                                          </>
+                                            <>
+                                            {(targeToken.value > targeToken.balance) &&
+                                                <Button variant="primary" size="lg" className="nobalance">
+                                                        Insufficient {targeToken.symbol.toUpperCase()}
+                                                </Button>
+                                            }
+                                            </>
+                                            </>
                                         }
+
+
+                                     
         
                                         {(connectionStatus == "connected" && swapSubmit) &&
                                             <Button variant="primary" size="lg">
