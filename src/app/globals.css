@@ -78,6 +78,7 @@ input[type="number"] {
   top: 0;
   left: 0;
   right: 0;
+  z-index: 1;
 }
 
 .header-container.active {
@@ -877,6 +878,11 @@ input[type="number"] {
   width: 100%;
   border: 0 none;
   margin: 20px 0 0;
+}
+
+.swap-page-container-inner button.nobalance {
+  background: rgba(0,0,0,0.5);
+  color: #666;
 }
 
 .swap-page-container-inner button:hover, .swap-page-container-inner button:active {
