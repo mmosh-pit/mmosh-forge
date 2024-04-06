@@ -225,61 +225,63 @@ export default function HeaderVW() {
                     </div>
                   </div>
                 </div>
-    
-                <div className="banner-container">
-                  <div className="banner-container-inner">
-                    {name !== "" && currentLocation == "/dashboard" && (
-                      <div className="banner-container-inner-item">
-                        <p>
-                          Hey {capitalizeString(name)}, you’ll need an invitation to
-                          mint your Profile and become a MMOSH DAO member
-                        </p>
-                        <p>
-                          You can get an invitation from a current member.{" "}
-                          <Link href={mainUrl}>
-                            Find one in the Membership Directory
-                          </Link>{" "}
-                          or ask in our main telegram group for guests
-                        </p>
-                        <a
-                          type="button"
-                          href="https://t.me/mmoshpit"
-                          target="_blank"
-                        >
-                          <Button variant="primary" size="lg">
-                            Go to Telegram Group
+                {(currentLocation != "/project/create/step1" && currentLocation != "/project/create/step2" && currentLocation != "/project/create/step3" && currentLocation != "/project/create/step4") &&
+                  <div className="banner-container">
+                    <div className="banner-container-inner">
+                      {name !== "" && currentLocation == "/dashboard" && (
+                        <div className="banner-container-inner-item">
+                          <p>
+                            Hey {capitalizeString(name)}, you’ll need an invitation to
+                            mint your Profile and become a MMOSH DAO member
+                          </p>
+                          <p>
+                            You can get an invitation from a current member.{" "}
+                            <Link href={mainUrl}>
+                              Find one in the Membership Directory
+                            </Link>{" "}
+                            or ask in our main telegram group for guests
+                          </p>
+                          <a
+                            type="button"
+                            href="https://t.me/mmoshpit"
+                            target="_blank"
+                          >
+                            <Button variant="primary" size="lg">
+                              Go to Telegram Group
+                            </Button>
+                          </a>
+                        </div>
+                      )}
+      
+                      {name === "" && currentLocation == "/dashboard" && (
+                        <div className="banner-container-inner-item no-account-banner">
+                          <h2>Howdy Stranger</h2>
+                          <p>The Forge is only for MMOSH Members and their Guests.</p>
+                          <p>
+                            Please connect the wallet you used to register, create a
+                            new account for this wallet address.
+                          </p>
+                          <Button variant="primary" size="lg" href={mainUrl}>
+                            Create an Account
                           </Button>
-                        </a>
+                        </div>
+                      )}
+                      
+                      <div className="banner-container-inner-item">
+                        <img
+                          src={
+                            location.pathname == "/dashboard"
+                              ? "/images/headerlogo.png"
+                              : "/images/headerlogo1.png"
+                          }
+                          alt="banner"
+                          key={"banner"}
+                        />
                       </div>
-                    )}
-    
-                    {name === "" && currentLocation == "/dashboard" && (
-                      <div className="banner-container-inner-item no-account-banner">
-                        <h2>Howdy Stranger</h2>
-                        <p>The Forge is only for MMOSH Members and their Guests.</p>
-                        <p>
-                          Please connect the wallet you used to register, create a
-                          new account for this wallet address.
-                        </p>
-                        <Button variant="primary" size="lg" href={mainUrl}>
-                          Create an Account
-                        </Button>
-                      </div>
-                    )}
-    
-                    <div className="banner-container-inner-item">
-                      <img
-                        src={
-                          location.pathname == "/dashboard"
-                            ? "/images/headerlogo.png"
-                            : "/images/headerlogo1.png"
-                        }
-                        alt="banner"
-                        key={"banner"}
-                      />
                     </div>
                   </div>
-                </div>
+                }
+
               </div>
               <Drawer
                 sx={{

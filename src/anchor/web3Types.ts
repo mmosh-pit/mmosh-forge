@@ -23,6 +23,14 @@ export type Result<T, E> = {
 };
 export type TxPassType<Info> = { signature: string, info?: Info };
 
+export type _MintGensisInput = {
+  name?: string,
+  symbol?: string,
+  uri?: string,
+  mintKp: web3.Keypair,
+  input: MainStateInput,
+}
+
 export type _MintProfileInput = {
   name?: string,
   symbol?: string,

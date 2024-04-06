@@ -711,6 +711,26 @@ export default function Invitation() {
                   }
                   </div>
               </div>
+              <div className="col-md-4">
+                  <div className="invitation-grid">
+                  {profileImage != "" &&
+                    <div className="invitation-create-grid">
+                      <div className="invitation-create-grid-left">
+                            <img src={profileImage} alt="profile" />
+                      </div>
+                      <div className="invitation-create-grid-right">
+                          <h3>Create a Project</h3>
+                          <p>With your own Project, you can build community to launch and scale your own projects. Get started now!</p>
+                          <div className="invitation-action-container">
+                            <Button variant="primary" size="sm" onClick={()=>{navigate.push("/project/create/step1")}}>
+                              Create a Project!
+                            </Button>
+                          </div>
+                      </div>
+                    </div>
+                  }
+                  </div>
+              </div>
           </div>
       </div>
 
