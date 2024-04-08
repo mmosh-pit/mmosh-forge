@@ -722,6 +722,9 @@ export default function Invitation() {
                           <h3>Create a Project</h3>
                           <p>With your own Project, you can build community to launch and scale your own projects. Get started now!</p>
                           <div className="invitation-action-container">
+                            <Button className="project-btn" variant="primary" size="sm" onClick={()=>{navigate.push("/projects")}}>
+                              Projects
+                            </Button>
                             <Button variant="primary" size="sm" onClick={()=>{navigate.push("/project/create/step1")}}>
                               Create a Project!
                             </Button>

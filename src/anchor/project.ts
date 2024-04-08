@@ -211,10 +211,21 @@ export class Connectivity {
   async sendProjectPrice(profile:any): Promise<Result<TxPassType<{ profile: string }>, any>> {
       try {
         const user = this.provider.publicKey;
-        let parentProfile = new anchor.web3.PublicKey(profile)
-        const parentProfileState = this.__getProfileStateAccount(parentProfile);
+        let myProfile = new anchor.web3.PublicKey(profile)
+        const myProfileState = this.__getProfileStateAccount(myProfile);
+        let myProfileStateInfo =
+          await this.program.account.profileState.fetch(myProfileState);
+
+        console.log("myProfileStateInfo ",myProfileStateInfo)
+
+        const parentProfile = myProfileStateInfo.lineage.parent
+
+        console.log("parentProfile ",parentProfile.toBase58())
+
         let parentProfileStateInfo =
-          await this.program.account.profileState.fetch(parentProfileState);
+        await this.program.account.profileState.fetch(this.__getProfileStateAccount(parentProfile));
+
+        console.log("parentProfileStateInfo ",parentProfileStateInfo)
 
           const mainStateInfo = web3.PublicKey.findProgramAddressSync(
             [Seeds.mainState],
@@ -422,24 +433,28 @@ export class Connectivity {
       if (typeof genesisProfile == "string")
         genesisProfile = new web3.PublicKey(activationToken);
 
+      console.log("mint pass 1")
       symbol = symbol ?? "";
       uriHash = uriHash ?? "";
-
+      console.log("mint pass 2")
       const activationTokenState =
         this.__getActivationTokenStateAccount(activationToken);
       const activationTokenStateInfo =
         await this.program.account.activationTokenState.fetch(
           activationTokenState,
         );
+        console.log("mint pass 3")
       const parentProfile = activationTokenStateInfo.parentProfile;
       const parentProfileStateInfo =
         await this.program.account.profileState.fetch(
           this.__getProfileStateAccount(parentProfile),
         );
+        console.log("mint pass 4")
       const lut = parentProfileStateInfo.lut;
       const parentProfileNftInfo = await this.metaplex
         .nfts()
         .findByMint({ mintAddress: parentProfile, loadJsonMetadata: false });
+        console.log("mint pass 4")
       const collection = parentProfileNftInfo?.collection?.address;
       if (!collection) return { Err: "Collection info not found" };
       const collectionMetadata = BaseMpl.getMetadataAccount(collection);
@@ -452,6 +467,7 @@ export class Connectivity {
           { mint: activationToken, owner: user },
           this.ixCallBack,
         );
+        console.log("mint pass 6")
       const profileMetadata = BaseMpl.getMetadataAccount(profile);
       const profileEdition = BaseMpl.getEditionAccount(profile);
       const profileState = this.__getProfileStateAccount(profile);
@@ -459,7 +475,7 @@ export class Connectivity {
       const mainStateInfo = await this.program.account.mainState.fetch(
         this.mainState,
       );
-
+      console.log("mint pass 7")
       const {
         //profiles
         grandParentProfile,
@@ -489,12 +505,14 @@ export class Connectivity {
         genesisProfile,
         mainStateInfo.oposToken
       );
+
+      console.log("mint pass 8")
       const userOposAta = getAssociatedTokenAddressSync(mainStateInfo.oposToken, user);
       const parentMainState = web3.PublicKey.findProgramAddressSync(
         [Seeds.mainState],
         this.programId,
       )[0];
-
+      console.log("mint pass 9")
       const ix = await this.program.methods
         .mintPassByAt(name, symbol, uriHash)
         .accounts({
@@ -534,11 +552,11 @@ export class Connectivity {
         })
         .instruction();
       this.txis.push(ix);
-
+      console.log("mint pass 10", commonLut)
       const commonLutInfo = await (
-        await this.connection.getAddressLookupTable(commonLut)
+        await this.connection.getAddressLookupTable(new anchor.web3.PublicKey(commonLut))
       ).value;
-
+      console.log("mint pass 11")
       const lutsInfo = [commonLutInfo];
 
       const freezeInstructions = await this.calculatePriorityFee(
@@ -547,6 +565,7 @@ export class Connectivity {
         mintKp,
       );
 
+      console.log("mint pass 12")
       for (let index = 0; index < freezeInstructions.length; index++) {
         const element = freezeInstructions[index];
         this.txis.push(element);
@@ -558,48 +577,17 @@ export class Connectivity {
         recentBlockhash: blockhash,
         instructions: [...this.txis],
       }).compileToV0Message(lutsInfo);
-
+      console.log("mint pass 13")
       const tx = new web3.VersionedTransaction(message);
       tx.sign([mintKp]);
       this.txis = [];
-
+      console.log("mint pass 14")
       // const signedTx = await this.provider.wallet.signTransaction(tx as any);
       // const txLen = signedTx.serialize().length;
       // log({ txLen, luts: lutsInfo.length });
 
       const signature = await this.provider.sendAndConfirm(tx as any);
-
-      await this.storeRoyalty(user.toBase58(), [
-        {
-          receiver: currentGenesisProfileHolder.toBase58(),
-          amount: 12000,
-        },
-        {
-          receiver: currentParentProfileHolder.toBase58(),
-          amount: 4000,
-        },
-        {
-          receiver: currentGrandParentProfileHolder.toBase58(),
-          amount: 2000,
-        },
-        {
-          receiver: currentGgreatGrandParentProfileHolder.toBase58(),
-          amount: 600,
-        },
-      ]);
-
-      await this.storeLineage(
-        user.toBase58(),
-        {
-          promotor: parentProfile.toBase58(),
-          scout: grandParentProfile.toBase58(),
-          recruitor: greatGrandParentProfile.toBase58(),
-          originator: ggreateGrandParentProfile.toBase58(),
-          gensis: genesisProfile.toBase58(),
-        },
-        profile.toBase58(),
-      );
-
+      console.log("mint pass 15")
       return {
         Ok: {
           signature,
@@ -968,6 +956,141 @@ export class Connectivity {
     }
   }
 
+  async mintBadge(
+    input: _MintSubscriptionToken,
+  ): Promise<Result<TxPassType<any>, any>> {
+    try {
+      this.reinit();
+      const user = this.provider.publicKey;
+      if (!user) throw "Wallet not found";
+      let { subscriptionToken, receiver, parentProfile, amount } = input;
+      amount = amount ?? 1;
+
+      let subscriptionTokenState: web3.PublicKey = null;
+      if (!subscriptionToken) {
+        if (!parentProfile) throw "Parent Profile not found";
+        if (typeof parentProfile == "string")
+          parentProfile = new web3.PublicKey(parentProfile);
+        const parentProfileStateInfoData =
+          await this.program.account.profileState.fetch(
+            this.__getProfileStateAccount(parentProfile),
+          );
+        subscriptionToken = parentProfileStateInfoData.activationToken;
+        if (!subscriptionToken) throw "Subscription Token not initialised";
+        subscriptionTokenState =
+          this.__getActivationTokenStateAccount(subscriptionToken);
+      } else {
+        if (typeof subscriptionToken == "string")
+          subscriptionToken = new web3.PublicKey(subscriptionToken);
+        subscriptionTokenState =
+          this.__getActivationTokenStateAccount(subscriptionToken);
+      }
+
+      console.log("test1")
+
+      const activationTokenStateInfo =
+        await this.program.account.activationTokenState.fetch(
+          subscriptionTokenState,
+        );
+      parentProfile = activationTokenStateInfo.parentProfile;
+      const parentProfileState = this.__getProfileStateAccount(parentProfile);
+      let parentProfileStateInfo =
+        await this.program.account.profileState.fetch(parentProfileState);
+      console.log("test2")
+      if (!receiver) receiver = user;
+      if (typeof receiver == "string") receiver = new web3.PublicKey(receiver);
+      const { ata: receiverAta } =
+        await this.baseSpl.__getOrCreateTokenAccountInstruction(
+          { mint: subscriptionToken, owner: receiver },
+          this.ixCallBack,
+        );
+
+      // const profile = activationTokenStateInfo.parentProfile
+      const profileState = this.__getProfileStateAccount(parentProfile);
+      const { ata: minterProfileAta } =
+        await this.baseSpl.__getOrCreateTokenAccountInstruction(
+          { mint: parentProfile, owner: user },
+          this.ixCallBack,
+        );
+      console.log("test3")
+      const mainStateDetail = await this.program.account.mainState.fetch(
+        this.mainState,
+      );
+      const profileCollection = web3Consts.passCollection;
+      const profileCollectionState =
+        await this.program.account.collectionState.fetch(
+          this.__getCollectionStateAccount(profileCollection),
+        );
+      const genesisProfile = profileCollectionState.genesisProfile;
+      console.log("test3")
+      const {
+        currentGenesisProfileHolder,
+      } = await this.__getProfileHoldersInfo(
+        parentProfileStateInfo.lineage,
+        parentProfile,
+        genesisProfile,
+        mainStateDetail.oposToken
+      );
+
+      const ix = await this.program.methods
+        .createPassToken(new BN(amount))
+        .accounts({
+          activationTokenState: subscriptionTokenState,
+          tokenProgram,
+          activationToken: subscriptionToken,
+          profile: parentProfile,
+          profileState,
+          minterProfileAta,
+          project: this.projectId,
+          mainState: this.mainState,
+          minter: user,
+          receiverAta,
+          systemProgram,
+          associatedTokenProgram,
+        })
+        .instruction();
+      this.txis.push(ix);
+
+     
+      // if(this.provider.publicKey != currentGenesisProfileHolder) {
+         let mintPrice =amount * (mainStateDetail.invitationMintingCost.toNumber() / 1000_000_000) * 1000_000_000
+         console.log("invitation mintPrice ", mintPrice)
+         let receivedIXs:any =  await this.baseSpl.transfer_token_modified({ mint: mainStateDetail.oposToken, sender: this.provider.publicKey, receiver: currentGenesisProfileHolder, init_if_needed: true, amount: mintPrice })
+         for (let index = 0; index < receivedIXs.length; index++) {
+            this.txis.push(receivedIXs[index]);
+         }
+      // }
+
+      const tx = new web3.Transaction().add(...this.txis);
+
+      tx.recentBlockhash = (
+        await this.connection.getLatestBlockhash()
+      ).blockhash;
+      tx.feePayer = this.provider.publicKey;
+
+      const feeEstimate = await this.getPriorityFeeEstimate(tx);
+      let feeIns;
+      if (feeEstimate > 0) {
+        feeIns = web3.ComputeBudgetProgram.setComputeUnitPrice({
+          microLamports: feeEstimate,
+        });
+      } else {
+        feeIns = web3.ComputeBudgetProgram.setComputeUnitLimit({
+          units: 1_400_000,
+        });
+      }
+      tx.add(feeIns);
+
+      this.txis = [];
+      const signature = await this.provider.sendAndConfirm(tx);
+      return { Ok: { signature, info: {} } };
+    } catch (error) {
+      log({ error });
+      return { Err: error };
+    }
+  }
+
+
   async isCreatorInvitation(mintAddress: web3.PublicKey, userAddress: string) {
     try {
       const mintData = await this.metaplex.nfts().findByMint({ mintAddress });
@@ -1202,4 +1325,318 @@ export class Connectivity {
       ),
     };
   }
+
+
+  async getUserNFTs(userKey: any) {
+    const filters = [
+      {
+        dataSize: 165,
+      },
+      {
+        memcmp: {
+          offset: 32,
+          bytes: userKey, //wallet address string
+        },
+      },
+    ];
+
+    const accounts: any = await this.connection.getParsedProgramAccounts(
+      TOKEN_PROGRAM_ID, //importing from solana spl-token library
+      { filters },
+    );
+    let mintKeys = [];
+    let mintList: any = [];
+    for (let i in accounts) {
+      let details = accounts[i].account?.data?.parsed?.info;
+      if (
+        parseInt(details.tokenAmount.decimals) == 0 &&
+        parseInt(details.tokenAmount.amount) > 0
+      ) {
+        const mintKey = new anchor.web3.PublicKey(details?.mint);
+        mintKeys.push(mintKey);
+      }
+    }
+
+    if (mintKeys.length > 0) {
+      mintList = await this.metaplex
+        .nfts()
+        .findAllByMintList({ mints: mintKeys });
+      console.log(mintList);
+    }
+    return mintList;
+  }
+
+  async getProfileMetadataByProject(uri: string) {
+    try {
+      const result = await axios.get(uri);
+
+      if (result.data) {
+        let userData: any = {
+          seniority: "",
+          project: "",
+        };
+        for (let index = 0; index < result.data.attributes.length; index++) {
+          const element = result.data.attributes[index];
+          if (element.trait_type == "Seniority") {
+            userData.seniority = element.value;
+          } else if (element.trait_type == "Project") {
+            userData.project = element.value;
+          }
+        }
+        return userData;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.log("metadata error", error);
+      return null;
+    }
+  }
+
+  async getInvitationMetdata(uri: string) {
+    try {
+      const result = await axios.get(uri);
+      if (result.data) {
+        let userData: any = {
+          project: "",
+        };
+        for (let index = 0; index < result.data.attributes.length; index++) {
+          const element = result.data.attributes[index];
+          if (element.trait_type == "Project") {
+            userData.project = element.value;
+          }
+        }
+        return userData;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.log("metadata error", error);
+      return null;
+    }
+  }
+
+  async getProjectUserInfo(projectId: String) {
+    const user = this.provider.publicKey;
+    if (!user) throw "Wallet not found";
+
+    let profilelineage = {
+      promoter: "",
+      promoterprofile:"",
+      scout: "",
+      scoutprofile:"",
+      recruiter: "",
+      recruiterprofile: "",
+      originator: "",
+      originatorprofile: "",
+    };
+    let generation = "0";
+
+    try {
+      const mainStateInfo = await this.program.account.mainState.fetch(
+        this.mainState,
+      );
+      console.log("mainStateInfo ", mainStateInfo);
+      const passCollection = web3Consts.passCollection;
+
+      const _userNfts = await this.getUserNFTs(user.toBase58());
+
+      let activationTokenBalance: any = 0;
+      let profiles: any = [];
+      const activationTokens = [];
+      let totalChild = 0;
+      let seniority = 0;
+      for (let i of _userNfts) {
+        const nftInfo: any = i;
+        const collectionInfo = i?.collection;
+        if (
+          collectionInfo?.address.toBase58() == passCollection.toBase58()
+        ) {
+          const metadata = await this.getProfileMetadataByProject(i?.uri);
+          if (metadata) {
+            if(metadata.project == projectId) {
+              if (seniority == 0 || seniority > metadata.seniority) {
+                profiles = [
+                  {
+                    name: i.name,
+                    address: nftInfo.mintAddress.toBase58(),
+                    userinfo: metadata,
+                  },
+                ];
+                seniority = metadata.seniority;
+              }
+            }
+          }
+        }
+      }
+
+      if (profiles.length > 0) {
+        const genesisProfile = new anchor.web3.PublicKey(profiles[0].address);
+        const profileState = this.__getProfileStateAccount(genesisProfile);
+        const profileStateInfo =
+          await this.program.account.profileState.fetch(profileState);
+        console.log("profileStateInfo ", profileStateInfo);
+        let hasInvitation: any = false;
+        if (profileStateInfo.activationToken) {
+          hasInvitation = await this.isCreatorInvitation(
+            profileStateInfo.activationToken,
+            user.toBase58(),
+          );
+          console.log("hasInvitation ", hasInvitation);
+          if (hasInvitation) {
+            const userActivationAta = getAssociatedTokenAddressSync(
+              profileStateInfo.activationToken,
+              user,
+            );
+            activationTokenBalance = await this.getActivationTokenBalance(
+              profileStateInfo.activationToken,
+            );
+          }
+        }
+        totalChild = profileStateInfo.lineage.totalChild.toNumber();
+        generation = profileStateInfo.lineage.generation.toString();
+
+        for (let i of _userNfts) {
+          const collectionInfo = i?.collection;
+          if (
+            collectionInfo?.address.toBase58() ==
+              web3Consts.badgeCollection.toBase58() &&
+            hasInvitation && i?.mintAddress == profileStateInfo.activationToken.toBase58()
+          ) {
+
+            activationTokens.push({
+              name: i.name,
+              genesis: genesisProfile.toBase58(),
+              activation: hasInvitation
+                ? profileStateInfo.activationToken.toBase58()
+                : "",
+            });
+          }
+        }
+
+        if (this.getAddressString(profileState) != "") {
+          const {
+            parentProfile,
+            grandParentProfile,
+            greatGrandParentProfile,
+            ggreateGrandParentProfile,
+            currentGreatGrandParentProfileHolder,
+            currentGgreatGrandParentProfileHolder,
+            currentGrandParentProfileHolder,
+            currentParentProfileHolder,
+          } = await this.__getProfileHoldersInfo(
+            profileStateInfo.lineage,
+            genesisProfile,
+            web3Consts.genesisProfile,
+            mainStateInfo.oposToken
+          );
+          profilelineage = {
+            promoter: this.getAddressString(currentParentProfileHolder),
+            promoterprofile: this.getAddressString(parentProfile),
+            scout: this.getAddressString(currentGrandParentProfileHolder),
+            scoutprofile:  this.getAddressString(grandParentProfile),
+            recruiter: this.getAddressString(
+              currentGreatGrandParentProfileHolder,
+            ),
+            recruiterprofile:  this.getAddressString(greatGrandParentProfile),
+            originator: this.getAddressString(
+              currentGgreatGrandParentProfileHolder,
+            ),
+            originatorprofile:  this.getAddressString(ggreateGrandParentProfile),
+          };
+        }
+      } else {
+        for (let i of _userNfts) {
+          if (i) {
+            if (i.symbol) {
+              const collectionInfo = i?.collection;
+              if (
+                collectionInfo?.address.toBase58() ==
+                web3Consts.badgeCollection.toBase58() && (i.symbol == "INVITE"  || i.symbol == "BADGE")
+              ) {
+                let isCreator = false;
+                console.log("i.creators", i.creators);
+                for (let index = 0; index < i.creators.length; index++) {
+                  if (i.creators[index].address.toBase58() == user.toBase58()) {
+                    isCreator = true;
+                    break;
+                  }
+                }
+                if (isCreator) {
+                  continue;
+                }
+
+                const metadata = await this.getInvitationMetdata(i?.uri);
+                if (metadata) {
+                  if(metadata.project != projectId) {
+                      continue;
+                  }
+                }
+
+                try {
+                  const nftInfo: any = i;
+                  console.log("token address ", nftInfo.mintAddress.toBase58());
+                  const activationTokenState =
+                    this.__getActivationTokenStateAccount(nftInfo.mintAddress);
+                  const activationTokenStateInfo =
+                    await this.program.account.activationTokenState.fetch(
+                      activationTokenState,
+                    );
+                  console.log(
+                    "activationTokenStateInfo ",
+                    activationTokenStateInfo,
+                  );
+                  const parentProfile = activationTokenStateInfo.parentProfile;
+
+                  activationTokens.push({
+                    name: i.name,
+                    genesis: parentProfile.toBase58(),
+                    activation: nftInfo.mintAddress.toBase58(),
+                  });
+                  
+                  const generationData =
+                    await this.getProfileChilds(parentProfile);
+                  totalChild = generationData.totalChild;
+                  generation = generationData.generation;
+                  profilelineage = await this.getProfileLineage(parentProfile);
+                } catch (error) {
+                  console.log("error invite ", error);
+                }
+              }
+              if (activationTokens.length > 0) {
+                break;
+              }
+            }
+          }
+        }
+      }
+      const profileInfo = {
+        profiles,
+        activationTokens,
+        activationTokenBalance,
+        totalChild: totalChild,
+        profilelineage,
+        generation,
+        invitationPrice: mainStateInfo.invitationMintingCost.toNumber(),
+        mintPrice: mainStateInfo.profileMintingCost.toNumber()
+      };
+      console.log("profileInfo", profileInfo);
+      return profileInfo;
+    } catch (error) {
+      console.log("error profile", error);
+      const profiles: any = [];
+      const profileInfo = {
+        profiles: profiles,
+        activationTokens: profiles,
+        activationTokenBalance: 0,
+        totalChild: 0,
+        profilelineage,
+        generation,
+        invitationPrice: 0,
+        mintPrice: 0
+      };
+      return profileInfo;
+    }
+  }
+
 }

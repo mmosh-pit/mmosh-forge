@@ -43,6 +43,7 @@ export default function ProjectStepFour() {
     const [symbol, setSymbol] = useState("");
     const [description, setDescription] = useState("");
     const [imageFile, setImageFile] = useState("");
+    const [topics, setTopics] = useState([])
     const [coin, setCoin] = useState({
         name:"",
         symbol: "Select",
@@ -76,9 +77,12 @@ export default function ProjectStepFour() {
         setDescription(projectDetails.description)
         setImageFile(projectDetails.image)
 
+        let topicsData:any = JSON.parse(localStorage.getItem("step2"));
+        setTopics(topicsData);
     
         let projectInfo:any = JSON.parse(localStorage.getItem("step3"));
         setCoin(projectInfo.coin)
+        console.log("projectInfo.coin ", projectInfo.coin)
         setPrice(projectInfo.price)
         setInvitationType(projectInfo.invitationType)
         setDiscount(projectInfo.discount)
@@ -179,7 +183,6 @@ export default function ProjectStepFour() {
 
             let projectConn: ProjectConn = new ProjectConn(env, web3Consts.programID, projectKeyPair.publicKey);
 
-            setMintingStatus("Creating Project...")
 
             let invPrice = Number(invitaitonPrice);
             if(discount !== "") {
@@ -189,93 +192,75 @@ export default function ProjectStepFour() {
             const profileMintingCost = new anchor.BN(calcNonDecimalValue(Number(price), 9))
             const invitationMintingCost = new anchor.BN(calcNonDecimalValue(invPrice, 9))
 
+                    
+            setMintingStatus("Preparing Metadata...")
+
+            const body = {
+                name: name,
+                symbol: symbol,
+                description: description,
+                image: imageFile,
+                enternal_url: process.env.NEXT_PUBLIC_APP_MAIN_URL + "/project/" + name,
+                family: "MMOSH Pit",
+                collection: "Pass Collection",
+                attributes: [
+                  {
+                    trait_type: "Primitive",
+                    value: "Project",
+                  },
+                  {
+                    trait_type: "Project",
+                    value: projectKeyPair.publicKey.toBase58(),
+                  },
+                  {
+                    trait_type: "Gen",
+                    value: "0",
+                  },
+                  {
+                    trait_type: "Seniority",
+                    value: "0",
+                  },
+                ],
+            };
+
+            for (let index = 0; index < topics.length; index++) {
+                body.attributes.push(
+                    {
+                        trait_type: "topics",
+                        value: topics[index].value
+                    }
+                )
+            }
+
+            const shdwHash: any = await pinFileToShadowDrive(body);
+
+            if (shdwHash === "") {
+              createMessage(
+                "We’re sorry, there was an error while trying to prepare meta url. please try again later.",
+                "danger-container",
+              );
+              return;
+            }
+
             console.log("initProjectState params ", {
-              oposToken: coin.token,
-              profileMintingCost: price,
-              invitationMintingCost: invPrice,
-              mintingCostDistribution: {
-                parent: 100 * priceDistribution.curator,
-                grandParent: 100 * priceDistribution.creator,
-                greatGrandParent: 100 * priceDistribution.promoter,
-                ggreatGrandParent: 100 * priceDistribution.scout,
-                genesis: 100 * priceDistribution.echosystem,
-              },
-              tradingPriceDistribution: {
-                  seller: 100 * priceDistribution.creator,
-                  parent: 100 * priceDistribution.creator,
-                  grandParent: 100 * priceDistribution.promotor,
-                  greatGrandParent: 100 * priceDistribution.scout,
+                oposToken: coin.token,
+                profileMintingCost: price,
+                invitationMintingCost: invPrice,
+                mintingCostDistribution: {
+                  parent: 100 * priceDistribution.curator,
+                  grandParent: 100 * priceDistribution.creator,
+                  greatGrandParent: 100 * priceDistribution.promoter,
+                  ggreatGrandParent: 100 * priceDistribution.scout,
                   genesis: 100 * priceDistribution.echosystem,
-              }
-          })
-            // const res = await projectConn.initProjectState({
-            //     oposToken: new anchor.web3.PublicKey(coin.token),
-            //     profileMintingCost,
-            //     invitationMintingCost,
-            //     mintingCostDistribution: {
-            //       parent: 100 * priceDistribution.curator,
-            //       grandParent: 100 * priceDistribution.creator,
-            //       greatGrandParent: 100 * priceDistribution.promoter,
-            //       ggreatGrandParent: 100 * priceDistribution.scout,
-            //       genesis: 100 * priceDistribution.echosystem,
-            //     },
-            //     tradingPriceDistribution: {
-            //         seller: 100 * priceDistribution.creator,
-            //         parent: 100 * priceDistribution.creator,
-            //         grandParent: 100 * priceDistribution.promotor,
-            //         greatGrandParent: 100 * priceDistribution.scout,
-            //         genesis: 100 * priceDistribution.echosystem,
-            //     }
-            // })
-   
-            // console.log("res ", res);
-
-            // setMintingStatus("Waiting for confirmations...")
-
-            // await delay(10000)
-
-            
-            
-            const shdwHash = ""
-            // setMintingStatus("Preparing Metadata...")
-
-            // const body = {
-            //     name: name,
-            //     symbol: symbol,
-            //     description: description,
-            //     image: imageFile,
-            //     enternal_url: process.env.NEXT_PUBLIC_APP_MAIN_URL + "/project/" + name,
-            //     family: "MMOSH Pit",
-            //     collection: "Pass Collection",
-            //     attributes: [
-            //       {
-            //         trait_type: "Primitive",
-            //         value: "Project",
-            //       },
-            //       {
-            //         trait_type: "Project",
-            //         value: projectKeyPair.publicKey.toBase58(),
-            //       },
-            //       {
-            //         trait_type: "Gen",
-            //         value: "0",
-            //       },
-            //       {
-            //         trait_type: "Seniority",
-            //         value: "0",
-            //       },
-            //     ],
-            // };
-
-            // const shdwHash: any = await pinFileToShadowDrive(body);
-
-            // if (shdwHash === "") {
-            //   createMessage(
-            //     "We’re sorry, there was an error while trying to prepare meta url. please try again later.",
-            //     "danger-container",
-            //   );
-            //   return;
-            // }
+                },
+                tradingPriceDistribution: {
+                    seller: 100 * priceDistribution.curator,
+                    parent: 100 * priceDistribution.creator,
+                    grandParent: 100 * priceDistribution.promoter,
+                    greatGrandParent: 100 * priceDistribution.scout,
+                    genesis: 100 * priceDistribution.echosystem,
+                }
+            })
 
             setMintingStatus("Creating Gensis Pass...")
 
@@ -296,9 +281,9 @@ export default function ProjectStepFour() {
                     genesis: 100 * priceDistribution.echosystem,
                   },
                   tradingPriceDistribution: {
-                      seller: 100 * priceDistribution.creator,
+                      seller: 100 * priceDistribution.curator,
                       parent: 100 * priceDistribution.creator,
-                      grandParent: 100 * priceDistribution.promotor,
+                      grandParent: 100 * priceDistribution.promoter,
                       greatGrandParent: 100 * priceDistribution.scout,
                       genesis: 100 * priceDistribution.echosystem,
                   }
@@ -314,36 +299,40 @@ export default function ProjectStepFour() {
 
             projectConn.setMainState();
 
-            const shdwHashInvite = ""
-            // setMintingStatus("Preparing Badge Metadata...")
+            setMintingStatus("Preparing Badge Metadata...")
 
-            // let desc =
-            // "Cordially invites you to join on the "+capitalizeString(name)+". The favor of a reply is requested.";
-            // if (name != "") {
-            //     desc =
-            //     capitalizeString(name) +
-            //     " cordially invites you to join "+ getPronouns()+" on the MMOSH. The favor of a reply is requested.";
-            // }
+            let desc =
+            "Cordially invites you to join on the "+capitalizeString(name)+". The favor of a reply is requested.";
+            if (name != "") {
+                desc =
+                capitalizeString(name) +
+                " cordially invites you to join "+ getPronouns()+" on the MMOSH. The favor of a reply is requested.";
+            }
 
-            // const invitebody = {
-            //     name: name != "" ? "Invitation from " + username : "Invitation",
-            //     symbol: "INVITE",
-            //     description: desc,
-            //     image:
-            //       "https://shdw-drive.genesysgo.net/FuBjTTmQuqM7pGR2gFsaiBxDmdj8ExP5fzNwnZyE2PgC/invite.png",
-            //     external_url: process.env.NEXT_PUBLIC_APP_MAIN_URL,
-            //     minter: username,
-            //   };
+            const invitebody = {
+                name: name != "" ? "Invitation from " + username : "Invitation",
+                symbol: "BADGE",
+                description: desc,
+                image:imageFile,
+                external_url: process.env.NEXT_PUBLIC_APP_MAIN_URL,
+                minter: username,
+                attributes: [
+                    {
+                        trait_type: "Project",
+                        value: projectKeyPair.publicKey.toBase58(),
+                    }
+                ]
+              };
         
-            // const shdwHashInvite: any = await pinFileToShadowDrive(invitebody);
+            const shdwHashInvite: any = await pinFileToShadowDrive(invitebody);
     
-            // if (shdwHashInvite === "") {
-            //     createMessage(
-            //         "We’re sorry, there was an error while trying to prepare meta url. please try again later.",
-            //         "danger-container",
-            //     );
-            //     return;
-            // }
+            if (shdwHashInvite === "") {
+                createMessage(
+                    "We’re sorry, there was an error while trying to prepare meta url. please try again later.",
+                    "danger-container",
+                );
+                return;
+            }
 
             setMintingStatus("Creating Badge Account...")
         
@@ -378,13 +367,15 @@ export default function ProjectStepFour() {
             const res5 = await projectConn.sendProjectPrice(profile);
             console.log("create badge result ", res5)
 
-
+            if(res5.Ok) {
               await axios.post("/api/save-project", {
                 name,
                 symbol,
+                desc: description,
                 image: imageFile,
+                coinimage: coin.image,
                 project: genesisProfileStr,
-                token: coin.token,
+                tokenaddress: coin.token,
                 lut: res4.Ok.info.lookupTable
               });
 
@@ -396,7 +387,16 @@ export default function ProjectStepFour() {
                   <p>Congrats! Your project has been deployed to the Solana blockchain and your assets have been sent to your wallet.</p>,
                   "success-container",
               );
-              navigate.replace("/invitation");
+              navigate.replace("/projects");
+            } else {
+              createMessage(
+                <p>We’re sorry. An error occurred while trying to deploy your project and mint your assets. Please check your wallet and try again.</p>,
+                "danger-container",
+              );
+            }
+
+
+
         } catch (error) {
             console.log(error)
             createMessage(

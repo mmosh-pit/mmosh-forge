@@ -196,7 +196,7 @@ export default function ProjectStepThree() {
         handleClose();
         setKeyword("");
         let coinDetails = {
-            name:token.name,
+            name: token.name,
             symbol: token.symbol,
             token: token.token,
             image:token.image,

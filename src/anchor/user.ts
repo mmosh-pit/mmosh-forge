@@ -116,6 +116,7 @@ export class Connectivity {
           descriptor: "",
           nouns: "",
           seniority: "",
+          project: "",
         };
         for (let index = 0; index < result.data.attributes.length; index++) {
           const element = result.data.attributes[index];
@@ -132,18 +133,43 @@ export class Connectivity {
             userData.nouns = element.value;
           } else if (element.trait_type == "Pronoun") {
             userData.pronouns = element.value;
+          } else if (element.trait_type == "Project") {
+            userData.project = element.value;
           }
         }
         return userData;
       } else {
         return null;
       }
-      return result.data;
     } catch (error) {
       console.log("metadata error", error);
       return null;
     }
   }
+
+  async getInvitationMetdata(uri: string) {
+    try {
+      const result = await axios.get(uri);
+      if (result.data) {
+        let userData: any = {
+          project: "",
+        };
+        for (let index = 0; index < result.data.attributes.length; index++) {
+          const element = result.data.attributes[index];
+          if (element.trait_type == "Project") {
+            userData.project = element.value;
+          }
+        }
+        return userData;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.log("metadata error", error);
+      return null;
+    }
+  }
+
 
   async setupLookupTable(
     addresses: web3.PublicKey[] = [],
@@ -978,8 +1004,9 @@ export class Connectivity {
           if (
             collectionInfo?.address.toBase58() ==
               web3Consts.badgeCollection.toBase58() &&
-            hasInvitation
+            hasInvitation && i?.mintAddress == profileStateInfo.activationToken.toBase58()
           ) {
+
             activationTokens.push({
               name: i.name,
               genesis: genesisProfile.toBase58(),
@@ -1028,7 +1055,7 @@ export class Connectivity {
 
               if (
                 collectionInfo?.address.toBase58() ==
-                web3Consts.badgeCollection.toBase58()
+                web3Consts.badgeCollection.toBase58() && i.symbol == "INVITE"
               ) {
                 let isCreator = false;
                 console.log("i.creators", i.creators);
@@ -1041,6 +1068,14 @@ export class Connectivity {
                 if (isCreator) {
                   continue;
                 }
+
+                // const metadata = await this.getInvitationMetdata(i?.uri);
+                // if (metadata) {
+                //   if(metadata.project != "") {
+                //       continue;
+                //   }
+                // }
+
                 try {
                   const nftInfo: any = i;
                   console.log("token address ", nftInfo.mintAddress.toBase58());
@@ -1061,6 +1096,7 @@ export class Connectivity {
                     genesis: parentProfile.toBase58(),
                     activation: nftInfo.mintAddress.toBase58(),
                   });
+                  
                   const generationData =
                     await this.getProfileChilds(parentProfile);
                   totalChild = generationData.totalChild;

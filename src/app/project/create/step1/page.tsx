@@ -6,6 +6,7 @@ import Form from "react-bootstrap/Form";
 import { useDropzone } from "react-dropzone";
 import { pinImageToShadowDrive } from "../../../lib/pinImageToShadowDrive";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 export default function ProjectStepOne() {
     const navigate = useRouter();
 
@@ -58,6 +59,8 @@ export default function ProjectStepOne() {
          return;
       }
       setIsSubmit(true)
+
+
       
       const body = {
         name: name,
@@ -67,6 +70,13 @@ export default function ProjectStepOne() {
       };
 
       try {
+        setButtonStatus("Checking Project Symbol...")
+        const result = await axios.get(`/api/check-project?project=${symbol}`);
+
+        if (result.data) { 
+          createMessage("Project symbol already exist", "danger-container");
+          return false;
+        }
         if (imageFile[0].file != null) {
           setButtonStatus("Uploading Image...")
           const imageUri = await pinImageToShadowDrive(imageFile[0].file);
@@ -208,11 +218,11 @@ export default function ProjectStepOne() {
                                             <Form.Control
                                             type="text"
                                             placeholder="Symbol"
-                                            maxLength={15}
+                                            maxLength={10}
                                             onChange={(event) => setSymbol(event.target.value)}
                                             value={symbol}
                                             />
-                                            <span>15 characters</span>
+                                            <span>10 characters</span>
                                     </div>
 
                                     <div className="profile-container-element">

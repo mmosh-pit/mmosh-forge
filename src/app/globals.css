@@ -26,6 +26,19 @@ input[type="number"] {
   padding: 0;
 }
 
+.project-root-container {
+  background: none !important;
+}
+
+.project-banner-container {
+  background: url(https://storage.googleapis.com/hellbenders-public-c095b-assets/hellbendersWebAssets/mmosh_bg.png),
+  url(https://storage.googleapis.com/hellbenders-public-c095b-assets/hellbendersWebAssets/texture.png);
+  background-size: cover;
+  background-repeat: no-repeat, repeat;
+  background-attachment: fixed;
+  min-height: 300px;
+}
+
 .root-container {
   position: relative;
   background: url(https://storage.googleapis.com/hellbenders-public-c095b-assets/hellbendersWebAssets/mmosh_bg.png),
@@ -395,6 +408,10 @@ input[type="number"] {
   border: 0 none;
 }
 
+.invitation-action-container button.project-btn {
+  margin: 0 15px 0 0;
+}
+
 .invitation-content-right p {
   margin: 5px 0 0;
   font-size: 10px;
@@ -528,6 +545,8 @@ input[type="number"] {
   border: 0 none;
   padding-left: 30px;
   padding-right: 30px;
+  white-space:nowrap;
+  text-overflow: ellipsis;
 }
 
 .price-details {
@@ -921,6 +940,7 @@ input[type="number"] {
   z-index: 0;
   height: 28px;
   margin: 15px 0;
+  text-align: center;
 }
 
 .swap-page-switcher-border {
@@ -1269,6 +1289,7 @@ input[type="number"] {
   font-size: 16px;
   text-transform: capitalize;
   margin:0 0 8px;
+  color: #fff;
 }
 
 .project-image-collage .project-image-collage-image-main {
@@ -1290,7 +1311,7 @@ input[type="number"] {
   bottom: -15px;
 }
 
-.create-coin-page .project-image-collage-coin-image img {
+.create-coin-page .project-image-collage-coin-image img, .project-directory .project-image-collage-coin-image img {
   width: 30px;
   height: 30px;
   object-fit: cover;
@@ -1567,6 +1588,250 @@ input[type="number"] {
   margin: 5px 0 0;
 }
 
+.project-directory {
+  margin: 40px 0;
+}
+
+.project-directory-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.project-directory-header h2 {
+  color: #fff;
+  font-family: 'goudyhvyface_btregular';
+  font-size: 18px;
+  margin: 0;
+  text-align: center;
+}
+
+.project-directory-search {
+  position: relative;
+  max-width: 500px;
+  width: 100%;
+  margin: 20px 20px 60px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(32, 34, 99, 0.7);
+  color: #fff;
+  border-radius: 20px;
+}
+
+.project-directory-search svg {
+  position: absolute;
+  left: 10px;
+  top: 7px;
+  color: rgba(255, 255, 255, 0.22);
+}
+
+.project-directory-search input[type="text"]{
+  background: none;
+  border: 0 none;
+  padding-left: 40px;
+  color: #fff;
+  font-size: 14px;
+  height: 40px;
+}
+
+.project-directory-search input[type="text"]::placeholder {
+  color: rgba(255, 255, 255, 0.22);
+}
+
+.project-directory-search input[type="text"]:focus {
+  box-shadow: none;
+  border: 0 none;
+}
+
+.project-directory-loader {
+  text-align: center;
+}
+
+.project-directory-empty {
+  text-align: center;
+  color: #fff;
+}
+
+.project-directory-container-item {
+  margin: 0 10px 40px;
+  cursor: pointer;
+}
+
+.project-detail {
+  position: relative;
+  padding: 0 0 100px;
+}
+
+.project-detail-loader {
+  text-align: center;
+  margin: 50px 0;
+}
+
+.project-detail-containers-sub-banner {
+  max-width: 200px;
+  position: absolute;
+  top: -150px;
+  left: -30px;
+}
+
+.project-detail-cointainer-info h2 {
+  color: #fff;
+  font-family: 'goudyhvyface_btregular';
+  font-size: 14px;
+  text-transform: capitalize;
+  margin: 10px 0;
+}
+
+.project-detail-cointainer-info h2 span {
+  color: #999;
+  font-size: 12x;
+  font-family: "Avenir LT Std";
+  text-transform: capitalize;
+}
+
+.project-detail-cointainer-info p {
+  font-size: 12x;
+  font-family: "Avenir LT Std";
+  color: #999;
+  margin: 0 0 10px;
+}
+
+.project-detail-cointainer-info .profile-link {
+  padding-left: 20px;
+  cursor: pointer;
+  position: relative;
+  color: #cd068e;
+  font-size: 12px;
+  text-decoration: underline;
+}
+.project-detail-cointainer-info .profile-link svg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 16px;
+  height: 16px;
+}
+
+.project-detail-container {
+  display: flex;
+  justify-content: center;
+}
+.project-detail-containers-mint-box {
+  display: flex;
+}
+.project-detail-containers-invitation , .project-detail-containers-passes {
+  max-width: 250px;
+  margin: 0 0 0 20px;
+  background: rgba(16, 14, 82, 0.26);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(19.5px);
+  border-radius: 7px;
+  padding: 15px;
+}
+
+.project-detail-container h2 {
+  color: #fff;
+  font-family: 'goudyhvyface_btregular';
+  font-size: 14px;
+  text-transform: capitalize;
+}
+
+.project-detail-container h3 {
+  color: #fff;
+  font-family: 'goudyhvyface_btregular';
+  font-size: 10px !important;
+  text-transform: capitalize;
+  margin: 17px 0px 0 14px  !important;
+}
+
+.project-detail-container .project-pass-collage-image-decorated-left {
+  left: 11px;
+}
+
+.project-detail-container .project-pass-collage-image-decorated-left img {
+    width: 100px;
+}
+
+.project-detail-container .project-pass-collage-image-decorated-bottom-info img {
+  width: 40px !important;
+  height: 40px !important;
+  margin-left: 10px !important;
+  top: -9px !important;
+}
+
+.project-detail-container .profile-container-action p {
+  color: #999;
+  padding:0;
+  margin: 0;
+}
+.project-detail-container .price-details {
+  margin: 0 0 10px;
+}
+.project-detail-container .price-details label {
+  color: #999;
+}
+
+.project-detail-element {
+  margin: 10px 0;
+}
+
+.project-detail-element label {
+  color: #999;
+  font-size: 10px
+}
+
+.project-detail-element input {
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(32, 34, 99, 1);
+  color: #fff;
+  font-size: 11px;
+}
+
+.project-detail-element input:focus {
+  box-shadow: none;
+  background: rgba(32, 34, 99, 1);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #fff;
+}
+
+.project-detail-element input::placeholder {
+  color: rgba(255, 255, 255, 0.22);
+}
+
+.project-detail-container .profile-container-action {
+  margin: 15px 0 0;
+}
+
+.project-detail-containers-mint-swap .swapinput-left-icon {
+  display: none;
+}
+
+.project-detail-containers-mint-swap
+{
+  margin: 0 0 0 20px;
+  background: rgba(16, 14, 82, 0.26);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(19.5px);
+  border-radius: 7px;
+  padding: 15px;
+}
+.swap-page-container-coin-detail {
+  text-align: center;
+  margin: 0 0 30px;
+}
+.swap-page-container-coin-detail img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.swap-page-container-coin-detail h3 {
+  font-family: "Avenir LT Std";
+  margin: 5px 0 0 !important;
+  font-size: 14px !important;
+  text-transform: uppercase;
+}
+
 @media (min-width: 320px) {
   .project-pass-collage-image-decorated-bottom .project-pass-collage-image-decorated-bottom-info img{
     width: 60px;
@@ -1672,12 +1937,6 @@ input[type="number"] {
     margin-left: 14px;
     top: -19px;
  }
- 
- .project-pass-collage-image-decorated-bottom .project-pass-collage-image-decorated-bottom-info h3 {
-   margin: 21px 0 0;
-   font-size: 16px;
- }
-
 }
 
 @media (min-width: 1400px) {
@@ -1693,4 +1952,40 @@ input[type="number"] {
     font-size: 16px;
   }
 
+}
+
+@media (max-width: 767px) {
+  .project-detail-containers-mint-box {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .project-detail-containers-invitation, .project-detail-containers-passes {
+    margin: 0 0 20px;
+  }
+}
+
+@media (max-width: 991px) {
+  .project-detail-containers-sub-banner {
+    margin: 0 auto 40px;
+    position: static;
+  }
+}
+
+@media (max-width: 1400px) {
+  .project-pass-collage-image-decorated-bottom .project-pass-collage-image-decorated-bottom-info h3 {
+    margin: 21px 0 0;
+    font-size: 16px;
+  }
+ 
+  .project-detail-container {
+   display: block;
+  }
+  .project-detail-containers-mint-swap {
+   max-width: 500px;
+   margin: 0 auto 40px;
+  }
+  .project-detail-containers-mint-box {
+   justify-content: center;
+  }
 }

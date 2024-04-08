@@ -178,6 +178,17 @@ export default function HeaderVW() {
     }
   };
 
+  const isProjectPages = () => {
+    if(currentLocation == "/project/step1" || currentLocation == "/project/step2" || currentLocation == "/project/step3" || pathname == "/project/step4") {
+      return false
+    }
+    if(currentLocation.substring(0,8) == "/project") {
+      return true
+    }
+    return false
+  }
+
+
   return (
     <>
     {currentLocation !== "/swap"&&
@@ -225,7 +236,7 @@ export default function HeaderVW() {
                     </div>
                   </div>
                 </div>
-                {(currentLocation != "/project/create/step1" && currentLocation != "/project/create/step2" && currentLocation != "/project/create/step3" && currentLocation != "/project/create/step4") &&
+                {(currentLocation != "/project/create/step1" && currentLocation != "/project/create/step2" && currentLocation != "/project/create/step3" && currentLocation != "/project/create/step4" && !isProjectPages()) &&
                   <div className="banner-container">
                     <div className="banner-container-inner">
                       {name !== "" && currentLocation == "/dashboard" && (
@@ -281,6 +292,13 @@ export default function HeaderVW() {
                     </div>
                   </div>
                 }
+
+                {isProjectPages() &&
+                  <div className="project-banner-container">
+                  </div>
+                }
+
+
 
               </div>
               <Drawer
