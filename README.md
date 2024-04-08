@@ -38,6 +38,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 # Depoyment steps
 
 ## Env configuration
+
 ```ini
 # This line is ignored since it's a comment
 MONGO_URI=<- Mongo db connection string
@@ -51,6 +52,7 @@ NEXT_PUBLIC_SHDW_PRIVATE= <- shadow storage private key
 2. update getNetwork function based on network
 
 For Mainnet
+
 ```ini
     const getNetwork = () => {
         return WalletAdapterNetwork.Mainnet;
@@ -58,6 +60,7 @@ For Mainnet
 ```
 
 For Devnet
+
 ```ini
     const getNetwork = () => {
         return WalletAdapterNetwork.Devnet;
@@ -67,19 +70,21 @@ For Devnet
 3. update rpc url in src/anchor/web3Config.json based on network
 
 For Mainnet
+
 ```ini
 "rpcURL": "https://api.mainnet-beta.solana.com"
 ```
 
 For Devnet
+
 ```ini
 "rpcURL": "https://api.devnet.solana.com"
 ```
 
-
 ## Devnet Program configuration
 
 go to src/anchor/web3Consts.ts and update variable with given value
+
 ```ini
   oposToken: new web3.PublicKey("6vgT7gxtF8Jdu7foPDZzdHxkwYFX9Y1jvgpxP8vH2Apw"),
   rootProfile: new web3.PublicKey(
@@ -93,10 +98,10 @@ go to src/anchor/web3Consts.ts and update variable with given value
 
 ```
 
-
 ## Mainnet Program configuration
 
 Go to src/anchor/web3Consts.ts and update variable with given value
+
 ```ini
   oposToken: new web3.PublicKey("FwfrwnNVLGyS8ucVjWvyoRdFDpTY8w6ACMAxJ4rqGUSS"),
   rootProfile: new web3.PublicKey(
@@ -110,3 +115,13 @@ Go to src/anchor/web3Consts.ts and update variable with given value
   rootCollection: new web3.PublicKey("2YsiCzmKFS6QfNL88goG22qbhzxNM7EhrUD4ghWTTYhS"),
 
 ```
+
+## LICENSE
+
+Copyright 2022 Scoby Society
+
+Licensed under the GNU License, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+
+https://www.gnu.org/licenses/agpl-3.0.en.html
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
