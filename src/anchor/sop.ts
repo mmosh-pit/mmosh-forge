@@ -407,6 +407,97 @@ export type Sop = {
       ]
     },
     {
+      "name": "projectDistribution",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "oposToken",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mainState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "currentParentProfileHolder",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentGrandParentProfileHolder",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentGreatGrandParentProfileHolder",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentGgreatGrandParentProfileHolder",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentGenesisProfileHolder",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "userOposAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentProfileHolderOposAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "grandParentProfileHolderOposAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "greatGrandParentProfileHolderOposAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "ggreatGrandParentProfileHolderOposAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "genesisProfileHolderOposAta",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "mintProfileByAt",
       "accounts": [
         {
@@ -446,6 +537,300 @@ export type Sop = {
         },
         {
           "name": "mainState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "activationToken",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "profile",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "userProfileAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "profileState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "profileMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "profileEdition",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentProfileState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collection",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collectionMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collectionEdition",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "sysvarInstructions",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "parentProfile",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentParentProfileHolder",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentGrandParentProfileHolder",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentGreatGrandParentProfileHolder",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentGgreatGrandParentProfileHolder",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentGenesisProfileHolder",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "userOposAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentProfileHolderOposAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "grandParentProfileHolderOposAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "greatGrandParentProfileHolderOposAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "ggreatGrandParentProfileHolderOposAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "genesisProfileHolderOposAta",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "symbol",
+          "type": "string"
+        },
+        {
+          "name": "uriHash",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "mintGenesisPass",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "mplProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "profile",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "mainState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentMainState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userProfileAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "profileState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "profileMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "profileEdition",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collection",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collectionState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collectionMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collectionEdition",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "sysvarInstructions",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "symbol",
+          "type": "string"
+        },
+        {
+          "name": "uriHash",
+          "type": "string"
+        },
+        {
+          "name": "input",
+          "type": {
+            "defined": "MainStateInput"
+          }
+        }
+      ]
+    },
+    {
+      "name": "mintPassByAt",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "mplProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "oposToken",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "userActivationTokenAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "project",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mainState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentMainState",
           "isMut": true,
           "isSigner": false
         },
@@ -881,7 +1266,7 @@ export type Sop = {
       ]
     },
     {
-      "name": "initCoinToken",
+      "name": "initPassToken",
       "accounts": [
         {
           "name": "user",
@@ -889,8 +1274,18 @@ export type Sop = {
           "isSigner": true
         },
         {
-          "name": "userCoinTokenAta",
+          "name": "userProfileAta",
           "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userActivationTokenAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "project",
+          "isMut": false,
           "isSigner": false
         },
         {
@@ -899,12 +1294,62 @@ export type Sop = {
           "isSigner": false
         },
         {
-          "name": "coinToken",
+          "name": "parentMainState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "activationToken",
           "isMut": true,
           "isSigner": true
         },
         {
-          "name": "coinTokenMetadata",
+          "name": "activationTokenState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "activationTokenMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "profile",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "profileState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "profileMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "profileEdition",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "profileCollectionAuthorityRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentCollection",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentCollectionMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentCollectionEdition",
           "isMut": true,
           "isSigner": false
         },
@@ -946,7 +1391,74 @@ export type Sop = {
         {
           "name": "uri",
           "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "createPassToken",
+      "accounts": [
+        {
+          "name": "minter",
+          "isMut": true,
+          "isSigner": true
         },
+        {
+          "name": "minterProfileAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "receiverAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "project",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mainState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "activationToken",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "activationTokenState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "profile",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "profileState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
         {
           "name": "amount",
           "type": "u64"
@@ -1935,22 +2447,6 @@ export type Sop = {
       }
     },
     {
-      "name": "coinTokenState",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "parentProfile",
-            "type": "publicKey"
-          },
-          {
-            "name": "creator",
-            "type": "publicKey"
-          }
-        ]
-      }
-    },
-    {
       "name": "collectionState",
       "type": {
         "kind": "struct",
@@ -2720,6 +3216,26 @@ export type Sop = {
           {
             "name": "parentMint",
             "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "MintPassByAtInput",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "symbol",
+            "type": "string"
+          },
+          {
+            "name": "uriHash",
+            "type": "string"
           }
         ]
       }
@@ -3364,6 +3880,97 @@ export const IDL: Sop = {
       ]
     },
     {
+      "name": "projectDistribution",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "oposToken",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mainState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "currentParentProfileHolder",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentGrandParentProfileHolder",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentGreatGrandParentProfileHolder",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentGgreatGrandParentProfileHolder",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentGenesisProfileHolder",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "userOposAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentProfileHolderOposAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "grandParentProfileHolderOposAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "greatGrandParentProfileHolderOposAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "ggreatGrandParentProfileHolderOposAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "genesisProfileHolderOposAta",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "mintProfileByAt",
       "accounts": [
         {
@@ -3403,6 +4010,300 @@ export const IDL: Sop = {
         },
         {
           "name": "mainState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "activationToken",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "profile",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "userProfileAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "profileState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "profileMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "profileEdition",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentProfileState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collection",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collectionMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collectionEdition",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "sysvarInstructions",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "parentProfile",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentParentProfileHolder",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentGrandParentProfileHolder",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentGreatGrandParentProfileHolder",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentGgreatGrandParentProfileHolder",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentGenesisProfileHolder",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "userOposAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentProfileHolderOposAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "grandParentProfileHolderOposAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "greatGrandParentProfileHolderOposAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "ggreatGrandParentProfileHolderOposAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "genesisProfileHolderOposAta",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "symbol",
+          "type": "string"
+        },
+        {
+          "name": "uriHash",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "mintGenesisPass",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "mplProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "profile",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "mainState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentMainState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userProfileAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "profileState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "profileMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "profileEdition",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collection",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collectionState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collectionMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collectionEdition",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "sysvarInstructions",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "symbol",
+          "type": "string"
+        },
+        {
+          "name": "uriHash",
+          "type": "string"
+        },
+        {
+          "name": "input",
+          "type": {
+            "defined": "MainStateInput"
+          }
+        }
+      ]
+    },
+    {
+      "name": "mintPassByAt",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "mplProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "oposToken",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "userActivationTokenAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "project",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mainState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentMainState",
           "isMut": true,
           "isSigner": false
         },
@@ -3838,7 +4739,7 @@ export const IDL: Sop = {
       ]
     },
     {
-      "name": "initCoinToken",
+      "name": "initPassToken",
       "accounts": [
         {
           "name": "user",
@@ -3846,8 +4747,18 @@ export const IDL: Sop = {
           "isSigner": true
         },
         {
-          "name": "userCoinTokenAta",
+          "name": "userProfileAta",
           "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userActivationTokenAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "project",
+          "isMut": false,
           "isSigner": false
         },
         {
@@ -3856,12 +4767,62 @@ export const IDL: Sop = {
           "isSigner": false
         },
         {
-          "name": "coinToken",
+          "name": "parentMainState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "activationToken",
           "isMut": true,
           "isSigner": true
         },
         {
-          "name": "coinTokenMetadata",
+          "name": "activationTokenState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "activationTokenMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "profile",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "profileState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "profileMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "profileEdition",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "profileCollectionAuthorityRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentCollection",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentCollectionMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "parentCollectionEdition",
           "isMut": true,
           "isSigner": false
         },
@@ -3903,7 +4864,74 @@ export const IDL: Sop = {
         {
           "name": "uri",
           "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "createPassToken",
+      "accounts": [
+        {
+          "name": "minter",
+          "isMut": true,
+          "isSigner": true
         },
+        {
+          "name": "minterProfileAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "receiverAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "project",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mainState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "activationToken",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "activationTokenState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "profile",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "profileState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
         {
           "name": "amount",
           "type": "u64"
@@ -4892,22 +5920,6 @@ export const IDL: Sop = {
       }
     },
     {
-      "name": "coinTokenState",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "parentProfile",
-            "type": "publicKey"
-          },
-          {
-            "name": "creator",
-            "type": "publicKey"
-          }
-        ]
-      }
-    },
-    {
       "name": "collectionState",
       "type": {
         "kind": "struct",
@@ -5677,6 +6689,26 @@ export const IDL: Sop = {
           {
             "name": "parentMint",
             "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "MintPassByAtInput",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "symbol",
+            "type": "string"
+          },
+          {
+            "name": "uriHash",
+            "type": "string"
           }
         ]
       }

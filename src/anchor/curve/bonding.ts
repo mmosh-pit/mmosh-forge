@@ -1581,10 +1581,12 @@ export class Connectivity {
       const infoes = await this.connection.getMultipleAccountsInfo([
         new anchor.web3.PublicKey(userbasetokenAta.toBase58()),
         new anchor.web3.PublicKey(usertargettokenAta.toBase58()),
+        new anchor.web3.PublicKey(this.provider.publicKey.toBase58()),
       ]);
       console.log("getTokenBalance ", infoes);
       let baseBalance = 0
       let targetBalance = 0
+      let solBalance = 0
       if(infoes[0]) {
         const tokenBaseAccount = unpackAccount(userbasetokenAta, infoes[0]);
         baseBalance = (parseInt(tokenBaseAccount?.amount?.toString()) ?? 0) / web3Consts.LAMPORTS_PER_OPOS
@@ -1594,17 +1596,23 @@ export class Connectivity {
         const tokenTargetAccount = unpackAccount(usertargettokenAta, infoes[1]);
         targetBalance = (parseInt(tokenTargetAccount?.amount?.toString()) ?? 0) / web3Consts.LAMPORTS_PER_OPOS
       }
+
+      if (infoes[2]) {
+        solBalance = infoes[2].lamports / 1000_000_000;
+      }
     
 
       return {
         base:baseBalance,
         target:targetBalance,
+        sol: solBalance,
       };
     } catch (error) {
       console.log("erorror ",error)
       return {
         base: 0,
         target: 0,
+        sol: 0
       };
     }
   }

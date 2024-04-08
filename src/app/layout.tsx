@@ -21,11 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="root-container">
-          <div className="content-container">
             <WalletConnector>{children}</WalletConnector>
-          </div>
-        </div>
       </body>
     </html>
   );
