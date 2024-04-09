@@ -213,16 +213,16 @@ export default function Profile() {
       description: desc,
       image: "",
       enternal_url: process.env.NEXT_PUBLIC_APP_MAIN_URL + "/" + userName,
-      family: "MMOSH Pit",
-      collection: "Moral Panic",
+      family: "MMOSH",
+      collection: "MMOSH Profile Collection",
       attributes: [
         {
           trait_type: "Primitive",
           value: "Profile",
         },
         {
-          trait_type: "MMOSH",
-          value: "Moral Panic",
+          trait_type: "Ecosystem",
+          value: "Genesis MMOSH",
         },
         {
           trait_type: "Gen",
@@ -257,13 +257,22 @@ export default function Profile() {
 
     // get promoter name
     if (profileLineage.promoter.length > 0) {
+
       let promoter: any = await getUserName(profileLineage.promoter);
       if (promoter != "") {
+        body.attributes.push({
+          trait_type: "Source",
+          value: promoter,
+        });
         body.attributes.push({
           trait_type: "Promoter",
           value: promoter,
         });
       } else {
+        body.attributes.push({
+          trait_type: "Source",
+          value: profileLineage.promoter,
+        });
         body.attributes.push({
           trait_type: "Promoter",
           value: profileLineage.promoter,

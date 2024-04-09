@@ -325,69 +325,27 @@ export default function ProjectDetail({ params }: { params: { address: string } 
             if(projectInfo.activationTokens.length == 0) {
                 setInviteButtonStatus("Preparing Metadata ...")
                 let attributes = [];
+
                 // get promoter name
                 if (projectInfo.profilelineage.promoter.length > 0) {
                   let promoter: any = await getUserName(projectInfo.profilelineage.promoter);
                   if (promoter != "") {
                     attributes.push({
-                      trait_type: "Promoter",
+                      trait_type: "Parent",
                       value: promoter,
                     });
                   } else {
                     attributes.push({
-                      trait_type: "Promoter",
+                      trait_type: "Parent",
                       value: projectInfo.profilelineage.promoter,
                     });
                   }
                 }
-          
-                // get scout name
-                if (projectInfo.profilelineage.scout.length > 0) {
-                  let scout: any = await getUserName(projectInfo.profilelineage.scout);
-                  if (scout != "") {
-                    attributes.push({
-                      trait_type: "Scout",
-                      value: scout,
-                    });
-                  } else {
-                    attributes.push({
-                      trait_type: "Scout",
-                      value: projectInfo.profilelineage.scout,
-                    });
-                  }
-                }
-          
-                // get recruiter name
-                if (projectInfo.profilelineage.recruiter.length > 0) {
-                  let recruiter: any = await getUserName(projectInfo.profilelineage.recruiter);
-                  if (recruiter != "") {
-                    attributes.push({
-                      trait_type: "Recruiter",
-                      value: recruiter,
-                    });
-                  } else {
-                    attributes.push({
-                      trait_type: "Recruiter",
-                      value: projectInfo.profilelineage.recruiter,
-                    });
-                  }
-                }
-          
-                // get originator name
-                if (projectInfo.profilelineage.originator.length > 0) {
-                  let originator: any = await getUserName(projectInfo.profilelineage.originator);
-                  if (originator != "") {
-                    attributes.push({
-                      trait_type: "Originator",
-                      value: originator,
-                    });
-                  } else {
-                    attributes.push({
-                      trait_type: "Originator",
-                      value: projectInfo.profilelineage.originator,
-                    });
-                  }
-                }
+
+                attributes.push({
+                    trait_type: "Seniority",
+                    value: projectInfo.generation,
+                });
 
                 attributes.push({
                     trait_type: "Gen",
@@ -400,7 +358,7 @@ export default function ProjectDetail({ params }: { params: { address: string } 
                 });
 
                 let desc =
-                "Cordially invites you to join on the "+capitalizeString(forgeContext.userData.name)+". The favor of a reply is requested.";
+                "Cordially invites you to join on the "+capitalizeString(projectDetail.name)+". The favor of a reply is requested.";
                 if (forgeContext.userData.name != "") {
                     desc =
                     capitalizeString(forgeContext.userData.name) +
@@ -408,8 +366,8 @@ export default function ProjectDetail({ params }: { params: { address: string } 
                 }
         
               const body = {
-                name: forgeContext.userData.name != "" ? "Invitation from " + capitalizeString(forgeContext.userData.name) : "Invitation",
-                symbol: "BADGE",
+                name: forgeContext.userData.name != "" ? "Invitation from " + capitalizeString(projectDetail.name) : "Invitation",
+                symbol: projectDetail.symbol,
                 description: desc,
                 image: projectDetail.image,
                 external_url: process.env.NEXT_PUBLIC_APP_MAIN_URL,
@@ -588,123 +546,55 @@ export default function ProjectDetail({ params }: { params: { address: string } 
             let projectConn: ProjectConn = new ProjectConn(env, web3Consts.programID, new anchor.web3.PublicKey(params.address));
             setPassButtonStatus("Preparing Metadata...")
             const body = {
-                name: forgeContext.userData.name,
-                symbol: "PASS",
+                name:  projectDetail.name,
+                symbol: projectDetail.symbol,
                 description: projectDetail.desc,
                 image: projectDetail.image,
-                enternal_url: process.env.NEXT_PUBLIC_APP_MAIN_URL + "/project/" + projectDetail.project,
-                family: projectDetail.name,
-                collection: "Pass Collection",
+                enternal_url: process.env.NEXT_PUBLIC_APP_MAIN_URL,
+                family: "MMOSH",
+                collection: "MMOSH Pass Collection",
                 attributes: [
                   {
                     trait_type: "Project",
                     value:params.address,
                   },
                   {
-                    trait_type: "Gen",
-                    value: projectInfo.generation,
+                    trait_type: "Primitive",
+                    value:"Pass",
                   },
                   {
-                    trait_type: "Full Name",
-                    value: forgeContext.userData.name,
+                    trait_type: "MMOSH",
+                    value:"Genesis MMOSH",
                   },
                   {
-                    trait_type: "Username",
-                    value: forgeContext.userData.username,
-                  },
-                  {
-                    trait_type: "Adjective",
-                    value: forgeContext.userData.descriptor,
-                  },
-                  {
-                    trait_type: "Noun",
-                    value: forgeContext.userData.nouns,
-                  },
-                  {
-                    trait_type: "Pronoun",
-                    value: forgeContext.userData.pronouns,
+                    trait_type: "Seniority",
+                    value:"0",
                   },
                 ],
             };
-            // get promoter name
-            if (projectInfo.profilelineage.promoter.length > 0) {
-                let promoter: any = await getUserName(projectInfo.profilelineage.promoter);
-                if (promoter != "") {
-                    body.attributes.push({
-                    trait_type: "Promoter",
-                    value: promoter,
-                    });
-                } else {
-                    body.attributes.push({
-                    trait_type: "Promoter",
-                    value: projectInfo.profilelineage.promoter,
-                    });
-                }
-                body.attributes.push({
-                    trait_type: "Promoter_Profile",
-                    value: projectInfo.profilelineage.promoterprofile,
-                });
-            }
-        
-            // get scout name
-            if (projectInfo.profilelineage.scout.length > 0) {
-                let scout: any = await getUserName(projectInfo.profilelineage.scout);
-                if (scout != "") {
-                    body.attributes.push({
-                    trait_type: "Scout",
-                    value: scout,
-                    });
-                } else {
-                    body.attributes.push({
-                    trait_type: "Scout",
-                    value: projectInfo.profilelineage.scout,
-                    });
-                }
-                body.attributes.push({
-                    trait_type: "Scout_Profile",
-                    value: projectInfo.profilelineage.scoutprofile,
-                });
-            }
-        
-            // get recruiter name
-            if (projectInfo.profilelineage.recruiter.length > 0) {
-                let recruiter: any = await getUserName(projectInfo.profilelineage.recruiter);
-                if (recruiter != "") {
-                    body.attributes.push({
-                    trait_type: "Recruiter",
-                    value: recruiter,
-                    });
-                } else {
-                    body.attributes.push({
-                    trait_type: "Recruiter",
-                    value: projectInfo.profilelineage.recruiter,
-                    });
-                }
-                body.attributes.push({
-                    trait_type: "Recruiter_Profile",
-                    value: projectInfo.profilelineage.recruiterprofile,
-                });
-            }
-        
+
+
+
             // get originator name
             if (projectInfo.profilelineage.originator.length > 0) {
                 let originator: any = await getUserName(projectInfo.profilelineage.originator);
                 if (originator != "") {
                     body.attributes.push({
-                    trait_type: "Originator",
+                    trait_type: "Creator",
                     value: originator,
                     });
                 } else {
                     body.attributes.push({
-                    trait_type: "Originator",
+                    trait_type: "Creator",
                     value: projectInfo.profilelineage.originator,
                     });
                 }
                 body.attributes.push({
-                    trait_type: "Originator_Profile",
+                    trait_type: "Creator_Profile",
                     value: projectInfo.profilelineage.originatorprofile,
                 });
             }
+
             const shadowHash: any = await pinFileToShadowDrive(body);
             if (shadowHash === "") {
                 setPassSubmit(false);
@@ -717,8 +607,8 @@ export default function ProjectDetail({ params }: { params: { address: string } 
             setPassButtonStatus("Minting Pass...")
 
             const res = await projectConn.mintPass({
-                name: forgeContext.userData.username.substring(0, 15),
-                symbol: "PASS",
+                name: projectDetail.name,
+                symbol: projectDetail.symbol,
                 uriHash: shadowHash,
                 activationToken,
                 genesisProfile,
@@ -739,8 +629,7 @@ export default function ProjectDetail({ params }: { params: { address: string } 
                     "danger-container",
                 );
             }
-
-            
+                 
             setPassSubmit(false)
             setPassButtonStatus("Mint")
         } catch (error) {

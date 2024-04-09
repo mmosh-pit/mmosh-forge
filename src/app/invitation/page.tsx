@@ -175,11 +175,6 @@ export default function Invitation() {
       }
 
       attributes.push({
-        trait_type: "MMOSH",
-        value: "Charlie the Cybernatural Owl #0",
-      });
-
-      attributes.push({
         trait_type: "Gen",
         value: generation,
       });
@@ -674,7 +669,7 @@ export default function Invitation() {
           </div>
           <div className="invitation-action-container">
             {buttonText === "Mint" &&
-              <Button variant="primary" size="sm" onClick={mintInvitationAction}>
+              <Button variant="primary" size="sm" onClick={registerAction}>
                 {buttonText}
               </Button>
             }
