@@ -79,36 +79,22 @@ For Devnet
 
 ## Devnet Program configuration
 
-go to src/anchor/web3Consts.ts and update variable with given value
+create .env  and update variable with given value
 ```ini
-  oposToken: new web3.PublicKey("6vgT7gxtF8Jdu7foPDZzdHxkwYFX9Y1jvgpxP8vH2Apw"),
-  rootProfile: new web3.PublicKey(
-    "85YaBFhbwuqPiRVNrXdMJwdt1qjdxbtypGcFBc6Tp7qA",
-  ),
-  genesisProfile: new web3.PublicKey(
-    "J2tFYfnM4t8XMcaMsR2WyUhaNrkJ26pwKZGq2J9T7rQL",
-  ),
-  badgeCollection: new web3.PublicKey("147m8aw1hcmyBduQvSJoXCFaLb8wQSe9DNxWVsLTfqec"),
-  rootCollection: new web3.PublicKey("9h9c4idX2UnGhFa266dQxMGD5kMk9pigumRAV2x9Hbk2"),
-  profileCollection: new web3.PublicKey("28tSBSVvfGJXWdhrwRJM45ZcefyfwBEZgqDs5T2k7TLL"),
-  commonlut: new web3.PublicKey("G2ywjqhzR9U3mvuKBeTByDGEw7rMjnyDUexeZe19WNSF"),
+NEXT_PUBLIC_OPOS_TOKEN=6vgT7gxtF8Jdu7foPDZzdHxkwYFX9Y1jvgpxP8vH2Apw
+NEXT_PUBLIC_ROOT_PROFILE=DA8ZEAcwZdzBzqrcr5N9vEvvSbBhmrdvpp6V4wksM6eG
+NEXT_PUBLIC_GENESIS_PROFILE=5iDkjEmsEvGi3hUrRk19UFJUBNRzDZLA5hUdXujtMY3A
+NEXT_PUBLIC_ROOT_COLLECTION=7VgnWBvH6m6tFqjQuhTQSzhLjG6YxEzwBA17meJgqbD1
+NEXT_PUBLIC_APP_PROFILE_COLLECTION=6LSk9Eozrf4XxW68WqTuRaFUHxN6ChwuZ5GWgLcuQSCm
+NEXT_PUBLIC_BADGE_COLLECTION=4mAserfrmL4eGRnGDsZMsm8hRqqSdKDXcNDZ5mFQDQZJ
+NEXT_PUBLIC_PASS_COLLECTION=DBRZcZaNCEL241JGvt3VtKhPTEnY7DdegQPpEXLsU2qn
+NEXT_PUBLIC_APP_COMMON_LUT=2T4ZrPa9ixzygBHtJ2nVqYQBnqHUjejFA5MSL8EziN1U
 
 ```
 
 
 ## Mainnet Program configuration
 
-Go to src/anchor/web3Consts.ts and update variable with given value
+create .env  and update variable with given value
 ```ini
-  oposToken: new web3.PublicKey("FwfrwnNVLGyS8ucVjWvyoRdFDpTY8w6ACMAxJ4rqGUSS"),
-  rootProfile: new web3.PublicKey(
-    "85YaBFhbwuqPiRVNrXdMJwdt1qjdxbtypGcFBc6Tp7qA",
-  ),
-  genesisProfile: new web3.PublicKey(
-    "HLU5hoeXDqn9QSL6qFsPqi2dHXsTmsioYcuNd1CWbedB",
-  ),
-  commonLut: new web3.PublicKey("A1y1BoDXB5bph8nkiD1oBQb1BksxtSCbzxjH8gwuFf2Q"),
-  badgeCollection: new web3.PublicKey("GX2AC9XPza59gUL7mEeCnLPeD6o7bjRbS8xP2S1hgYjp"),
-  rootCollection: new web3.PublicKey("2YsiCzmKFS6QfNL88goG22qbhzxNM7EhrUD4ghWTTYhS"),
-
 ```

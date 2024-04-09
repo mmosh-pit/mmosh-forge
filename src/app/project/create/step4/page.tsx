@@ -200,25 +200,29 @@ export default function ProjectStepFour() {
                 symbol: symbol,
                 description: description,
                 image: imageFile,
-                enternal_url: process.env.NEXT_PUBLIC_APP_MAIN_URL + "/project/" + name,
-                family: "MMOSH Pit",
-                collection: "Pass Collection",
+                enternal_url: process.env.NEXT_PUBLIC_APP_MAIN_URL,
+                family: "MMOSH",
+                collection: "MMOSH Pass Collection",
                 attributes: [
                   {
                     trait_type: "Primitive",
-                    value: "Project",
+                    value: "Pass",
+                  },
+                  {
+                    trait_type: "MMOSH",
+                    value: " Genesis MMOSH",
                   },
                   {
                     trait_type: "Project",
                     value: projectKeyPair.publicKey.toBase58(),
                   },
                   {
-                    trait_type: "Gen",
+                    trait_type: "Seniority",
                     value: "0",
                   },
                   {
-                    trait_type: "Seniority",
-                    value: "0",
+                    trait_type: "Creator",
+                    value: forgeContext.userData.name,
                   },
                 ],
             };
@@ -310,8 +314,8 @@ export default function ProjectStepFour() {
             }
 
             const invitebody = {
-                name: name != "" ? "Invitation from " + username : "Invitation",
-                symbol: "BADGE",
+                name: name != "" ? "Invitation from join " +  name : "Invitation",
+                symbol: symbol,
                 description: desc,
                 image:imageFile,
                 external_url: process.env.NEXT_PUBLIC_APP_MAIN_URL,
@@ -320,7 +324,11 @@ export default function ProjectStepFour() {
                     {
                         trait_type: "Project",
                         value: projectKeyPair.publicKey.toBase58(),
-                    }
+                    },
+                    {
+                      trait_type: "Seniority",
+                      value: "0",
+                    },
                 ]
               };
         

@@ -3,7 +3,7 @@ import { AnchorProvider, Program, web3, BN } from "@project-serum/anchor";
 import { Wallet } from "@project-serum/anchor/dist/cjs/provider";
 import { bs58, utf8 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
 import { TOKEN_PROGRAM_ID } from "@coral-xyz/anchor/dist/cjs/utils/token";
-import { IDL, Sop } from "../sop";
+import { IDL, Mmoshforge } from "../mmoshforge";
 
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -58,9 +58,9 @@ import {
 } from "forge-spl-token";
 import { web3Consts } from "../web3Consts";
 
-export type ProgramStateV0 = IdlAccounts<Sop>["programStateV0"];
-export type CurveV0 = IdlAccounts<Sop>["curveV0"];
-export type TokenBondingV0 = IdlAccounts<Sop>["tokenBondingV0"];
+export type ProgramStateV0 = IdlAccounts<Mmoshforge>["programStateV0"];
+export type CurveV0 = IdlAccounts<Mmoshforge>["curveV0"];
+export type TokenBondingV0 = IdlAccounts<Mmoshforge>["tokenBondingV0"];
 
 export interface IProgramState extends ProgramStateV0 {
   publicKey: anchor.web3.PublicKey;
@@ -80,7 +80,7 @@ export class Connectivity {
   txis: web3.TransactionInstruction[] = [];
   extraSigns: web3.Keypair[] = [];
   multiSignInfo: any[] = [];
-  program: Program<Sop>;
+  program: Program<Mmoshforge>;
   mainState: web3.PublicKey;
   connection: web3.Connection;
   metaplex: Metaplex;
@@ -1086,7 +1086,7 @@ export class Connectivity {
       }
     }
 
-    const args: anchor.IdlTypes<Sop>["BuyV0Args"] = {
+    const args: anchor.IdlTypes<Mmoshforge>["BuyV0Args"] = {
       // @ts-ignore
       buyTargetAmount,
       // @ts-ignore
@@ -1281,7 +1281,7 @@ export class Connectivity {
           unixTime,
         );
 
-    const args: anchor.IdlTypes<Sop>["SellV0Args"] = {
+    const args: anchor.IdlTypes<Mmoshforge>["SellV0Args"] = {
       targetAmount: toBN(targetAmount, targetMint),
       minimumPrice: new BN(
         Math.ceil(min * (1 - slippage) * Math.pow(10, baseMint.decimals)),
