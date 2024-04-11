@@ -179,10 +179,10 @@ export default function HeaderVW() {
   };
 
   const isProjectPages = () => {
-    if(currentLocation == "/project/step1" || currentLocation == "/project/step2" || currentLocation == "/project/step3" || pathname == "/project/step4") {
+    if(currentLocation == "/community/step1" || currentLocation == "/community/step2" || currentLocation == "/community/step3" || pathname == "/community/step4") {
       return false
     }
-    if(currentLocation.substring(0,8) == "/project") {
+    if(currentLocation.substring(0,8) == "/communi") {
       return true
     }
     return false
@@ -236,7 +236,7 @@ export default function HeaderVW() {
                     </div>
                   </div>
                 </div>
-                {(currentLocation != "/project/create/step1" && currentLocation != "/project/create/step2" && currentLocation != "/project/create/step3" && currentLocation != "/project/create/step4" && !isProjectPages()) &&
+                {(currentLocation != "/community/create/step1" && currentLocation != "/community/create/step2" && currentLocation != "/community/create/step3" && currentLocation != "/community/create/step4" && !isProjectPages()) &&
                   <div className="banner-container">
                     <div className="banner-container-inner">
                       {name !== "" && currentLocation == "/dashboard" && (
@@ -293,7 +293,7 @@ export default function HeaderVW() {
                   </div>
                 }
 
-                {isProjectPages() &&
+                {currentLocation == "/communities" &&
                   <div className="project-banner-container">
                   </div>
                 }

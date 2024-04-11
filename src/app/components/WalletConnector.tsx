@@ -31,10 +31,10 @@ const WalletConnector = ({ children }: { children: React.ReactNode }) => {
   );
 
   const isProjectPages = () => {
-    if(pathname == "/project/step1" || pathname == "/project/step2" || pathname == "/project/step3" || pathname == "/project/step4") {
+    if(pathname == "/community/step1" || pathname == "/community/step2" || pathname == "/community/step3" || pathname == "/community/step4") {
       return false
     }
-    if(pathname.substring(0,8) == "/project") {
+    if(pathname.substring(0,8) == "/communi") {
       return true
     }
     return false

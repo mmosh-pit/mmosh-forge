@@ -346,7 +346,7 @@ export class Connectivity {
             receiver: currentGgreatGrandParentProfileHolder.toBase58(),
             amount: 1350,
           },
-        ]);
+        ],web3Consts.oposToken);
   
         return {
           Ok: {
@@ -421,6 +421,7 @@ export class Connectivity {
 
   async mintPass(
     input: _MintProfileByAtInput,
+    profile: string
   ): Promise<Result<TxPassType<{ profile: string }>, any>> {
     try {
       this.reinit();
@@ -477,34 +478,33 @@ export class Connectivity {
       );
       console.log("mint pass 7")
       const {
-        //profiles
-        grandParentProfile,
-        greatGrandParentProfile,
-        ggreateGrandParentProfile,
-        //
-        currentGreatGrandParentProfileHolder,
-        currentGgreatGrandParentProfileHolder,
-        currentGrandParentProfileHolder,
         currentGenesisProfileHolder,
+        currentGrandParentProfileHolder,
         currentParentProfileHolder,
-        //
-        currentParentProfileHolderAta,
         currentGenesisProfileHolderAta,
-        currentGrandParentProfileHolderAta,
-        currentGreatGrandParentProfileHolderAta,
-        currentGgreatGrandParentProfileHolderAta,
-        //
         parentProfileHolderOposAta,
-        genesisProfileHolderOposAta,
         grandParentProfileHolderOposAta,
-        greatGrandParentProfileHolderOposAta,
-        ggreatGrandParentProfileHolderOposAta,
       } = await this.__getProfileHoldersInfo(
         parentProfileStateInfo.lineage,
         parentProfile,
         genesisProfile,
         mainStateInfo.oposToken
       );
+
+
+      let myProfile = new anchor.web3.PublicKey(profile)
+      const myProfileState = this.__getProfileStateAccount(myProfile);
+      let myProfileStateInfo =
+        await this.program.account.profileState.fetch(myProfileState);
+
+      const profileHolderInfo = await this.__getProfileHoldersInfo(
+        myProfileStateInfo.lineage,
+        profile,
+        web3Consts.genesisProfile,
+        mainStateInfo.oposToken
+      );
+
+
 
       console.log("mint pass 8")
       const userOposAta = getAssociatedTokenAddressSync(mainStateInfo.oposToken, user);
@@ -539,16 +539,16 @@ export class Connectivity {
           userActivationTokenAta, // 19
           associatedTokenProgram, // 20
           parentProfile,
-          currentParentProfileHolder,
-          currentGrandParentProfileHolder,
-          currentGreatGrandParentProfileHolder,
-          currentGgreatGrandParentProfileHolder,
-          currentGenesisProfileHolder,
-          parentProfileHolderOposAta,
-          grandParentProfileHolderOposAta,
-          greatGrandParentProfileHolderOposAta,
-          ggreatGrandParentProfileHolderOposAta,
-          genesisProfileHolderOposAta,
+          currentGenesisProfileHolder:profileHolderInfo.currentGenesisProfileHolder,
+          currentParentProfileHolder:profileHolderInfo.currentParentProfileHolder,
+          currentGrandParentProfileHolder:currentGenesisProfileHolder,
+          currentGreatGrandParentProfileHolder:currentParentProfileHolder,
+          currentGgreatGrandParentProfileHolder: currentGrandParentProfileHolder,
+          genesisProfileHolderOposAta:profileHolderInfo.currentGenesisProfileHolderAta,
+          parentProfileHolderOposAta:profileHolderInfo.parentProfileHolderOposAta,
+          grandParentProfileHolderOposAta:currentGenesisProfileHolderAta,
+          greatGrandParentProfileHolderOposAta:parentProfileHolderOposAta,
+          ggreatGrandParentProfileHolderOposAta:grandParentProfileHolderOposAta,
         })
         .instruction();
       this.txis.push(ix);
@@ -587,6 +587,31 @@ export class Connectivity {
       // log({ txLen, luts: lutsInfo.length });
 
       const signature = await this.provider.sendAndConfirm(tx as any);
+
+
+      await this.storeRoyalty(user.toBase58(), [
+        {
+          receiver: profileHolderInfo.currentGenesisProfileHolder.toBase58(),
+          amount: (mainStateInfo.profileMintingCost.toNumber() / web3Consts.LAMPORTS_PER_OPOS) * (mainStateInfo.mintingCostDistribution.genesis / 10000),
+        },
+        {
+          receiver: profileHolderInfo.currentParentProfileHolder.toBase58(),
+          amount: (mainStateInfo.profileMintingCost.toNumber() / web3Consts.LAMPORTS_PER_OPOS) * (mainStateInfo.mintingCostDistribution.parent / 10000),
+        },
+        {
+          receiver: currentGenesisProfileHolder.toBase58(),
+          amount: (mainStateInfo.profileMintingCost.toNumber() / web3Consts.LAMPORTS_PER_OPOS) * (mainStateInfo.mintingCostDistribution.grandParent / 10000),
+        },
+        {
+          receiver: currentParentProfileHolder.toBase58(),
+          amount: (mainStateInfo.profileMintingCost.toNumber() / web3Consts.LAMPORTS_PER_OPOS) * (mainStateInfo.mintingCostDistribution.greatGrandParent / 10000),
+        },
+        {
+          receiver: currentGrandParentProfileHolder.toBase58(),
+          amount: (mainStateInfo.profileMintingCost.toNumber() / web3Consts.LAMPORTS_PER_OPOS) * (mainStateInfo.mintingCostDistribution.ggreatGrandParent / 10000),
+        },
+      ],mainStateInfo.oposToken.toBase58());
+
       console.log("mint pass 15")
       return {
         Ok: {
@@ -631,10 +656,11 @@ export class Connectivity {
     return lookupResult
   }
 
-  async storeRoyalty(sender: string, receivers: any) {
+  async storeRoyalty(sender: string, receivers: any, coin:any) {
     await axios.post("/api/update-royalty", {
       sender,
       receivers,
+      coin
     });
   }
 
@@ -1059,6 +1085,8 @@ export class Connectivity {
          for (let index = 0; index < receivedIXs.length; index++) {
             this.txis.push(receivedIXs[index]);
          }
+
+  
       // }
 
       const tx = new web3.Transaction().add(...this.txis);
@@ -1083,6 +1111,14 @@ export class Connectivity {
 
       this.txis = [];
       const signature = await this.provider.sendAndConfirm(tx);
+
+      await this.storeRoyalty(user.toBase58(), [
+        {
+          receiver: currentGenesisProfileHolder.toBase58(),
+          amount: amount * (mainStateDetail.invitationMintingCost.toNumber() / web3Consts.LAMPORTS_PER_OPOS),
+        },
+      ],mainStateDetail.oposToken.toBase58());
+      
       return { Ok: { signature, info: {} } };
     } catch (error) {
       log({ error });
@@ -1379,7 +1415,7 @@ export class Connectivity {
           const element = result.data.attributes[index];
           if (element.trait_type == "Seniority") {
             userData.seniority = element.value;
-          } else if (element.trait_type == "Project") {
+          } else if (element.trait_type == "Community") {
             userData.project = element.value;
           }
         }
@@ -1402,7 +1438,7 @@ export class Connectivity {
         };
         for (let index = 0; index < result.data.attributes.length; index++) {
           const element = result.data.attributes[index];
-          if (element.trait_type == "Project") {
+          if (element.trait_type == "Community") {
             userData.project = element.value;
           }
         }

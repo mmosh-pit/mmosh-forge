@@ -69,6 +69,7 @@ export default function ProjectStepFour() {
     const [username, setUsername] = useState("")
 
     const [profile, setProfile] = useState("");
+    const [telegram, setTelegram] = useState("");
 
     useEffect(()=>{
         let projectDetails:any = JSON.parse(localStorage.getItem("step1"));
@@ -213,7 +214,7 @@ export default function ProjectStepFour() {
                     value: " Genesis MMOSH",
                   },
                   {
-                    trait_type: "Project",
+                    trait_type: "Community",
                     value: projectKeyPair.publicKey.toBase58(),
                   },
                   {
@@ -322,7 +323,7 @@ export default function ProjectStepFour() {
                 minter: username,
                 attributes: [
                     {
-                        trait_type: "Project",
+                        trait_type: "Community",
                         value: projectKeyPair.publicKey.toBase58(),
                     },
                     {
@@ -371,7 +372,7 @@ export default function ProjectStepFour() {
             const res4:any = await projectConn.registerCommonLut();
             console.log("register lookup result ", res4)
 
-            setMintingStatus("Buying new Project...")
+            setMintingStatus("Buying new Community...")
             const res5 = await projectConn.sendProjectPrice(profile);
             console.log("create badge result ", res5)
 
@@ -384,6 +385,8 @@ export default function ProjectStepFour() {
                 coinimage: coin.image,
                 project: genesisProfileStr,
                 tokenaddress: coin.token,
+                telegram,
+                seniority: 0,
                 lut: res4.Ok.info.lookupTable
               });
 
@@ -392,13 +395,13 @@ export default function ProjectStepFour() {
               localStorage.removeItem("step3")
 
               createMessage(
-                  <p>Congrats! Your project has been deployed to the Solana blockchain and your assets have been sent to your wallet.</p>,
+                  <p>Congrats! Your community has been deployed to the Solana blockchain and your assets have been sent to your wallet.</p>,
                   "success-container",
               );
-              navigate.replace("/projects");
+              navigate.replace("/communities");
             } else {
               createMessage(
-                <p>We’re sorry. An error occurred while trying to deploy your project and mint your assets. Please check your wallet and try again.</p>,
+                <p>We’re sorry. An error occurred while trying to deploy your community and mint your assets. Please check your wallet and try again.</p>,
                 "danger-container",
               );
             }
@@ -408,12 +411,10 @@ export default function ProjectStepFour() {
         } catch (error) {
             console.log(error)
             createMessage(
-                <p>We’re sorry. An error occurred while trying to deploy your project and mint your assets. Please check your wallet and try again.</p>,
+                <p>We’re sorry. An error occurred while trying to deploy your community and mint your assets. Please check your wallet and try again.</p>,
                 "danger-container",
             );
         }
-
-
     }
 
     const capitalizeString = (str: any) => {
@@ -473,81 +474,120 @@ export default function ProjectStepFour() {
             <div className="create-coin-page-header">
                 <h2>Step 4</h2> 
                 <h3>Mint and Deploy</h3> 
-                <p className="heading">Deploy your project to the Solana blockchain and mint your Genesis Pass, a Project Pass <br/>and 100 Invitation Badges. You can mint more Badges on the project page any time.</p>
+                <p className="heading">Deploy your community to the Solana blockchain and mint your Genesis Pass, a Community Pass <br/>and 100 Invitation Badges. You can mint more Badges on the community page any time.</p>
                 <div className="backAction" onClick={()=>{navigate.back()}}>
                 <ArrowBackIos /><span>Back</span>
                 </div>
             </div>
-            <div className="container">
-                <div className="row justify-content-md-center">
-                    <div className="col-md-4">
-                        <div className="project-image-collage-main">
-                            <div className="project-image-collage">
-                                <h3>{symbol}</h3>
-                                <div className="project-image-collage-image">
-                                <img src={imageFile} alt="project" className="project-image-collage-image-main"/>
-                                <div className="project-image-collage-coin-image">
-                                    {coin.name != "" &&
-                                        <img src={coin.image} alt="project"/>
-                                    }
-                                    {coin.name == "" &&
-                                        <div className="empty-coin-image"></div>
-                                    }
 
-                                </div>
-                        
-                                
-                                </div>
-                                <p className="project-image-collage-subtitle">{name}</p>
-                                <p>{description}</p>
+            <div className="project-step4-container-flex">
+                <div className="project-step4-container">
+                    <div className="project-image-collage-main">
+                        <div className="project-image-collage">
+                            <h3>{symbol}</h3>
+                            <div className="project-image-collage-image">
+                            <img src={imageFile} alt="project" className="project-image-collage-image-main"/>
+                            <div className="project-image-collage-coin-image">
+                                {coin.name != "" &&
+                                    <img src={coin.image} alt="project"/>
+                                }
+                                {coin.name == "" &&
+                                    <div className="empty-coin-image"></div>
+                                }
+
                             </div>
-                            <p>Please note: the wallet that holds the Genesis Pass will receive all of your royalties as the Project Founder, so please keep it safe.</p>
+                    
+                            
+                            </div>
+                            <p className="project-image-collage-subtitle">{name}</p>
+                            <p>{description}</p>
+                        </div>
+                        <p>Please note: the wallet that holds the Genesis Pass will receive all of your royalties as the Project Founder, so please keep it safe.</p>
+                        <div className="project-create-telegram">
+                          <label>Link to your Official Community Group on Telegram</label>
+                          <div className="project-create-telegram-inner">
+                            <label>https://t.me/</label>
+                            <Form.Control
+                              type="text"
+                              placeholder="Link"
+                              onChange={(event) => setTelegram(event.target.value)}
+                              value={telegram}
+                            />
+                          </div>
                         </div>
                     </div>
                 </div>
             </div>
+    
+            <div className="project-step4-container-flex">
+                <div className="project-step4-container">
+                  <div className="project-pass-collage-container">
+                        <h3>Genesis Pass</h3>
+                        <div className="project-pass-collage-image-decorated">
+                            <img src={imageFile} alt="project" className="project-pass-collage-image-decorated-main"/>
+                            <div className="project-pass-collage-image-decorated-left">
+                                <img src="/images/access.png" />
+                            </div>
+                            <div className="project-pass-collage-image-decorated-right">
+                                <img src="/images/logo.png" />
+                            </div>
+                            <div className="project-pass-collage-image-decorated-bottom">
+                                <img src="/images/passback.png" className="project-pass-collage-image-decorated-bottom-background" />
+                                <div className="project-pass-collage-image-decorated-bottom-info">
+                                  <div className="row">
+                                    <div className="col-4">
+                                        <img src={coin.image} alt="project" className="project-pass-collage-image-decorated-bottom-coin"/>
+                                    </div>
+                                    <div className="col-8">
+                                        <h3>Gensis Pass</h3>
+                                    </div>
+                                  </div>
 
-            <div className="container">
-               <div className="row justify-content-md-center">
-                   <div className="col-md-4">
-                      <div className="project-pass-collage-container">
-                           <h3>Genesis Pass</h3>
-                           <div className="project-pass-collage-image-decorated">
-                               <img src={imageFile} alt="project" className="project-pass-collage-image-decorated-main"/>
-                               <div className="project-pass-collage-image-decorated-left">
-                                   <img src="/images/access.png" />
-                               </div>
-                               <div className="project-pass-collage-image-decorated-right">
-                                   <img src="/images/logo.png" />
-                               </div>
-                               <div className="project-pass-collage-image-decorated-bottom">
-                                   <img src="/images/passback.png" className="project-pass-collage-image-decorated-bottom-background" />
-                                   <div className="project-pass-collage-image-decorated-bottom-info">
-                                      <div className="row">
-                                        <div className="col-4">
-                                            <img src={coin.image} alt="project" className="project-pass-collage-image-decorated-bottom-coin"/>
-                                        </div>
-                                        <div className="col-8">
-                                            <h3>Gensis Pass</h3>
-                                        </div>
-                                      </div>
+                                </div>
 
-                                   </div>
+                            </div>
+                        </div>
+                  </div>
+                </div>
+                <div className="project-step4-container">
+                  <div className="project-pass-collage-container">
+                        <h3>Invitation Badge</h3>
+                        <div className="project-pass-collage-image-decorated">
+                            <img src={imageFile} alt="project" className="project-pass-collage-image-decorated-main"/>
+                            <div className="project-pass-collage-image-decorated-left">
+                                <img src="/images/access.png" />
+                            </div>
+                            <div className="project-pass-collage-image-decorated-right">
+                                <img src="/images/logo.png" />
+                            </div>
+                            <div className="project-pass-collage-image-decorated-bottom">
+                                <img src="/images/passback1.png" className="project-pass-collage-image-decorated-bottom-background" />
+                                <div className="project-pass-collage-image-decorated-bottom-info">
+                                  <div className="row">
+                                    <div className="col-4">
+                                        <img src={coin.image} alt="project" className="project-pass-collage-image-decorated-bottom-coin"/>
+                                    </div>
+                                    <div className="col-8">
+                                        <h3>Invitation Badge</h3>
+                                    </div>
+                                  </div>
 
-                               </div>
-                           </div>
-                      </div>
-                   </div>
-                   <div className="col-md-4">
-                      <div className="project-pass-collage-container">
-                           <h3>Project Pass</h3>
-                           <div className="project-pass-collage-image">
-                               <img src={imageFile} alt="project" className="project-image-collage-image-main"/>
-                           </div>
-                      </div>
-                   </div>
-               </div>
+                                </div>
+
+                            </div>
+                        </div>
+                  </div>
+                </div>
+                <div className="project-step4-container">
+                  <div className="project-pass-collage-container">
+                        <h3>Project Pass</h3>
+                        <div className="project-pass-collage-image">
+                            <img src={imageFile} alt="project" className="project-image-collage-image-main"/>
+                        </div>
+                  </div>
+                </div>
             </div>
+
             <div className="profile-container-action">
                     <Bars
                         height="80"

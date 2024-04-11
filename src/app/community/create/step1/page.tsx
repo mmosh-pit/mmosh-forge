@@ -70,11 +70,11 @@ export default function ProjectStepOne() {
       };
 
       try {
-        setButtonStatus("Checking Project Symbol...")
+        setButtonStatus("Checking Community Symbol...")
         const result = await axios.get(`/api/check-project?project=${symbol}`);
 
         if (result.data) { 
-          createMessage("Project symbol already exist", "danger-container");
+          createMessage("Community symbol already exist", "danger-container");
           return false;
         }
         if (imageFile[0].file != null) {
@@ -87,9 +87,9 @@ export default function ProjectStepOne() {
         setButtonStatus("Next")
         setIsSubmit(false);
         localStorage.setItem("step1",JSON.stringify(body));
-        navigate.push("/project/create/step2");
+        navigate.push("/community/create/step2");
       } catch (error) {
-        console.log("error on project step 1",error)
+        console.log("error on community step 1",error)
         setButtonStatus("Next")
         setIsSubmit(false);
       }
@@ -114,7 +114,7 @@ export default function ProjectStepOne() {
     }
 
     if(imageFile.length == 0) {
-      createMessage("Project Image is required", "danger-container");
+      createMessage("Community Image is required", "danger-container");
       return false;
     }
     return true;
@@ -154,7 +154,7 @@ export default function ProjectStepOne() {
        <div className="create-coin-page-header">
         <h2>Step 1</h2> 
         <h3>Deploy the Art and Metadata</h3> 
-        <p className="heading">Set the image, name, symbol and description for your project.</p>
+        <p className="heading">Set the image, name, symbol and description for your community.</p>
        </div>
 
        <div className="container">
@@ -231,7 +231,7 @@ export default function ProjectStepOne() {
                                             as="textarea"
                                             rows={6}
                                             maxLength={160}
-                                            placeholder="Describe your project within 160 characters."
+                                            placeholder="Describe your community within 160 characters."
                                             onChange={(event) => setDesc(event.target.value)}
                                             value={desc}
                                         />
@@ -264,7 +264,7 @@ export default function ProjectStepOne() {
                }
 
                 <div className="note-step-1">
-                    Please note. You will be charged 45,000 $MMOSH <br/>and a small amount of SOL to deploy your project to <br/>the Solana blockchain. Please ensure you have <br/>sufficient funds in this wallet before you begin.
+                    Please note. You will be charged 45,000 $MMOSH <br/>and a small amount of SOL to deploy your community to <br/>the Solana blockchain. Please ensure you have <br/>sufficient funds in this wallet before you begin.
                 </div>
 
              </>

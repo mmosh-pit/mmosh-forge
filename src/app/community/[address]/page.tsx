@@ -11,6 +11,7 @@ import * as anchor from "@coral-xyz/anchor";
 import { BondingPricing } from "@/anchor/curve/curves";
 import { Connectivity as CurveConn } from "@/anchor/curve/bonding";
 import { Connectivity as ProjectConn } from "@/anchor/project";
+import { Connectivity as UserConn } from "@/anchor/user";
 import SwapInputVW from "@/app/ui/swapinput/swapinputvw";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { ForgeContext } from "@/app/context/ForgeContext";
@@ -85,6 +86,13 @@ export default function ProjectDetail({ params }: { params: { address: string } 
 
     const [passSubmit, setPassSubmit] = useState(false)
     const [passButtonStatus, setPassButtonStatus] = useState("Mint")
+    const [telegram, setTelegram] = useState("")
+
+    const [telegramSubmit, setTelegramSubmit] = useState(false)
+    const [telegramButtonStatus, setTelegramButtonStatus] = useState("Save")
+
+    const [isOwner, setOwner] = useState(false)
+    const [profile, setProfile] = useState("")
 
     const delay = ms => new Promise(res => setTimeout(res, ms));
 
@@ -103,6 +111,7 @@ export default function ProjectDetail({ params }: { params: { address: string } 
             onTokenSelect(coinResult.data)
             console.log("listResult ",listResult)
             setProjectDetail(listResult.data)
+            setTelegram(listResult.data.telegram)
             getUserProfileInfo()
         } catch (error) {
             setProjectLoading(false)
@@ -120,9 +129,26 @@ export default function ProjectDetail({ params }: { params: { address: string } 
         let projectConn: ProjectConn = new ProjectConn(env, web3Consts.programID, new anchor.web3.PublicKey(params.address));
         let projectInfo = await projectConn.getProjectUserInfo(params.address);
         console.log("project user Info", projectInfo)
+        if(projectInfo.profiles.length > 0) {
+            if(projectInfo.profiles[0].address == params.address) {
+                setOwner(true)
+            } else {
+                setOwner(false)
+            }
+        }
         setProjectInfo(projectInfo)
-        setProjectLoading(false)
+        getProfileInfo()
     }
+
+    const getProfileInfo = async () => {
+        const env = new anchor.AnchorProvider(connection.connection, wallet, {
+          preflightCommitment: "processed",
+        });
+        let userConn: UserConn = new UserConn(env, web3Consts.programID);
+        const profileInfo = await userConn.getUserInfo();
+        setProfile(profileInfo.profiles[0].address);
+        setProjectLoading(false)
+    };
 
     const actionSwitch = () => {
         let target:any = targeToken;
@@ -612,8 +638,8 @@ export default function ProjectDetail({ params }: { params: { address: string } 
                 uriHash: shadowHash,
                 activationToken,
                 genesisProfile,
-                commonLut: projectDetail.lut 
-            });
+                commonLut: projectDetail.lut
+            },profile);
 
             if(res.Ok) {
                 setPassButtonStatus("Waiting for confirmations...")
@@ -642,240 +668,318 @@ export default function ProjectDetail({ params }: { params: { address: string } 
         }
     }
 
+    const saveTelegram = async() => {
+        try {
+            setTelegramSubmit(true)
+            setTelegramButtonStatus("Saving...")
+            await axios.put("/api/update-project", {
+                field: "telegram",
+                value: telegram,
+                project: projectDetail.project,
+            });
+            setTelegramSubmit(false)
+            setTelegramButtonStatus("Save")
+        } catch (error) {
+            console.log("save telegram ",error)
+            setTelegramSubmit(false)
+            setTelegramButtonStatus("Save")
+        }
+
+    }
+
     return (
         <>
-        {showMsg && (
-            <div className={"message-container " + msgClass}>{msgText}</div>
-        )}
-        <div className="container">
-            <div className="project-detail">
-                <div className="project-detail-loader">
-                    <Bars
-                        height="80"
-                        width="80"
-                        color="rgba(255, 0, 199, 1)"
-                        ariaLabel="bars-loading"
-                        wrapperStyle={{}} 
-                        wrapperClass="bars-loading"
-                        visible={projectLoading}
-                    />
+            <div className="project-detail-main-banner">
+                <div className="telegram-info">
+                    Connect to Official Community on Telegram
                 </div>
-                {projectDetail &&
-                <>
-            
-                    <div className="project-detail-containers-sub-banner">
-                            <div className="project-detail-container-inner">
-                                <div className="project-detail-cointainer-info">
-                                    <div className="project-pass-collage-image">
-                                        <img src={projectDetail.image} alt="project" className="project-image-collage-image-main"/>
-                                    </div>
-                                    <h2>{projectDetail.name} <span>. {projectDetail.symbol}</span></h2>
-                                    <p>{projectDetail.desc}</p>
-                                    <div className="profile-link"><Person />Frank the ocean</div>
-                                </div>
-                            </div>
+            </div>
+            {showMsg && (
+                <div className={"message-container " + msgClass}>{msgText}</div>
+            )}
+            <div className="container">
+                <div className="project-detail">
+                    <div className="project-detail-loader">
+                        <Bars
+                            height="80"
+                            width="80"
+                            color="rgba(255, 0, 199, 1)"
+                            ariaLabel="bars-loading"
+                            wrapperStyle={{}} 
+                            wrapperClass="bars-loading"
+                            visible={projectLoading}
+                        />
                     </div>
-        
+                    {projectDetail &&
+                    <>
                 
-
-
-                    <div className="project-detail-container">
-                        <div className="project-detail-containers-mint-swap">
-                            <h2>Coin</h2>
-                            <div className="swap-page-container-coin-detail">
-                                <img src={projectDetail.coin.image} alt="coin image" />
-                                <h3>{projectDetail.coin.symbol}</h3>
-                            </div>
-                            <div className="swap-page-container-inner">
-                                <SwapInputVW balance={targeToken.balance} symbol={targeToken.symbol} type={"sell"} image={targeToken.image} onPopupOpen={handleShow} connectionstatus={connectionStatus} tokenAddress={targeToken.token} value={targeToken.value} onSetValue={onSetValue} />
-                                {targeToken.name !== "" &&
-                                    <>
-                                    <div className="swap-page-switcher" onClick={actionSwitch}>
-                                        <div className="swap-page-switcher-border"></div>
-                                        <div className="swap-page-switcher-icon">
-                                        <img src="/images/swap.png" alt="swap" />
+                        <div className="project-detail-containers-sub-banner">
+                                <div className="project-detail-container-inner">
+                                    <div className="project-detail-cointainer-info">
+                                        <div className="project-pass-collage-image">
+                                            <img src={projectDetail.image} alt="project" className="project-image-collage-image-main"/>
+                                        </div>
+                                        <h2>{projectDetail.name} <span>. {projectDetail.symbol}</span></h2>
+                                        <p>{projectDetail.desc}</p>
+                                    </div>
+                                </div>
+                                <div className="project-detail-user-info">
+                                    <div className="project-detail-user-info-header">
+                                        <img src={forgeContext.userData.image} alt="project" className="user-image"/>
+                                        <div className="project-detail-user-info-header-content">
+                                            <h4>{forgeContext.userData.name}</h4>
+                                            <p>@{forgeContext.userData.username}</p>
                                         </div>
                                     </div>
-                                    <SwapInputVW balance={baseToken.balance} symbol={baseToken.symbol} type={"buy"} image={baseToken.image} onPopupOpen={handleShow} connectionstatus={connectionStatus} tokenAddress={baseToken.token} value={baseToken.value} onSetValue={onSetValue} />
-                                    </>
-                                }
-                               {swapLoading &&
-                                    <Button variant="primary" size="lg">
-                                        Loading Token...
-                                    </Button>
-                               }
-
-                               {!swapLoading &&
-                                    <>
-                                        {(connectionStatus == "connected" && !swapSubmit) &&
-                                           <>
-                                          <>
-                                            {(targeToken.value <= targeToken.balance) &&
-                                                <Button variant="primary" size="lg" onClick={actionSwap} disabled={!(targeToken.value <= targeToken.balance && targeToken.balance!=0 && targeToken.value!=0)} >
-                                                        Swap
-                                                </Button>
-                                            }
-                                          </>
-                                            <>
-                                            {(targeToken.value > targeToken.balance) &&
-                                                <Button variant="primary" size="lg" className="nobalance">
-                                                        Insufficient {targeToken.symbol.toUpperCase()}
-                                                </Button>
-                                            }
-                                            </>
-                                            </>
-                                        }
-
-
-                                     
-        
-                                        {(connectionStatus == "connected" && swapSubmit) &&
-                                            <Button variant="primary" size="lg">
-                                                    Swaping Token...
-                                            </Button>
-                                        }
-        
-                                        
-        
-                                        {connectionStatus == "notconnected" &&
-                                            <WalletMultiButton>Connect Wallet</WalletMultiButton>
-                                        }
-                                    </>
-                               }
-
-
-
-                               <p className="info">The price will automatically update after a period of time.</p>
-                            </div>
+                                    <div className="project-detail-user-info-desc">
+                                       {forgeContext.userData.bio}
+                                    </div>
+                                    <div className="project-detail-user-info-link">
+                                        <a className="profile-link" href={process.env.NEXT_PUBLIC_APP_MAIN_URL +"/"+forgeContext.userData.username} target="_blank">{forgeContext.userData.name}</a>
+                                    </div>
+                                </div>
                         </div>
-                        <div className="project-detail-containers-mint-box">
-                            {projectInfo.profiles.length > 0 &&
-                                <div className="project-detail-containers-invitation">
-                                    <div className="project-detail-container-inner">
-                                        <div className="project-detail-container-invitation">
-                                            <h2>Invitation Badges</h2>
 
-                                                <div className="project-pass-collage-image-decorated">
-                                                    <img src={projectDetail.image} alt="project" className="project-pass-collage-image-decorated-main"/>
-                                                    <div className="project-pass-collage-image-decorated-left">
-                                                        <img src="/images/access.png" />
-                                                    </div>
-                                                    <div className="project-pass-collage-image-decorated-right">
-                                                        <img src="/images/logo.png" />
-                                                    </div>
-                                                    <div className="project-pass-collage-image-decorated-bottom">
-                                                        <img src="/images/passback.png" className="project-pass-collage-image-decorated-bottom-background" />
-                                                        <div className="project-pass-collage-image-decorated-bottom-info">
-                                                            <div className="row">
-                                                                <div className="col-4">
-                                                                    <img src={projectDetail.coin.image} alt="project" className="project-pass-collage-image-decorated-bottom-coin"/>
+                        <div className="project-detail-container">
+                            <div className="project-detail-containers-mint-swap">
+                                <h2>Coin</h2>
+                                <div className="swap-page-container-coin-detail">
+                                    <img src={projectDetail.coin.image} alt="coin image" />
+                                    <h3>{projectDetail.coin.symbol}</h3>
+                                </div>
+                                <div className="swap-page-container-inner">
+                                    <SwapInputVW balance={targeToken.balance} symbol={targeToken.symbol} type={"sell"} image={targeToken.image} onPopupOpen={handleShow} connectionstatus={connectionStatus} tokenAddress={targeToken.token} value={targeToken.value} onSetValue={onSetValue} />
+                                    {targeToken.name !== "" &&
+                                        <>
+                                        <div className="swap-page-switcher" onClick={actionSwitch}>
+                                            <div className="swap-page-switcher-border"></div>
+                                            <div className="swap-page-switcher-icon">
+                                            <img src="/images/swap.png" alt="swap" />
+                                            </div>
+                                        </div>
+                                        <SwapInputVW balance={baseToken.balance} symbol={baseToken.symbol} type={"buy"} image={baseToken.image} onPopupOpen={handleShow} connectionstatus={connectionStatus} tokenAddress={baseToken.token} value={baseToken.value} onSetValue={onSetValue} />
+                                        </>
+                                    }
+                                {swapLoading &&
+                                        <Button variant="primary" size="lg">
+                                            Loading Token...
+                                        </Button>
+                                }
+
+                                {!swapLoading &&
+                                        <>
+                                            {(connectionStatus == "connected" && !swapSubmit) &&
+                                            <>
+                                            <>
+                                                {(targeToken.value <= targeToken.balance) &&
+                                                    <Button variant="primary" size="lg" onClick={actionSwap} disabled={!(targeToken.value <= targeToken.balance && targeToken.balance!=0 && targeToken.value!=0)} >
+                                                            Swap
+                                                    </Button>
+                                                }
+                                            </>
+                                                <>
+                                                {(targeToken.value > targeToken.balance) &&
+                                                    <Button variant="primary" size="lg" className="nobalance">
+                                                            Insufficient {targeToken.symbol.toUpperCase()}
+                                                    </Button>
+                                                }
+                                                </>
+                                                </>
+                                            }
+
+
+                                        
+            
+                                            {(connectionStatus == "connected" && swapSubmit) &&
+                                                <Button variant="primary" size="lg">
+                                                        Swaping Token...
+                                                </Button>
+                                            }
+            
+                                            
+            
+                                            {connectionStatus == "notconnected" &&
+                                                <WalletMultiButton>Connect Wallet</WalletMultiButton>
+                                            }
+                                        </>
+                                }
+
+
+
+                                <p className="info">The price will automatically update after a period of time.</p>
+                                </div>
+                            </div>
+                            <div className="project-detail-containers-mint-box">
+                                {projectInfo.profiles.length > 0 &&
+                                    <div className="project-detail-containers-invitation">
+                                        <div className="project-detail-container-inner">
+                                            <div className="project-detail-container-invitation">
+                                                <h2>Invitation Badges</h2>
+
+                                                    <div className="project-pass-collage-image-decorated">
+                                                        <img src={projectDetail.image} alt="project" className="project-pass-collage-image-decorated-main"/>
+                                                        <div className="project-pass-collage-image-decorated-left">
+                                                            <img src="/images/access.png" />
+                                                        </div>
+                                                        <div className="project-pass-collage-image-decorated-right">
+                                                            <img src="/images/logo.png" />
+                                                        </div>
+                                                        <div className="project-pass-collage-image-decorated-bottom">
+                                                            <img src="/images/passback.png" className="project-pass-collage-image-decorated-bottom-background" />
+                                                            <div className="project-pass-collage-image-decorated-bottom-info">
+                                                                <div className="row">
+                                                                    <div className="col-4">
+                                                                        <img src={projectDetail.coin.image} alt="project" className="project-pass-collage-image-decorated-bottom-coin"/>
+                                                                    </div>
+                                                                    <div className="col-8">
+                                                                        <h3>Inivtiation Badge</h3>
+                                                                    </div>
                                                                 </div>
-                                                                <div className="col-8">
-                                                                    <h3>Inivtiation Badge</h3>
-                                                                </div>
+
                                                             </div>
 
                                                         </div>
-
                                                     </div>
-                                                </div>
-                                                <div className="project-detail-element">
-                                                    <label>Invitations to Mint</label>
-                                                    <Form.Control
-                                                    type="number"
-                                                    placeholder="0"
-                                                    onChange={(event) => setInputValue(event.target.value)}
-                                                    value={inputValue}
-                                                    />
-                                                </div>
-                                                <div className="profile-container-action">
-                                                    {!inviteSubmit &&
-                                                        <Button variant="primary" size="lg" onClick={inviteAction}>
-                                                            Mint
-                                                        </Button>
-                                                    }
-                                                    {inviteSubmit &&
-                                                        <Button variant="primary" size="lg">
-                                                            {inviteButtonStatus}
-                                                        </Button>
-                                                    }
-
-                                                <div className="price-details">
-                                                    {Number(projectInfo.invitationPrice) / 1000_000_000 > 0 &&
-                                                       <p>Price: {Number(projectInfo.invitationPrice) / 1000_000_000} {projectDetail.coin.symbol.toUpperCase()}</p>
-                                                    }
-                                             
-                                                    <label>
-                                                    Plus you will be charged a small amount of SOL in transaction fees.
-                                                    </label>
+                                                    <div className="project-detail-element">
+                                                        <label>Invitations to Mint</label>
+                                                        <Form.Control
+                                                        type="number"
+                                                        placeholder="0"
+                                                        onChange={(event) => setInputValue(event.target.value)}
+                                                        value={inputValue}
+                                                        />
                                                     </div>
-                                                    <div className="balance-details">
-                                                        {switcher&&
-                                                        <p>Current Balance: {baseToken.balance} {projectDetail.coin.symbol.toUpperCase()}</p>
+                                                    <div className="profile-container-action">
+                                                        {!inviteSubmit &&
+                                                            <Button variant="primary" size="lg" onClick={inviteAction}>
+                                                                Mint
+                                                            </Button>
                                                         }
-                                                        {!switcher&&
-                                                        <p>Current Balance: {targeToken.balance} {projectDetail.coin.symbol.toUpperCase()}</p>
+                                                        {inviteSubmit &&
+                                                            <Button variant="primary" size="lg">
+                                                                {inviteButtonStatus}
+                                                            </Button>
                                                         }
-                                                        
-                                                        <p>Current Balance: {solBalance} SOL</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                    </div>
-                                </div>
-                            } 
-                            {projectInfo.profiles.length == 0 && projectInfo.activationTokens.length > 0 &&
-                                <div className="project-detail-containers-passes">
-                                    <div className="project-detail-container-inner">
-                                            <div className="project-detail-container-passes">
-                                            <h2>Project Passes</h2>
-                                                <div className="project-pass-collage-image">
-                                                    <img src={projectDetail.image} alt="project" className="project-image-collage-image-main"/>
-                                                </div>
-                                                <div className="profile-container-action">
-                                                    {!passSubmit &&
-                                                        <Button variant="primary" size="lg" onClick={passAction}>
-                                                            Mint
-                                                        </Button>
-                                                    } 
-
-                                                    {passSubmit &&
-                                                        <Button variant="primary" size="lg">
-                                                            {passButtonStatus}
-                                                        </Button>
-                                                    } 
 
                                                     <div className="price-details">
-                                                        <p>Price: {Number(projectInfo.mintPrice) / 1000_000_000} {projectDetail.coin.symbol.toUpperCase()}</p>
+                                                        {Number(projectInfo.invitationPrice) / 1000_000_000 > 0 &&
+                                                        <p>Price: {Number(projectInfo.invitationPrice) / 1000_000_000} {projectDetail.coin.symbol.toUpperCase()}</p>
+                                                        }
+                                                
                                                         <label>
                                                         Plus you will be charged a small amount of SOL in transaction fees.
                                                         </label>
-                                                    </div>
-                                                    <div className="balance-details">
-                                                        {switcher&&
+                                                        </div>
+                                                        <div className="balance-details">
+                                                            {switcher&&
                                                             <p>Current Balance: {baseToken.balance} {projectDetail.coin.symbol.toUpperCase()}</p>
-                                                        }
-                                                        {!switcher&&
+                                                            }
+                                                            {!switcher&&
                                                             <p>Current Balance: {targeToken.balance} {projectDetail.coin.symbol.toUpperCase()}</p>
-                                                        }
-                                                        <p>Current Balance: {solBalance} SOL</p>
+                                                            }
+                                                            
+                                                            <p>Current Balance: {solBalance} SOL</p>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            
-                            }
+                                } 
+                                {projectInfo.profiles.length == 0 && projectInfo.activationTokens.length > 0 &&
+                                    <div className="project-detail-containers-passes">
+                                        <div className="project-detail-container-inner">
+                                                <div className="project-detail-container-passes">
+                                                <h2>Project Passes</h2>
+                                                    <div className="project-pass-collage-image">
+                                                        <img src={projectDetail.image} alt="project" className="project-image-collage-image-main"/>
+                                                    </div>
+                                                    <div className="profile-container-action">
+                                                        {!passSubmit &&
+                                                            <Button variant="primary" size="lg" onClick={passAction}>
+                                                                Mint
+                                                            </Button>
+                                                        } 
 
+                                                        {passSubmit &&
+                                                            <Button variant="primary" size="lg">
+                                                                {passButtonStatus}
+                                                            </Button>
+                                                        } 
+
+                                                        <div className="price-details">
+                                                            <p>Price: {Number(projectInfo.mintPrice) / 1000_000_000} {projectDetail.coin.symbol.toUpperCase()}</p>
+                                                            <label>
+                                                            Plus you will be charged a small amount of SOL in transaction fees.
+                                                            </label>
+                                                        </div>
+                                                        <div className="balance-details">
+                                                            {switcher&&
+                                                                <p>Current Balance: {baseToken.balance} {projectDetail.coin.symbol.toUpperCase()}</p>
+                                                            }
+                                                            {!switcher&&
+                                                                <p>Current Balance: {targeToken.balance} {projectDetail.coin.symbol.toUpperCase()}</p>
+                                                            }
+                                                            <p>Current Balance: {solBalance} SOL</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                        </div>
+                                    </div>
+                                
+                                }
+
+                            </div>
                         </div>
-                    </div>
-        
-                </>
-        
-                }
+                        {isOwner &&
+                        <div className="project-detail-telegram-container">
+                            <div className="project-detail-telegram-container-inner">
+                                <h4>Official Community on Telegram</h4>
+                                <p>With the {projectDetail.name}, you may join the Official Community on Telegram by following the link below </p>
+                              
+                                    <div className="project-detail-telegram-container-input">
+                                        <Form.Control
+                                        type="text"
+                                        placeholder="Link"
+                                        onChange={(event) => setTelegram(event.target.value)}
+                                        value={telegram}
+                                        />
+                                        {!telegramSubmit &&
+                                            <Button variant="primary" size="lg" onClick={saveTelegram}>
+                                                Save
+                                            </Button>
+                                        }
+    
+                                        {telegramSubmit &&
+                                            <Button variant="primary" size="lg">
+                                                {telegramButtonStatus}
+                                            </Button>
+                                        }
+                                    </div>
+                            </div>
+                        </div>
+                        }
 
+                    {(!isOwner && telegram !="") &&
+                        <div className="project-detail-telegram-container">
+                            <div className="project-detail-telegram-container-inner">
+                                <h4>Official Community on Telegram</h4>
+                                <p>With the {projectDetail.name}, you may join the Official Community on Telegram by following the link below </p>
+                              
+                                <div className="project-detail-telegram-container-link">
+                                    <a href={"https://t.me/"+telegram} target="_blank">{"https://t.me/"+telegram}</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+            
+                    </>
+            
+                    }
+
+
+
+                </div>
             </div>
-        </div>
         </>
     )
 }

@@ -154,7 +154,7 @@ export default function ProjectStepThree() {
             priceDistribution
         };
         localStorage.setItem("step3",JSON.stringify(body));
-        navigate.push("/project/create/step4");
+        navigate.push("/community/create/step4");
     }
 
 
@@ -277,10 +277,10 @@ export default function ProjectStepThree() {
                                         <div className="project-image-collage">
                                              <h3>{symbol}</h3>
                                              <div className="project-image-collage-image">
-                                                <img src={imageFile} alt="project" className="project-image-collage-image-main"/>
+                                                <img src={imageFile} alt="community" className="project-image-collage-image-main"/>
                                                 <div className="project-image-collage-coin-image">
                                                     {coin.name != "" &&
-                                                       <img src={coin.image} alt="project"/>
+                                                       <img src={coin.image} alt="community"/>
                                                     }
                                                     {coin.name == "" &&
                                                        <div className="empty-coin-image"></div>
@@ -312,7 +312,7 @@ export default function ProjectStepThree() {
                                                    </div>
                                                    <div className="col-md-6">
                                                         <div className="profile-container-element">
-                                                                <label>Project Pass Price</label>
+                                                                <label>Community Pass Price</label>
                                                                 <Form.Control
                                                                 type="number"
                                                                 placeholder="0"
@@ -371,7 +371,7 @@ export default function ProjectStepThree() {
                                                     }
                                                 </div>
                                                 <div className="project-share-royalties">
-                                                    <h4>Set the Royalties for the Project</h4>
+                                                    <h4>Set the Royalties for the Community</h4>
                                                     <div className="row">
                                                         <div className="col-md-6">
                                                             <div className="project-share-royalties-info">
@@ -431,7 +431,7 @@ export default function ProjectStepThree() {
                                                                     }}
                                                                     value={priceDistribution.promoter}
                                                             />
-                                                            <span>Promotes your project</span>
+                                                            <span>Promotes your community</span>
                                                         </div>
                                                         <div className="project-share-royalties-info flex-box">
                                                             <label>Scout</label>
