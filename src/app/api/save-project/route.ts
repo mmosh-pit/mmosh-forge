@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   const projectCollection = db.collection("mmosh-app-projects");
 
-  const { name, symbol, coinimage, desc, image, project, tokenaddress, lut  } = await req.json();
+  const { name, symbol, coinimage, desc, image, project, tokenaddress, lut, seniority, telegram  } = await req.json();
 
   const projectDetail = await projectCollection.findOne({
     project: project,
@@ -22,6 +22,8 @@ export async function POST(req: NextRequest) {
         token: tokenaddress,
         project,
         lut,
+        seniority,
+        telegram,
         created_date: new Date(),
         updated_date: new Date()
       })

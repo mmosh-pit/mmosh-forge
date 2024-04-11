@@ -44,18 +44,18 @@ export default function Projects() {
 
 
     const onProjectSelect = (projectItem:any) => {
-        navigate.push("/project/"+projectItem.project)
+        navigate.push("/community/"+projectItem.project)
     }
 
     return (
         <div className="project-directory">
                <div className="project-directory-header">
-                   <h2>Project Directory</h2> 
+                   <h2>Community Directory</h2> 
                    <div className="project-directory-search">
                        <Search />
                        <Form.Control
                             type="text"
-                            placeholder="Type the name or symbol of the project you want to search"
+                            placeholder="Type the name or symbol of the community you want to search"
                             maxLength={32}
                             onChange={(event) => searchProject(event.target.value)}
                             value={keyword}
@@ -100,7 +100,7 @@ export default function Projects() {
                 </div>
 
                 {(projects.length == 0 && !projectLoading) &&
-                    <div className="project-directory-empty">Projects not available</div>
+                    <div className="project-directory-empty">Communites not available</div>
                 }
                </div>
         </div>

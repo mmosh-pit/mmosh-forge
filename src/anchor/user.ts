@@ -104,14 +104,15 @@ export class Connectivity {
   async getProfileMetadata(uri: string) {
     try {
       const result = await axios.get(uri);
+      console.log("getProfileMetadata ",result)
       if (result.data) {
         let userData: any = {
           _id: "",
           wallet: "",
           username: "",
-          bio: "",
+          bio: result.data.description,
           pronouns: "",
-          name: "",
+          name: result.data.name,
           image: result.data.image,
           descriptor: "",
           nouns: "",
@@ -133,7 +134,7 @@ export class Connectivity {
             userData.nouns = element.value;
           } else if (element.trait_type == "Pronoun") {
             userData.pronouns = element.value;
-          } else if (element.trait_type == "Project") {
+          } else if (element.trait_type == "Community") {
             userData.project = element.value;
           }
         }
@@ -156,7 +157,7 @@ export class Connectivity {
         };
         for (let index = 0; index < result.data.attributes.length; index++) {
           const element = result.data.attributes[index];
-          if (element.trait_type == "Project") {
+          if (element.trait_type == "Community") {
             userData.project = element.value;
           }
         }
@@ -399,7 +400,7 @@ export class Connectivity {
           receiver: currentGgreatGrandParentProfileHolder.toBase58(),
           amount: 600,
         },
-      ]);
+      ],web3Consts.oposToken);
 
       await this.storeLineage(
         user.toBase58(),
@@ -446,10 +447,11 @@ export class Connectivity {
   }
 
 
-  async storeRoyalty(sender: string, receivers: any) {
+  async storeRoyalty(sender: string, receivers: any, coin:any) {
     await axios.post("/api/update-royalty", {
       sender,
       receivers,
+      coin
     });
   }
 
@@ -831,7 +833,7 @@ export class Connectivity {
           receiver: currentGenesisProfileHolder.toBase58(),
           amount: Number(amount),
         },
-      ]);
+      ], web3Consts.oposToken);
       return { Ok: { signature, info: {} } };
     } catch (error) {
       log({ error });
@@ -1069,12 +1071,12 @@ export class Connectivity {
                   continue;
                 }
 
-                // const metadata = await this.getInvitationMetdata(i?.uri);
-                // if (metadata) {
-                //   if(metadata.project != "") {
-                //       continue;
-                //   }
-                // }
+                const metadata = await this.getInvitationMetdata(i?.uri);
+                if (metadata) {
+                  if(metadata.project != "") {
+                      continue;
+                  }
+                }
 
                 try {
                   const nftInfo: any = i;

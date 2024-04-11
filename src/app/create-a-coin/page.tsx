@@ -59,6 +59,7 @@ export default function CreateCoin() {
     const [mintingStatus, setMintingStatus] = useState("Minting...")
 
     const [isSubmit, setIsSubmit] = useState(false);
+    const delay = ms => new Promise(res => setTimeout(res, ms));
 
   useEffect(() => {
     if (wallet?.publicKey) {
@@ -103,6 +104,13 @@ export default function CreateCoin() {
       });
       anchor.setProvider(env);
       let curveConn: CurveConn = new CurveConn(env, web3Consts.programID);
+
+      // first time need to execute
+      // const initres = await curveConn.initializeSolStorage({
+      //   mintKeypair: new anchor.web3.Keypair()
+      // })
+
+      // console.log("initres ",initres)
   
 
       const body = {
@@ -171,8 +179,11 @@ export default function CreateCoin() {
         let curve = await curveConn.initializeCurve({
           config: new ExponentialCurveConfig(curveConfig),
         });
+
+   
         
         setMintingStatus("Creating Token...")
+        await delay(15000)
         const targetMint = await curveConn.createTargetMint(
           name,
           symbol,
@@ -181,8 +192,10 @@ export default function CreateCoin() {
         console.log("target mint ", targetMint)
         // setIsSubmit(false);
         // return 
-        
+   
+
         setMintingStatus("Creating Bonding Curve...")
+      
         const res = await curveConn.createTokenBonding({
           name,
           symbol,
@@ -199,36 +212,37 @@ export default function CreateCoin() {
         });
 
         console.log("createTokenBonding",res)
-
-        setTimeout(async() => {
-          setMintingStatus("Swaping Token...")
-          const buyres = await curveConn.buy({
-            tokenBonding: res.tokenBonding,
-            desiredTargetAmount: new anchor.BN(Number(supply) * web3Consts.LAMPORTS_PER_OPOS),
-            slippage: 0.5
-          });
     
-          if (buyres) {
-              setMintingStatus("Saving Token...")
-              await storeToken(name,symbol,body.image, res.targetMint.toBase58(),res.tokenBonding.toBase58());
-              createMessage(
-                <p>Congrats! You coin is  minted and tradable in <a href="javascript:void(0)" onClick={()=>{navigate.push("/swap")}}>Swap</a></p>,
-                "success-container",
-              );
-              setName("");
-              setSymbol("")
-              setSupply("")
-              setDesc("");
-              getProfileInfo();
-          } else {
+
+        setMintingStatus("Swaping Token...")
+        await delay(15000)
+        const buyres = await curveConn.buy({
+          tokenBonding: res.tokenBonding,
+          desiredTargetAmount: new anchor.BN(Number(supply) * web3Consts.LAMPORTS_PER_OPOS),
+          slippage: 0.5
+        });
+  
+        if (buyres) {
+            setMintingStatus("Saving Token...")
+            await storeToken(name,symbol,body.image, res.targetMint.toBase58(),res.tokenBonding.toBase58());
             createMessage(
-                "We’re sorry, there was an error while trying to mint. Check your wallet and try again.",
-                "danger-container",
-              );
-          }
-          setMintingStatus("Minting...")
-          setIsSubmit(false);
-        }, 15000);
+              <p>Congrats! You coin is  minted and tradable in <a href="javascript:void(0)" onClick={()=>{navigate.push("/swap")}}>Swap</a></p>,
+              "success-container",
+            );
+            setName("");
+            setSymbol("")
+            setSupply("")
+            setDesc("");
+            getProfileInfo();
+        } else {
+          createMessage(
+              "We’re sorry, there was an error while trying to mint. Check your wallet and try again.",
+              "danger-container",
+            );
+        }
+        setMintingStatus("Minting...")
+        setIsSubmit(false);
+
       } catch (error) {
         console.log("error on creeating coin",error)
         setMintingStatus("Minting...")
@@ -507,13 +521,10 @@ export default function CreateCoin() {
                           onChange={(event) => setSupply(event.target.value)}
                           value={supply}
                           />
-                        <p>$MMOSH for {supply=="" ? 0 : supply} ${symbol} </p>
+                        <p>$MMOSH for {supply=="" ? 0 : supply} ${symbol.toUpperCase()} </p>
                       </div>
                     }
-
-                    <label>
-                        Plus a small amount of SOL for transaction fees
-                    </label>
+                    <p>Enter the amount of your initial swap. You will<br/> swap {supply=="" ? 0 : supply} MMOSH for {supply=="" ? 0 : supply} {symbol == "" ? "Coins" : symbol.toUpperCase()} and you<br/> will be charged small amount of SOL in<br/> transaction fees </p>
                 </div>
                 <div className="coins-balance-details">
                     <div className="coins-balance-details-heading">

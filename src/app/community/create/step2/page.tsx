@@ -26,7 +26,7 @@ export default function ProjectStepTwo() {
             return;
          }
          localStorage.setItem("step2",JSON.stringify(values));
-         navigate.push("/project/create/step3");
+         navigate.push("/community/create/step3");
     }
 
     const createMessage = (message: any, type: any) => {
@@ -57,7 +57,7 @@ export default function ProjectStepTwo() {
        <div className="create-coin-page-header">
         <h2>Step 2</h2> 
         <h3>Select the Topics and Interest</h3> 
-        <p className="heading">Select up to 8 topics and interests associate with your project.</p>
+        <p className="heading">Select up to 8 topics and interests associate with your community.</p>
         <div className="backAction" onClick={()=>{navigate.back()}}>
            <ArrowBackIos /><span>Back</span>
         </div>

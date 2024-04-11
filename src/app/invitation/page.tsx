@@ -714,14 +714,14 @@ export default function Invitation() {
                             <img src={profileImage} alt="profile" />
                       </div>
                       <div className="invitation-create-grid-right">
-                          <h3>Create a Project</h3>
-                          <p>With your own Project, you can build community to launch and scale your own projects. Get started now!</p>
+                          <h3>Create a Community</h3>
+                          <p>With your own Project, you can build community to launch and scale your own community. Get started now!</p>
                           <div className="invitation-action-container">
-                            <Button className="project-btn" variant="primary" size="sm" onClick={()=>{navigate.push("/projects")}}>
-                              Projects
+                            <Button className="project-btn" variant="primary" size="sm" onClick={()=>{navigate.push("/communities")}}>
+                              Communities
                             </Button>
-                            <Button variant="primary" size="sm" onClick={()=>{navigate.push("/project/create/step1")}}>
-                              Create a Project!
+                            <Button variant="primary" size="sm" onClick={()=>{navigate.push("/community/create/step1")}}>
+                              Create
                             </Button>
                           </div>
                       </div>
