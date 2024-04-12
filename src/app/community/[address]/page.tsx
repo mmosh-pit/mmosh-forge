@@ -29,6 +29,7 @@ export default function ProjectDetail({ params }: { params: { address: string } 
 
     const [projectLoading, setProjectLoading] = useState(true);
     const [projectDetail, setProjectDetail] = useState(null)
+    const [creatorInfo, setCreatorInfo] = useState(null)
     const [projectInfo, setProjectInfo] = useState({
         profiles: [],
         activationTokens: [],
@@ -47,7 +48,7 @@ export default function ProjectDetail({ params }: { params: { address: string } 
         generation: "",
         invitationPrice: 0,
         mintPrice: 0
-      })
+    })
 
     const [solBalance, setSolBalance] = useState(0);
     const [inputValue, setInputValue] = useState("")
@@ -128,7 +129,13 @@ export default function ProjectDetail({ params }: { params: { address: string } 
         anchor.setProvider(env);
         let projectConn: ProjectConn = new ProjectConn(env, web3Consts.programID, new anchor.web3.PublicKey(params.address));
         let projectInfo = await projectConn.getProjectUserInfo(params.address);
-        console.log("project user Info", projectInfo)
+
+        let tokenInfo = await projectConn.metaplex.nfts().findByMint({
+            mintAddress: new anchor.web3.PublicKey(params.address) 
+        })
+        let creator = tokenInfo.creators[0].address.toBase58()
+        let userInfo = await getUserData(creator);
+        setCreatorInfo(userInfo);
         if(projectInfo.profiles.length > 0) {
             if(projectInfo.profiles[0].address == params.address) {
                 setOwner(true)
@@ -484,6 +491,25 @@ export default function ProjectDetail({ params }: { params: { address: string } 
         }
     };
 
+    const getUserData = async (address: any) => {
+        try {
+            const result = await axios.get(
+                `/api/get-wallet-data?wallet=${address}`,
+              );
+              if (result) {
+                if (result.data) {
+                  if (result.data.profile) {
+                    return result.data.profile;
+                  }
+                }
+            }
+            return null
+        } catch (error) {
+            return null
+        }
+    };
+    
+
     const capitalizeString = (str: any) => {
     return str.charAt(0).toUpperCase() + str.slice(1);
     };
@@ -689,11 +715,22 @@ export default function ProjectDetail({ params }: { params: { address: string } 
 
     return (
         <>
-            <div className="project-detail-main-banner">
-                <div className="telegram-info">
-                    Connect to Official Community on Telegram
+            {projectDetail &&
+                <div className="project-detail-main-banner">
+                {isOwner &&
+                    <div className="telegram-info">
+                            Connect to Official Community on Telegram
+                    </div>
+                }
+
+                {!isOwner &&
+                    <div className="telegram-info-others">
+                            Mint this Pass to join {capitalizeString(projectDetail.name)}
+                    </div>
+                }
+
                 </div>
-            </div>
+            }
             {showMsg && (
                 <div className={"message-container " + msgClass}>{msgText}</div>
             )}
@@ -723,21 +760,24 @@ export default function ProjectDetail({ params }: { params: { address: string } 
                                         <p>{projectDetail.desc}</p>
                                     </div>
                                 </div>
-                                <div className="project-detail-user-info">
-                                    <div className="project-detail-user-info-header">
-                                        <img src={forgeContext.userData.image} alt="project" className="user-image"/>
-                                        <div className="project-detail-user-info-header-content">
-                                            <h4>{forgeContext.userData.name}</h4>
-                                            <p>@{forgeContext.userData.username}</p>
+                                {creatorInfo &&
+                                    <div className="project-detail-user-info">
+                                        <div className="project-detail-user-info-header">
+                                            <img src={creatorInfo.image} alt="project" className="user-image"/>
+                                            <div className="project-detail-user-info-header-content">
+                                                <h4>{creatorInfo.name}</h4>
+                                                <p>@{creatorInfo.username}</p>
+                                            </div>
+                                        </div>
+                                        <div className="project-detail-user-info-desc">
+                                            {creatorInfo.bio}
+                                        </div>
+                                        <div className="project-detail-user-info-link">
+                                            <a className="profile-link" href={process.env.NEXT_PUBLIC_APP_MAIN_URL +"/"+creatorInfo.username} target="_blank">{creatorInfo.name}</a>
                                         </div>
                                     </div>
-                                    <div className="project-detail-user-info-desc">
-                                       {forgeContext.userData.bio}
-                                    </div>
-                                    <div className="project-detail-user-info-link">
-                                        <a className="profile-link" href={process.env.NEXT_PUBLIC_APP_MAIN_URL +"/"+forgeContext.userData.username} target="_blank">{forgeContext.userData.name}</a>
-                                    </div>
-                                </div>
+                                }
+
                         </div>
 
                         <div className="project-detail-container">
