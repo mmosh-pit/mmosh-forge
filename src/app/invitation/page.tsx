@@ -669,7 +669,7 @@ export default function Invitation() {
           </div>
           <div className="invitation-action-container">
             {buttonText === "Mint" &&
-              <Button variant="primary" size="sm" onClick={registerAction}>
+              <Button variant="primary" size="sm" onClick={mintInvitationAction}>
                 {buttonText}
               </Button>
             }
