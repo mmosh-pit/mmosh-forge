@@ -1891,6 +1891,17 @@ input[type="number"] {
   top: 50px;
 }
 
+.telegram-info-others {
+  color: #fff;
+  font-family: 'goudyhvyface_btregular';
+  font-size: 16px;
+  padding: 5px 10px;
+  cursor: pointer;
+  position: relative;
+  top: 50px;
+}
+
+
 .project-detail-user-info {
   margin: 20px 0 0;
 }

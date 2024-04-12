@@ -1563,7 +1563,7 @@ export class Connectivity {
           } = await this.__getProfileHoldersInfo(
             profileStateInfo.lineage,
             genesisProfile,
-            web3Consts.genesisProfile,
+            mainStateInfo.genesisProfile,
             mainStateInfo.oposToken
           );
           profilelineage = {
