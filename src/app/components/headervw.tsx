@@ -1,5 +1,6 @@
 "use client";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { getCsrfToken, signIn, signOut, useSession } from "next-auth/react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { Button } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
@@ -23,6 +24,8 @@ import Link from "next/link";
 import { ForgeContext } from "../context/ForgeContext";
 import { Connectivity as UserConn } from "../../anchor/user";
 import { web3Consts } from "@/anchor/web3Consts";
+import { SigninMessage } from "../lib/SigninMessage";
+import { bs58 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
 
 export default function HeaderVW() {
   const forgeContext = React.useContext(ForgeContext);
@@ -38,6 +41,7 @@ export default function HeaderVW() {
   const [menuData, setMenuData] = useState<any>([]);
   const [mainUrl, setMainUrl] = useState("");
   const [currentLocation, setCurrentLocation] = useState("");
+  const { data: session, status } = useSession();
 
   useEffect(() => {
     const mainUrl: any = process.env.NEXT_PUBLIC_APP_MAIN_URL;
@@ -51,8 +55,12 @@ export default function HeaderVW() {
   useEffect(() => {
     if(pathname !=="/swap") {
       if (wallet?.publicKey) {
-        if (name == "") {
-          getProfileInfo();
+        if(status === "unauthenticated") {
+            handleSignIn();
+        } else {
+          if (name == "") {
+            getProfileInfo();
+          }
         }
       } else {
         forgeContext.setLoading(false);
@@ -188,6 +196,34 @@ export default function HeaderVW() {
     return false
   }
 
+  const handleSignIn = async () => {
+    try {
+      const csrf = await getCsrfToken();
+      if (!wallet.publicKey || !csrf || !wallet.signMessage) return;
+
+      const message = new SigninMessage({
+        domain: window.location.host,
+        publicKey: wallet.publicKey?.toBase58(),
+        statement: `Sign this message to sign in to the app.`,
+        nonce: csrf,
+      });
+
+      const data = new TextEncoder().encode(message.prepare());
+      const signature = await wallet.signMessage(data);
+      const serializedSignature = bs58.encode(signature);
+
+      await signIn("credentials", {
+        message: JSON.stringify(message),
+        redirect: false,
+        signature: serializedSignature,
+      });
+      if(name == "") {
+         getProfileInfo();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>

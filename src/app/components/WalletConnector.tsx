@@ -15,8 +15,10 @@ import HeaderVW from "./headervw";
 import { ForgeProvider } from "../context/ForgeContext";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { usePathname } from "next/navigation";
+import { SessionProvider } from "next-auth/react";
+import { Session } from "next-auth";
 
-const WalletConnector = ({ children }: { children: React.ReactNode }) => {
+const WalletConnector = ({ children, session }: { children: React.ReactNode, session:Session }) => {
   const solNetwork = Config.rpcURL;
   const endpoint = useMemo(() => solNetwork, [solNetwork]);
   const pathname = usePathname()
@@ -45,10 +47,12 @@ const WalletConnector = ({ children }: { children: React.ReactNode }) => {
       <ConnectionProvider endpoint={endpoint} config={{confirmTransactionInitialTimeout:120000}}>
         <WalletProvider wallets={wallets}>
           <WalletModalProvider>
+          <SessionProvider session={session} refetchInterval={0}>
             <div className={isProjectPages ? "project-root-container root-container" : "root-container"}>
               <HeaderVW />
               <div className="content-container">{children}</div>
             </div>
+            </SessionProvider>
           </WalletModalProvider>
         </WalletProvider>
       </ConnectionProvider>
