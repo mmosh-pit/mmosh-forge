@@ -1229,6 +1229,57 @@ export class Connectivity {
     }
   }
 
+  async getGensisProfileOwner(
+  ): Promise<{
+    profileHolder: web3.PublicKey;
+  }> {
+    const mainStateInfo = await this.program.account.mainState.fetch(
+      this.mainState,
+    );
+    const genesisProfileAta = (
+      await this.connection.getTokenLargestAccounts(mainStateInfo.genesisProfile)
+    ).value[0].address;
+
+    const atasInfo = await this.connection.getMultipleAccountsInfo([
+      genesisProfileAta,
+    ]);
+
+    const genesisProfileAtaHolder = unpackAccount(
+      genesisProfileAta,
+      atasInfo[0],
+    ).owner;
+
+    return {
+      profileHolder: genesisProfileAtaHolder
+    }
+  }
+
+  async getNftProfileOwner(
+      nftAddress: web3.PublicKey
+    ): Promise<{
+      profileHolder: web3.PublicKey;
+    }> {
+
+      const genesisProfileAta = (
+        await this.connection.getTokenLargestAccounts(nftAddress)
+      ).value[0].address;
+  
+      const atasInfo = await this.connection.getMultipleAccountsInfo([
+        genesisProfileAta,
+      ]);
+  
+      const genesisProfileAtaHolder = unpackAccount(
+        genesisProfileAta,
+        atasInfo[0],
+      ).owner;
+  
+      return {
+        profileHolder: genesisProfileAtaHolder
+      }
+    }
+    
+  
+
   async __getProfileHoldersInfo(
     input: LineageInfo,
     parentProfile: web3.PublicKey,

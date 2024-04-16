@@ -57,6 +57,7 @@ import {
   unpackAccount,
 } from "forge-spl-token";
 import { web3Consts } from "../web3Consts";
+import { BaseSpl } from "../base/baseSpl";
 
 export type ProgramStateV0 = IdlAccounts<Mmoshforge>["programStateV0"];
 export type CurveV0 = IdlAccounts<Mmoshforge>["curveV0"];
@@ -84,6 +85,7 @@ export class Connectivity {
   mainState: web3.PublicKey;
   connection: web3.Connection;
   metaplex: Metaplex;
+  baseSpl: BaseSpl;
   state: IProgramState | undefined;
   account;
 
@@ -109,6 +111,7 @@ export class Connectivity {
     this.programId = programId;
     this.program = new Program(IDL, programId, this.provider);
     this.metaplex = new Metaplex(this.connection);
+    this.baseSpl = new BaseSpl(this.connection);
     this.account = this.program.account;
   }
 
@@ -985,7 +988,10 @@ export class Connectivity {
       tokenBondingAcct.goLiveUnixTime.toNumber(),
     );
 
-    const instructions: anchor.web3.TransactionInstruction[] = [];
+    const instructions: anchor.web3.TransactionInstruction[] = this.txis;
+    console.log("buy instruction is ", instructions)
+
+    this.txis = []
     // let req = ComputeBudgetProgram.setComputeUnitLimit({units: 400000});
     // instructions.push(req);
 
@@ -1222,7 +1228,8 @@ export class Connectivity {
       tokenBondingAcct.goLiveUnixTime.toNumber(),
     );
 
-    const instructions: anchor.web3.TransactionInstruction[] = [];
+    const instructions: anchor.web3.TransactionInstruction[] = this.txis;
+    this.txis = [];
     // let req = ComputeBudgetProgram.setComputeUnitLimit({units: 350000});
     // instructions.push(req);
     if (!source) {

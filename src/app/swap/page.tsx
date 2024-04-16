@@ -3,6 +3,7 @@
 import {useEffect, useState } from "react";
 import * as anchor from "@coral-xyz/anchor";
 import { Connectivity as CurveConn } from "../../anchor/curve/bonding";
+import { Connectivity as UserConn } from "@/anchor/user";
 import SwapInputVW from "../ui/swapinput/swapinputvw";
 import { Close, OpenInNew, Search, SwapVerticalCircle } from "@mui/icons-material";
 import { Button, Form, InputGroup } from "react-bootstrap";
@@ -234,13 +235,13 @@ export default function Swap() {
         if(type === "sell") {
             if(targeToken.token == web3Consts.oposToken.toBase58()) {
                 console.log("receivedValue opos ",receivedValue)
-                let buyValue = curve.buyWithBaseAmount(receivedValue)
+                let buyValue = curve.buyWithBaseAmount(receivedValue - (receivedValue * 0.06))
                 let base = baseToken
                 base.value = buyValue
                 setBaseToken(base);
             } else {
                 console.log("receivedValue non opops ",receivedValue)
-                let buyValue = curve.sellTargetAmount(receivedValue)
+                let buyValue = curve.sellTargetAmount(receivedValue - (receivedValue * 0.06))
                 let base = baseToken
                 base.value = buyValue
                 setBaseToken(base);
@@ -257,6 +258,25 @@ export default function Swap() {
 
         anchor.setProvider(env);
         let curveConn: CurveConn = new CurveConn(env, web3Consts.programID);
+        let userConn: UserConn = new UserConn(env, web3Consts.programID);
+        const tokenBondingAcct = await curveConn.getTokenBonding(new anchor.web3.PublicKey(targeToken.bonding));
+        const gensisUser = await userConn.getGensisProfileOwner();
+        const ownerUser = await userConn.getNftProfileOwner(tokenBondingAcct.targetMint);
+
+        console.log("my user", wallet.publicKey.toBase58())
+        console.log("tokenBondingAcct ownerUser ",ownerUser.profileHolder.toBase58())
+        console.log("owner user share", (targeToken.value * 0.03) * web3Consts.LAMPORTS_PER_OPOS)
+        console.log("tokenBondingAcct gensisUser",gensisUser.profileHolder.toBase58())
+        console.log("gensisUser share ", (targeToken.value * 0.03) * web3Consts.LAMPORTS_PER_OPOS)
+
+        let createShare:any =  await userConn.baseSpl.transfer_token_modified({ mint: new anchor.web3.PublicKey(targeToken.token), sender: wallet.publicKey, receiver: ownerUser.profileHolder, init_if_needed: true, amount: (targeToken.value * 0.03) * web3Consts.LAMPORTS_PER_OPOS })
+        let gensisShare:any =  await userConn.baseSpl.transfer_token_modified({ mint: new anchor.web3.PublicKey(targeToken.token), sender: wallet.publicKey, receiver: gensisUser.profileHolder, init_if_needed: true, amount: (targeToken.value * 0.03) * web3Consts.LAMPORTS_PER_OPOS })
+        for (let index = 0; index < createShare.length; index++) {
+            curveConn.txis.push(createShare[index]);
+        }
+        for (let index = 0; index < gensisShare.length; index++) {
+            curveConn.txis.push(gensisShare[index]);
+        }
 
         try {
             if(targeToken.token == web3Consts.oposToken.toBase58()) {
@@ -269,11 +289,22 @@ export default function Swap() {
             } else {
                 const sellres = await curveConn.sell({
                     tokenBonding: new anchor.web3.PublicKey(targeToken.bonding),
-                    targetAmount: new anchor.BN(targeToken.value * web3Consts.LAMPORTS_PER_OPOS),
+                    targetAmount: new anchor.BN((targeToken.value - (targeToken.value * 0.06)) * web3Consts.LAMPORTS_PER_OPOS),
                     slippage: 0.5,
                 });
                 console.log("sellres ",sellres)
             }
+
+            await userConn.storeRoyalty(wallet.publicKey.toBase58(), [
+                {
+                  receiver: ownerUser.profileHolder.toBase58(),
+                  amount: (targeToken.value * 0.03),
+                },
+                {
+                    receiver: gensisUser.profileHolder.toBase58(),
+                    amount: (targeToken.value * 0.03),
+                },
+              ],targeToken.token);
 
             setTimeout(async () => {
                 createMessage(
@@ -338,9 +369,12 @@ export default function Swap() {
                                            <>
                                           <>
                                             {(targeToken.value <= targeToken.balance) &&
+                                             <>
+                                                <div className="swap-info">3% goes to holder of the Genesis Profile and 3% goes to the holder of the Profile of the Coin Creator.</div>
                                                 <Button variant="primary" size="lg" onClick={actionSwap} disabled={!(targeToken.value <= targeToken.balance && targeToken.balance!=0 && targeToken.value!=0)} >
                                                         Swap
                                                 </Button>
+                                             </>
                                             }
                                           </>
                                             <>
