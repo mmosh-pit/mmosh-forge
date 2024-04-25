@@ -1,5 +1,5 @@
 import * as anchor from "@coral-xyz/anchor";
-import { AnchorProvider, Program, web3, BN } from "@project-serum/anchor";
+import { AnchorProvider, Program, web3, BN } from "@coral-xyz/anchor";
 import { bs58 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
 import { TOKEN_PROGRAM_ID } from "@coral-xyz/anchor/dist/cjs/utils/token";
 import { IDL, Mmoshforge } from "./mmoshforge";
@@ -317,7 +317,6 @@ export class Connectivity {
           profile, // 1
           user, // 2
           oposToken, // 3
-          userOposAta, // 4
           userProfileAta, // 5
           mainState: this.mainState, // 6
           collection, // 7
@@ -335,19 +334,59 @@ export class Connectivity {
           userActivationTokenAta, // 19
           associatedTokenProgram, // 20
           parentProfile,
-          currentParentProfileHolder,
-          currentGrandParentProfileHolder,
-          currentGreatGrandParentProfileHolder,
-          currentGgreatGrandParentProfileHolder,
-          currentGenesisProfileHolder,
-          parentProfileHolderOposAta,
-          grandParentProfileHolderOposAta,
-          greatGrandParentProfileHolderOposAta,
-          ggreatGrandParentProfileHolderOposAta,
-          genesisProfileHolderOposAta,
         })
         .instruction();
       this.txis.push(ix);
+
+      const mainStateInfo = await this.program.account.mainState.fetch(
+        this.mainState,
+      );
+      let cost = mainStateInfo.profileMintingCost.toNumber()
+    
+      let holdersfullInfo = [];
+
+      holdersfullInfo.push({
+         receiver: currentGenesisProfileHolder.toBase58(),
+         vallue: cost * ((mainStateInfo.mintingCostDistribution.genesis / 100) / 100)
+      })
+
+      holdersfullInfo.push({
+        receiver: currentParentProfileHolder.toBase58(),
+        vallue: cost * ((mainStateInfo.mintingCostDistribution.parent / 100) / 100)
+      })
+
+      holdersfullInfo.push({
+        receiver: currentGrandParentProfileHolder.toBase58(),
+        vallue: cost * ((mainStateInfo.mintingCostDistribution.grandParent / 100) / 100)
+     })
+
+     holdersfullInfo.push({
+      receiver: currentGreatGrandParentProfileHolder.toBase58(),
+      vallue: cost * ((mainStateInfo.mintingCostDistribution.greatGrandParent / 100) / 100)
+     })
+
+     holdersfullInfo.push({
+      receiver: currentGgreatGrandParentProfileHolder.toBase58(),
+      vallue: cost * ((mainStateInfo.mintingCostDistribution.ggreatGrandParent / 100) / 100)
+     })
+
+     var holdermap = [];
+     holdersfullInfo.reduce(function(res, value) {
+       if (!res[value.receiver]) {
+         res[value.receiver] = { receiver: value.receiver, vallue: 0 };
+         holdermap.push(res[value.receiver])
+       }
+       res[value.receiver].vallue += value.vallue;
+       return res;
+     }, {});
+
+     for (let index = 0; index < holdermap.length; index++) {
+         const element = holdermap[index];
+         let createShare:any =  await this.baseSpl.transfer_token_modified({ mint: mainStateInfo.oposToken, sender: user, receiver: new anchor.web3.PublicKey(element.receiver), init_if_needed: true, amount: element.vallue});
+         for (let index = 0; index < createShare.length; index++) {
+             this.txis.push(createShare[index]);
+         }
+     }
 
       const commonLutInfo = await (
         await this.connection.getAddressLookupTable(commonLut)

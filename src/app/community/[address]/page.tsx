@@ -415,7 +415,7 @@ export default function ProjectDetail({ params }: { params: { address: string } 
                 });
 
                 attributes.push({
-                    trait_type: "Project",
+                    trait_type: "Community",
                     value: params.address,
                 });
 
@@ -636,7 +636,7 @@ export default function ProjectDetail({ params }: { params: { address: string } 
                 collection: "MMOSH Pass Collection",
                 attributes: [
                   {
-                    trait_type: "Project",
+                    trait_type: "Community",
                     value:params.address,
                   },
                   {
@@ -865,7 +865,7 @@ export default function ProjectDetail({ params }: { params: { address: string } 
             
                                             {(connectionStatus == "connected" && swapSubmit) &&
                                                 <Button variant="primary" size="lg">
-                                                        Swaping Token...
+                                                        Swapping Token...
                                                 </Button>
                                             }
             

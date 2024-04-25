@@ -9,14 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@coral-xyz/anchor": "^0.28.0",
+    "@coral-xyz/anchor": "^0.29.0",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@metaplex-foundation/js": "^0.20.1",
     "@metaplex-foundation/mpl-token-metadata": "^2.11.0",
     "@mui/icons-material": "^5.15.9",
     "@mui/material": "^5.15.9",
-    "@project-serum/anchor": "^0.26.0",
     "@sentry/nextjs": "^7.106.0",
     "@shadow-drive/sdk": "^5.0.0",
     "@solana-mobile/wallet-adapter-mobile": "^2.1.1",

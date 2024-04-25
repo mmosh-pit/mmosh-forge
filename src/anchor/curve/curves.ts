@@ -7,7 +7,7 @@ import {
   PublicKey,
   Keypair
 } from "@solana/web3.js";
-import * as anchor from "@project-serum/anchor";
+import * as anchor from "@coral-xyz/anchor";
 import { CurveV0, ICurveConfig, TokenBondingV0 } from "./bonding";
 import { toU128 } from "./utils";
 import { BondingHierarchy } from "./bondingHierarchy";

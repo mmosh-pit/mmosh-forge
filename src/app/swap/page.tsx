@@ -293,6 +293,14 @@ export default function Swap() {
                     slippage: 0.5,
                 });
                 console.log("sellres ",sellres)
+                if(sellres == "") {
+                    createMessage(
+                        "There was an error while swapping your tokens. Please, try again.",
+                        "danger-container",
+                    );
+                    setSwapSubmit(false)
+                    return
+                }
             }
 
             await userConn.storeRoyalty(wallet.publicKey.toBase58(), [
@@ -321,6 +329,7 @@ export default function Swap() {
 
 
         } catch (error) {
+            console.log("error ", error)
             createMessage(
                 "There was an error while swapping your tokens. Please, try again.",
                 "danger-container",
@@ -392,7 +401,7 @@ export default function Swap() {
         
                                         {(connectionStatus == "connected" && swapSubmit) &&
                                             <Button variant="primary" size="lg">
-                                                    Swaping Token...
+                                                    Swapping Token...
                                             </Button>
                                         }
         
