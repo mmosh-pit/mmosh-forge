@@ -3,7 +3,8 @@ import { AnchorProvider, Program, web3, BN } from "@coral-xyz/anchor";
 import { Wallet } from "@coral-xyz/anchor/dist/cjs/provider";
 import { bs58, utf8 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
 import { TOKEN_PROGRAM_ID } from "@coral-xyz/anchor/dist/cjs/utils/token";
-import { IDL, Mmoshforge } from "../mmoshforge";
+import { Mmoshforge } from "./../mmoshforge";
+import IDL from "./../mmoshforge.json"
 
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -109,7 +110,7 @@ export class Connectivity {
     this.provider = provider;
     this.connection = provider.connection;
     this.programId = programId;
-    this.program = new Program(IDL, programId, this.provider);
+    this.program = new Program(IDL as Mmoshforge, this.provider);
     this.metaplex = new Metaplex(this.connection);
     this.baseSpl = new BaseSpl(this.connection);
     this.account = this.program.account;
@@ -1092,7 +1093,7 @@ export class Connectivity {
       }
     }
 
-    const args: anchor.IdlTypes<Mmoshforge>["BuyV0Args"] = {
+    const args: anchor.IdlTypes<Mmoshforge>["buyV0Args"] = {
       // @ts-ignore
       buyTargetAmount,
       // @ts-ignore
@@ -1296,7 +1297,7 @@ export class Connectivity {
           unixTime,
         );
 
-    const args: anchor.IdlTypes<Mmoshforge>["SellV0Args"] = {
+    const args: anchor.IdlTypes<Mmoshforge>["sellV0Args"] = {
       targetAmount: toBN(targetAmount, targetMint),
       minimumPrice: new BN(
         Math.ceil(min * (1 - slippage) * Math.pow(10, baseMint.decimals)),

@@ -4,14 +4,14 @@ import { Mmoshforge } from "./mmoshforge";
 
 const mainStateTypeName = "mainState";
 const profileStateTypeName = "profileState";
-const lineageTypeName = "LineageInfo";
+const lineageTypeName = "lineageInfo";
 
 export type MainState = IdlAccounts<Mmoshforge>[typeof mainStateTypeName];
 export type ProfileState = IdlAccounts<Mmoshforge>[typeof profileStateTypeName];
 export type LineageInfo = IdlTypes<Mmoshforge>[typeof lineageTypeName];
 
-const mainStateInputTypeName = "MainStateInput";
-const mintProfileByAdminInput = "MintProfileByAdminInput"
+const mainStateInputTypeName = "mainStateInput";
+const mintProfileByAdminInput = "mintProfileByAdminInput"
 export type MainStateInput = IdlTypes<Mmoshforge>[typeof mainStateInputTypeName];
 export type MintProfileByAdminInput = IdlTypes<Mmoshforge>[typeof mintProfileByAdminInput];
 

@@ -1,203 +1,348 @@
+/**
+ * Program IDL in camelCase format in order to be used in JS/TS.
+ *
+ * Note that this is only a type helper and is not the actual IDL. The original
+ * IDL can be found at `target/idl/mmoshforge.json`.
+ */
 export type Mmoshforge = {
-  "version": "0.1.0",
-  "name": "mmoshforge",
+  "address": "GQJBSNqckwApKwrjHMgvhhFtwZFxb3YCoDFFcLmYCnEA",
+  "metadata": {
+    "name": "mmoshforge",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
   "instructions": [
     {
-      "name": "initMainState",
+      "name": "buyNativeV0",
+      "discriminator": [
+        161,
+        81,
+        234,
+        221,
+        249,
+        227,
+        95,
+        20
+      ],
       "accounts": [
         {
-          "name": "owner",
-          "isMut": true,
-          "isSigner": true
+          "name": "common",
+          "accounts": [
+            {
+              "name": "tokenBonding",
+              "writable": true
+            },
+            {
+              "name": "curve"
+            },
+            {
+              "name": "baseMint"
+            },
+            {
+              "name": "targetMint",
+              "writable": true
+            },
+            {
+              "name": "baseStorage",
+              "writable": true
+            },
+            {
+              "name": "buyBaseRoyalties",
+              "writable": true
+            },
+            {
+              "name": "destination",
+              "writable": true
+            },
+            {
+              "name": "buyTargetRoyalties",
+              "writable": true
+            },
+            {
+              "name": "tokenProgram"
+            },
+            {
+              "name": "clock"
+            }
+          ]
         },
         {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
+          "name": "source",
+          "writable": true,
+          "signer": true
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
+          "name": "state"
+        },
+        {
+          "name": "wrappedSolMint",
+          "writable": true
+        },
+        {
+          "name": "mintAuthority"
+        },
+        {
+          "name": "solStorage",
+          "writable": true
+        },
+        {
+          "name": "systemProgram"
         }
       ],
       "args": [
         {
-          "name": "input",
+          "name": "args",
           "type": {
-            "defined": "MainStateInput"
+            "defined": {
+              "name": "buyV0Args"
+            }
           }
         }
       ]
     },
     {
-      "name": "updateMainState",
+      "name": "buyV1",
+      "discriminator": [
+        69,
+        255,
+        7,
+        52,
+        119,
+        228,
+        164,
+        6
+      ],
       "accounts": [
         {
-          "name": "owner",
-          "isMut": true,
-          "isSigner": true
+          "name": "common",
+          "accounts": [
+            {
+              "name": "tokenBonding",
+              "writable": true
+            },
+            {
+              "name": "curve"
+            },
+            {
+              "name": "baseMint"
+            },
+            {
+              "name": "targetMint",
+              "writable": true
+            },
+            {
+              "name": "baseStorage",
+              "writable": true
+            },
+            {
+              "name": "buyBaseRoyalties",
+              "writable": true
+            },
+            {
+              "name": "destination",
+              "writable": true
+            },
+            {
+              "name": "buyTargetRoyalties",
+              "writable": true
+            },
+            {
+              "name": "tokenProgram"
+            },
+            {
+              "name": "clock"
+            }
+          ]
         },
         {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
+          "name": "state"
+        },
+        {
+          "name": "source",
+          "writable": true
+        },
+        {
+          "name": "sourceAuthority",
+          "signer": true
         }
       ],
       "args": [
         {
-          "name": "input",
+          "name": "args",
           "type": {
-            "defined": "MainStateInput"
+            "defined": {
+              "name": "buyV0Args"
+            }
           }
         }
       ]
     },
     {
-      "name": "updateMainStateOwner",
+      "name": "buyWrappedSolV0",
+      "discriminator": [
+        147,
+        243,
+        74,
+        130,
+        34,
+        114,
+        38,
+        33
+      ],
       "accounts": [
         {
-          "name": "owner",
-          "isMut": true,
-          "isSigner": true
+          "name": "state"
         },
         {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
+          "name": "wrappedSolMint",
+          "writable": true
+        },
+        {
+          "name": "mintAuthority"
+        },
+        {
+          "name": "solStorage",
+          "writable": true
+        },
+        {
+          "name": "source",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "destination",
+          "writable": true
+        },
+        {
+          "name": "tokenProgram"
+        },
+        {
+          "name": "systemProgram"
         }
       ],
       "args": [
         {
-          "name": "newOwner",
-          "type": "publicKey"
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "buyWrappedSolV0Args"
+            }
+          }
         }
       ]
     },
     {
-      "name": "setCommonLut",
-      "accounts": [
-        {
-          "name": "owner",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        }
+      "name": "closeTokenBondingV0",
+      "discriminator": [
+        160,
+        94,
+        159,
+        74,
+        193,
+        107,
+        122,
+        168
       ],
-      "args": [
-        {
-          "name": "lut",
-          "type": "publicKey"
-        }
-      ]
-    },
-    {
-      "name": "resetMain",
       "accounts": [
         {
-          "name": "owner",
-          "isMut": true,
-          "isSigner": true
+          "name": "refund",
+          "writable": true
         },
         {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
+          "name": "tokenBonding",
+          "writable": true
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
+          "name": "generalAuthority",
+          "signer": true
+        },
+        {
+          "name": "targetMint",
+          "writable": true
+        },
+        {
+          "name": "baseStorage",
+          "writable": true
+        },
+        {
+          "name": "tokenProgram"
         }
       ],
       "args": []
     },
     {
       "name": "createCollection",
+      "discriminator": [
+        156,
+        251,
+        92,
+        54,
+        233,
+        2,
+        16,
+        82
+      ],
       "accounts": [
         {
           "name": "admin",
-          "isMut": true,
-          "isSigner": true
+          "writable": true,
+          "signer": true
         },
         {
           "name": "mainState",
-          "isMut": true,
-          "isSigner": false
+          "writable": true
         },
         {
           "name": "collection",
-          "isMut": true,
-          "isSigner": false
+          "writable": true
         },
         {
           "name": "adminAta",
-          "isMut": true,
-          "isSigner": false
+          "writable": true
         },
         {
           "name": "collectionState",
-          "isMut": true,
-          "isSigner": false
+          "writable": true
         },
         {
           "name": "collectionMetadata",
-          "isMut": true,
-          "isSigner": false
+          "writable": true
         },
         {
           "name": "collectionEdition",
-          "isMut": true,
-          "isSigner": false
+          "writable": true
         },
         {
           "name": "collectionAuthorityRecord",
-          "isMut": true,
-          "isSigner": false
+          "writable": true
         },
         {
-          "name": "sysvarInstructions",
-          "isMut": false,
-          "isSigner": false
+          "name": "sysvarInstructions"
         },
         {
           "name": "parentCollection",
-          "isMut": true,
-          "isSigner": false
+          "writable": true
         },
         {
           "name": "parentCollectionMetadata",
-          "isMut": true,
-          "isSigner": false
+          "writable": true
         },
         {
           "name": "parentCollectionEdition",
-          "isMut": true,
-          "isSigner": false
+          "writable": true
         },
         {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
+          "name": "mplProgram"
         },
         {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
+          "name": "tokenProgram"
         },
         {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
+          "name": "associatedTokenProgram"
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
+          "name": "systemProgram"
         }
       ],
       "args": [
@@ -220,1319 +365,101 @@ export type Mmoshforge = {
       ]
     },
     {
-      "name": "updateCollection",
+      "name": "createCurveV0",
+      "discriminator": [
+        205,
+        203,
+        250,
+        201,
+        156,
+        135,
+        114,
+        221
+      ],
       "accounts": [
         {
-          "name": "admin",
-          "isMut": true,
-          "isSigner": true
+          "name": "payer",
+          "writable": true,
+          "signer": true
         },
         {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
+          "name": "curve",
+          "writable": true
         },
         {
-          "name": "collection",
-          "isMut": true,
-          "isSigner": false
+          "name": "systemProgram"
         },
         {
-          "name": "collectionMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collectionEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "sysvarInstructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "parentCollection",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentCollectionMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentCollectionEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
+          "name": "rent"
         }
       ],
       "args": [
         {
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "name": "symbol",
-          "type": "string"
-        },
-        {
-          "name": "uri",
-          "type": "string"
-        }
-      ]
-    },
-    {
-      "name": "mintGenesisProfile",
-      "accounts": [
-        {
-          "name": "admin",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profile",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "adminAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collection",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collectionState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collectionMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collectionEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collectionAuthorityRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "subCollectionAuthorityRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "sysvarInstructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "input",
+          "name": "args",
           "type": {
-            "defined": "MintProfileByAdminInput"
+            "defined": {
+              "name": "createCurveV0Args"
+            }
           }
-        }
-      ]
-    },
-    {
-      "name": "projectDistribution",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "oposToken",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "currentParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGreatGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGgreatGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGenesisProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "userOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "grandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "greatGrandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ggreatGrandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "genesisProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "passDistribution",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "project",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "oposToken",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "currentParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGreatGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGgreatGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGenesisProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "userOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "grandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "greatGrandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ggreatGrandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "genesisProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "profileDistribution",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "oposToken",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "currentParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGreatGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGgreatGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGenesisProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "userOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "grandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "greatGrandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ggreatGrandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "genesisProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "mintProfileByAt",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "oposToken",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "userActivationTokenAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "activationToken",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profile",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "userProfileAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentProfileState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collection",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collectionMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collectionEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "sysvarInstructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "parentProfile",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "name": "symbol",
-          "type": "string"
-        },
-        {
-          "name": "uriHash",
-          "type": "string"
-        }
-      ]
-    },
-    {
-      "name": "mintGenesisPass",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "profile",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentMainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userProfileAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collection",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collectionState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collectionMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collectionEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "sysvarInstructions",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "name": "symbol",
-          "type": "string"
-        },
-        {
-          "name": "uriHash",
-          "type": "string"
-        },
-        {
-          "name": "input",
-          "type": {
-            "defined": "MainStateInput"
-          }
-        }
-      ]
-    },
-    {
-      "name": "mintPassByAt",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "oposToken",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "userActivationTokenAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "project",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentMainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "activationToken",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profile",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "userProfileAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentProfileState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collection",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collectionMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collectionEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "sysvarInstructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "parentProfile",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "name": "symbol",
-          "type": "string"
-        },
-        {
-          "name": "uriHash",
-          "type": "string"
-        }
-      ]
-    },
-    {
-      "name": "initActivationToken",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "userProfileAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userActivationTokenAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "activationToken",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "activationTokenState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "activationTokenMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profile",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "profileState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileCollectionAuthorityRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentCollection",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentCollectionMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentCollectionEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "sysvarInstructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "name": "symbol",
-          "type": "string"
-        },
-        {
-          "name": "uri",
-          "type": "string"
-        }
-      ]
-    },
-    {
-      "name": "mintActivationToken",
-      "accounts": [
-        {
-          "name": "minter",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "minterProfileAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "receiverAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "activationToken",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "activationTokenState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profile",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "profileState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "parentProfile",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "grandParentProfile",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "greatGrandParentProfile",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "ggreateGrandParentProfile",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "genesisProfile",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "parentProfileState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "oposToken",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentParentProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGrandParentProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGreatGrandParentProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGgreatGrandParentProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGenesisProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGreatGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGgreatGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGenesisProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "userOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "grandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "greatGrandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ggreatGrandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "genesisProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "amount",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "initPassToken",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "userProfileAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userActivationTokenAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "project",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentMainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "activationToken",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "activationTokenState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "activationTokenMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profile",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "profileState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileCollectionAuthorityRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentCollection",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentCollectionMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentCollectionEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "sysvarInstructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "name": "symbol",
-          "type": "string"
-        },
-        {
-          "name": "uri",
-          "type": "string"
         }
       ]
     },
     {
       "name": "createPassToken",
+      "discriminator": [
+        51,
+        165,
+        125,
+        185,
+        174,
+        69,
+        218,
+        41
+      ],
       "accounts": [
         {
           "name": "minter",
-          "isMut": true,
-          "isSigner": true
+          "writable": true,
+          "signer": true
         },
         {
           "name": "minterProfileAta",
-          "isMut": true,
-          "isSigner": false
+          "writable": true
         },
         {
           "name": "receiverAta",
-          "isMut": true,
-          "isSigner": false
+          "writable": true
         },
         {
-          "name": "project",
-          "isMut": false,
-          "isSigner": false
+          "name": "project"
         },
         {
           "name": "mainState",
-          "isMut": true,
-          "isSigner": false
+          "writable": true
         },
         {
           "name": "activationToken",
-          "isMut": true,
-          "isSigner": false
+          "writable": true
         },
         {
           "name": "activationTokenState",
-          "isMut": true,
-          "isSigner": false
+          "writable": true
         },
         {
-          "name": "profile",
-          "isMut": false,
-          "isSigner": false
+          "name": "profile"
         },
         {
           "name": "profileState",
-          "isMut": true,
-          "isSigner": false
+          "writable": true
         },
         {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
+          "name": "tokenProgram"
         },
         {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
+          "name": "associatedTokenProgram"
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
+          "name": "systemProgram"
         }
       ],
       "args": [
@@ -1543,904 +470,1510 @@ export type Mmoshforge = {
       ]
     },
     {
-      "name": "initializeSolStorageV0",
+      "name": "initActivationToken",
+      "discriminator": [
+        242,
+        105,
+        199,
+        89,
+        203,
+        143,
+        3,
+        220
+      ],
       "accounts": [
         {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
+          "name": "user",
+          "writable": true,
+          "signer": true
         },
         {
-          "name": "state",
-          "isMut": true,
-          "isSigner": false
+          "name": "userProfileAta",
+          "writable": true
         },
         {
-          "name": "solStorage",
-          "isMut": false,
-          "isSigner": false
+          "name": "userActivationTokenAta",
+          "writable": true
         },
         {
-          "name": "wrappedSolMint",
-          "isMut": false,
-          "isSigner": false
+          "name": "mainState",
+          "writable": true
         },
         {
-          "name": "mintAuthority",
-          "isMut": false,
-          "isSigner": false
+          "name": "activationToken",
+          "writable": true,
+          "signer": true
         },
         {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
+          "name": "activationTokenState",
+          "writable": true
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
+          "name": "activationTokenMetadata",
+          "writable": true
         },
         {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
+          "name": "profile"
+        },
+        {
+          "name": "profileState",
+          "writable": true
+        },
+        {
+          "name": "profileMetadata",
+          "writable": true
+        },
+        {
+          "name": "profileEdition",
+          "writable": true
+        },
+        {
+          "name": "profileCollectionAuthorityRecord",
+          "writable": true
+        },
+        {
+          "name": "parentCollection",
+          "writable": true
+        },
+        {
+          "name": "parentCollectionMetadata",
+          "writable": true
+        },
+        {
+          "name": "parentCollectionEdition",
+          "writable": true
+        },
+        {
+          "name": "sysvarInstructions"
+        },
+        {
+          "name": "mplProgram"
+        },
+        {
+          "name": "associatedTokenProgram"
+        },
+        {
+          "name": "tokenProgram"
+        },
+        {
+          "name": "systemProgram"
         }
       ],
       "args": [
         {
-          "name": "args",
-          "type": {
-            "defined": "InitializeSolStorageV0Args"
-          }
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "symbol",
+          "type": "string"
+        },
+        {
+          "name": "uri",
+          "type": "string"
         }
       ]
     },
     {
-      "name": "buyWrappedSolV0",
-      "accounts": [
-        {
-          "name": "state",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "wrappedSolMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mintAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "solStorage",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "source",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "destination",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
+      "name": "initMainState",
+      "discriminator": [
+        33,
+        233,
+        208,
+        22,
+        125,
+        72,
+        253,
+        30
       ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": "BuyWrappedSolV0Args"
-          }
-        }
-      ]
-    },
-    {
-      "name": "sellWrappedSolV0",
       "accounts": [
-        {
-          "name": "state",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "wrappedSolMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "solStorage",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "source",
-          "isMut": true,
-          "isSigner": false
-        },
         {
           "name": "owner",
-          "isMut": false,
-          "isSigner": true
+          "writable": true,
+          "signer": true
         },
         {
-          "name": "destination",
-          "isMut": true,
-          "isSigner": false
+          "name": "mainState",
+          "writable": true
         },
         {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
+          "name": "systemProgram"
         }
       ],
       "args": [
         {
-          "name": "args",
+          "name": "input",
           "type": {
-            "defined": "SellWrappedSolV0Args"
+            "defined": {
+              "name": "mainStateInput"
+            }
           }
         }
       ]
     },
     {
-      "name": "createCurveV0",
+      "name": "initPassToken",
+      "discriminator": [
+        104,
+        46,
+        125,
+        140,
+        102,
+        252,
+        213,
+        92
+      ],
+      "accounts": [
+        {
+          "name": "user",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "userProfileAta",
+          "writable": true
+        },
+        {
+          "name": "userActivationTokenAta",
+          "writable": true
+        },
+        {
+          "name": "project"
+        },
+        {
+          "name": "mainState",
+          "writable": true
+        },
+        {
+          "name": "parentMainState",
+          "writable": true
+        },
+        {
+          "name": "activationToken",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "activationTokenState",
+          "writable": true
+        },
+        {
+          "name": "activationTokenMetadata",
+          "writable": true
+        },
+        {
+          "name": "profile"
+        },
+        {
+          "name": "profileState",
+          "writable": true
+        },
+        {
+          "name": "profileMetadata",
+          "writable": true
+        },
+        {
+          "name": "profileEdition",
+          "writable": true
+        },
+        {
+          "name": "profileCollectionAuthorityRecord",
+          "writable": true
+        },
+        {
+          "name": "parentCollection",
+          "writable": true
+        },
+        {
+          "name": "parentCollectionMetadata",
+          "writable": true
+        },
+        {
+          "name": "parentCollectionEdition",
+          "writable": true
+        },
+        {
+          "name": "sysvarInstructions"
+        },
+        {
+          "name": "mplProgram"
+        },
+        {
+          "name": "associatedTokenProgram"
+        },
+        {
+          "name": "tokenProgram"
+        },
+        {
+          "name": "systemProgram"
+        }
+      ],
+      "args": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "symbol",
+          "type": "string"
+        },
+        {
+          "name": "uri",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "initializeSolStorageV0",
+      "discriminator": [
+        20,
+        26,
+        34,
+        233,
+        185,
+        171,
+        12,
+        98
+      ],
       "accounts": [
         {
           "name": "payer",
-          "isMut": true,
-          "isSigner": true
+          "writable": true,
+          "signer": true
         },
         {
-          "name": "curve",
-          "isMut": true,
-          "isSigner": false
+          "name": "state",
+          "writable": true
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
+          "name": "solStorage"
         },
         {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
+          "name": "wrappedSolMint"
+        },
+        {
+          "name": "mintAuthority"
+        },
+        {
+          "name": "tokenProgram"
+        },
+        {
+          "name": "systemProgram"
+        },
+        {
+          "name": "rent"
         }
       ],
       "args": [
         {
           "name": "args",
           "type": {
-            "defined": "CreateCurveV0Args"
+            "defined": {
+              "name": "initializeSolStorageV0Args"
+            }
           }
         }
       ]
     },
     {
       "name": "initializeTokenBondingV0",
+      "discriminator": [
+        4,
+        205,
+        255,
+        32,
+        185,
+        121,
+        134,
+        61
+      ],
       "accounts": [
         {
           "name": "payer",
-          "isMut": true,
-          "isSigner": true
+          "writable": true,
+          "signer": true
         },
         {
-          "name": "curve",
-          "isMut": false,
-          "isSigner": false
+          "name": "curve"
         },
         {
           "name": "tokenBonding",
-          "isMut": true,
-          "isSigner": false
+          "writable": true
         },
         {
-          "name": "baseMint",
-          "isMut": false,
-          "isSigner": false
+          "name": "baseMint"
         },
         {
-          "name": "targetMint",
-          "isMut": false,
-          "isSigner": false
+          "name": "targetMint"
         },
         {
-          "name": "baseStorage",
-          "isMut": false,
-          "isSigner": false
+          "name": "baseStorage"
         },
         {
-          "name": "buyBaseRoyalties",
-          "isMut": false,
-          "isSigner": false
+          "name": "buyBaseRoyalties"
         },
         {
-          "name": "buyTargetRoyalties",
-          "isMut": false,
-          "isSigner": false
+          "name": "buyTargetRoyalties"
         },
         {
-          "name": "sellBaseRoyalties",
-          "isMut": false,
-          "isSigner": false
+          "name": "sellBaseRoyalties"
         },
         {
-          "name": "sellTargetRoyalties",
-          "isMut": false,
-          "isSigner": false
+          "name": "sellTargetRoyalties"
         },
         {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
+          "name": "tokenProgram"
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
+          "name": "systemProgram"
         },
         {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
+          "name": "rent"
         },
         {
-          "name": "clock",
-          "isMut": false,
-          "isSigner": false
+          "name": "clock"
         }
       ],
       "args": [
         {
           "name": "args",
           "type": {
-            "defined": "InitializeTokenBondingV0Args"
+            "defined": {
+              "name": "initializeTokenBondingV0Args"
+            }
           }
         }
       ]
     },
     {
-      "name": "closeTokenBondingV0",
+      "name": "mintActivationToken",
+      "discriminator": [
+        234,
+        158,
+        56,
+        192,
+        194,
+        164,
+        9,
+        244
+      ],
       "accounts": [
         {
-          "name": "refund",
-          "isMut": true,
-          "isSigner": false
+          "name": "minter",
+          "writable": true,
+          "signer": true
         },
         {
-          "name": "tokenBonding",
-          "isMut": true,
-          "isSigner": false
+          "name": "minterProfileAta",
+          "writable": true
         },
         {
-          "name": "generalAuthority",
-          "isMut": false,
-          "isSigner": true
+          "name": "receiverAta",
+          "writable": true
         },
         {
-          "name": "targetMint",
-          "isMut": true,
-          "isSigner": false
+          "name": "mainState",
+          "writable": true
         },
         {
-          "name": "baseStorage",
-          "isMut": true,
-          "isSigner": false
+          "name": "activationToken",
+          "writable": true
         },
         {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
+          "name": "activationTokenState",
+          "writable": true
+        },
+        {
+          "name": "profile"
+        },
+        {
+          "name": "profileState",
+          "writable": true
+        },
+        {
+          "name": "tokenProgram"
+        },
+        {
+          "name": "associatedTokenProgram"
+        },
+        {
+          "name": "systemProgram"
+        },
+        {
+          "name": "parentProfile"
+        },
+        {
+          "name": "grandParentProfile"
+        },
+        {
+          "name": "greatGrandParentProfile"
+        },
+        {
+          "name": "ggreateGrandParentProfile"
+        },
+        {
+          "name": "genesisProfile"
+        },
+        {
+          "name": "parentProfileState",
+          "writable": true
+        },
+        {
+          "name": "oposToken"
+        },
+        {
+          "name": "currentParentProfileHolderAta"
+        },
+        {
+          "name": "currentGrandParentProfileHolderAta"
+        },
+        {
+          "name": "currentGreatGrandParentProfileHolderAta"
+        },
+        {
+          "name": "currentGgreatGrandParentProfileHolderAta"
+        },
+        {
+          "name": "currentGenesisProfileHolderAta"
+        },
+        {
+          "name": "currentParentProfileHolder"
+        },
+        {
+          "name": "currentGrandParentProfileHolder"
+        },
+        {
+          "name": "currentGreatGrandParentProfileHolder"
+        },
+        {
+          "name": "currentGgreatGrandParentProfileHolder"
+        },
+        {
+          "name": "currentGenesisProfileHolder"
+        },
+        {
+          "name": "userOposAta",
+          "writable": true
+        },
+        {
+          "name": "parentProfileHolderOposAta",
+          "writable": true
+        },
+        {
+          "name": "grandParentProfileHolderOposAta",
+          "writable": true
+        },
+        {
+          "name": "greatGrandParentProfileHolderOposAta",
+          "writable": true
+        },
+        {
+          "name": "ggreatGrandParentProfileHolderOposAta",
+          "writable": true
+        },
+        {
+          "name": "genesisProfileHolderOposAta",
+          "writable": true
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "mintGenesisPass",
+      "discriminator": [
+        14,
+        146,
+        113,
+        105,
+        81,
+        191,
+        143,
+        226
+      ],
+      "accounts": [
+        {
+          "name": "user",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mplProgram"
+        },
+        {
+          "name": "tokenProgram"
+        },
+        {
+          "name": "associatedTokenProgram"
+        },
+        {
+          "name": "systemProgram"
+        },
+        {
+          "name": "profile",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mainState",
+          "writable": true
+        },
+        {
+          "name": "parentMainState",
+          "writable": true
+        },
+        {
+          "name": "userProfileAta",
+          "writable": true
+        },
+        {
+          "name": "profileState",
+          "writable": true
+        },
+        {
+          "name": "profileMetadata",
+          "writable": true
+        },
+        {
+          "name": "profileEdition",
+          "writable": true
+        },
+        {
+          "name": "collection",
+          "writable": true
+        },
+        {
+          "name": "collectionState",
+          "writable": true
+        },
+        {
+          "name": "collectionMetadata",
+          "writable": true
+        },
+        {
+          "name": "collectionEdition",
+          "writable": true
+        },
+        {
+          "name": "sysvarInstructions"
+        }
+      ],
+      "args": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "symbol",
+          "type": "string"
+        },
+        {
+          "name": "uriHash",
+          "type": "string"
+        },
+        {
+          "name": "input",
+          "type": {
+            "defined": {
+              "name": "mainStateInput"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "mintGenesisProfile",
+      "discriminator": [
+        213,
+        67,
+        157,
+        90,
+        201,
+        241,
+        157,
+        246
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mainState",
+          "writable": true
+        },
+        {
+          "name": "profile",
+          "writable": true
+        },
+        {
+          "name": "adminAta",
+          "writable": true
+        },
+        {
+          "name": "profileState",
+          "writable": true
+        },
+        {
+          "name": "profileMetadata",
+          "writable": true
+        },
+        {
+          "name": "profileEdition",
+          "writable": true
+        },
+        {
+          "name": "collection",
+          "writable": true
+        },
+        {
+          "name": "collectionState",
+          "writable": true
+        },
+        {
+          "name": "collectionMetadata",
+          "writable": true
+        },
+        {
+          "name": "collectionEdition",
+          "writable": true
+        },
+        {
+          "name": "collectionAuthorityRecord",
+          "writable": true
+        },
+        {
+          "name": "subCollectionAuthorityRecord",
+          "writable": true
+        },
+        {
+          "name": "sysvarInstructions"
+        },
+        {
+          "name": "mplProgram"
+        },
+        {
+          "name": "tokenProgram"
+        },
+        {
+          "name": "associatedTokenProgram"
+        },
+        {
+          "name": "systemProgram"
+        }
+      ],
+      "args": [
+        {
+          "name": "input",
+          "type": {
+            "defined": {
+              "name": "mintProfileByAdminInput"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "mintPassByAt",
+      "discriminator": [
+        155,
+        164,
+        136,
+        144,
+        190,
+        184,
+        210,
+        221
+      ],
+      "accounts": [
+        {
+          "name": "user",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mplProgram"
+        },
+        {
+          "name": "tokenProgram"
+        },
+        {
+          "name": "associatedTokenProgram"
+        },
+        {
+          "name": "systemProgram"
+        },
+        {
+          "name": "oposToken"
+        },
+        {
+          "name": "userActivationTokenAta",
+          "writable": true
+        },
+        {
+          "name": "project"
+        },
+        {
+          "name": "mainState",
+          "writable": true
+        },
+        {
+          "name": "parentMainState",
+          "writable": true
+        },
+        {
+          "name": "activationToken",
+          "writable": true
+        },
+        {
+          "name": "profile",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "userProfileAta",
+          "writable": true
+        },
+        {
+          "name": "profileState",
+          "writable": true
+        },
+        {
+          "name": "profileMetadata",
+          "writable": true
+        },
+        {
+          "name": "profileEdition",
+          "writable": true
+        },
+        {
+          "name": "parentProfileState",
+          "writable": true
+        },
+        {
+          "name": "collection",
+          "writable": true
+        },
+        {
+          "name": "collectionMetadata",
+          "writable": true
+        },
+        {
+          "name": "collectionEdition",
+          "writable": true
+        },
+        {
+          "name": "sysvarInstructions"
+        },
+        {
+          "name": "parentProfile"
+        }
+      ],
+      "args": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "symbol",
+          "type": "string"
+        },
+        {
+          "name": "uriHash",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "mintProfileByAt",
+      "discriminator": [
+        100,
+        237,
+        109,
+        44,
+        36,
+        6,
+        29,
+        147
+      ],
+      "accounts": [
+        {
+          "name": "user",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mplProgram"
+        },
+        {
+          "name": "tokenProgram"
+        },
+        {
+          "name": "associatedTokenProgram"
+        },
+        {
+          "name": "systemProgram"
+        },
+        {
+          "name": "oposToken"
+        },
+        {
+          "name": "userActivationTokenAta",
+          "writable": true
+        },
+        {
+          "name": "mainState",
+          "writable": true
+        },
+        {
+          "name": "activationToken",
+          "writable": true
+        },
+        {
+          "name": "profile",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "userProfileAta",
+          "writable": true
+        },
+        {
+          "name": "profileState",
+          "writable": true
+        },
+        {
+          "name": "profileMetadata",
+          "writable": true
+        },
+        {
+          "name": "profileEdition",
+          "writable": true
+        },
+        {
+          "name": "parentProfileState",
+          "writable": true
+        },
+        {
+          "name": "collection",
+          "writable": true
+        },
+        {
+          "name": "collectionMetadata",
+          "writable": true
+        },
+        {
+          "name": "collectionEdition",
+          "writable": true
+        },
+        {
+          "name": "sysvarInstructions"
+        },
+        {
+          "name": "parentProfile"
+        }
+      ],
+      "args": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "symbol",
+          "type": "string"
+        },
+        {
+          "name": "uriHash",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "resetMain",
+      "discriminator": [
+        114,
+        169,
+        116,
+        115,
+        81,
+        124,
+        80,
+        201
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mainState",
+          "writable": true
+        },
+        {
+          "name": "systemProgram"
         }
       ],
       "args": []
     },
     {
-      "name": "transferReservesV0",
+      "name": "sellNativeV0",
+      "discriminator": [
+        29,
+        129,
+        234,
+        157,
+        18,
+        252,
+        113,
+        179
+      ],
       "accounts": [
         {
           "name": "common",
           "accounts": [
             {
               "name": "tokenBonding",
-              "isMut": true,
-              "isSigner": false
+              "writable": true
             },
             {
-              "name": "reserveAuthority",
-              "isMut": false,
-              "isSigner": true
+              "name": "curve"
             },
             {
-              "name": "baseMint",
-              "isMut": false,
-              "isSigner": false
+              "name": "baseMint"
+            },
+            {
+              "name": "targetMint",
+              "writable": true
             },
             {
               "name": "baseStorage",
-              "isMut": true,
-              "isSigner": false
+              "writable": true
             },
             {
-              "name": "tokenProgram",
-              "isMut": false,
-              "isSigner": false
+              "name": "sellBaseRoyalties",
+              "writable": true
+            },
+            {
+              "name": "source",
+              "writable": true
+            },
+            {
+              "name": "sourceAuthority",
+              "signer": true
+            },
+            {
+              "name": "sellTargetRoyalties",
+              "writable": true
+            },
+            {
+              "name": "tokenProgram"
+            },
+            {
+              "name": "clock"
             }
           ]
         },
         {
           "name": "destination",
-          "isMut": true,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": "TransferReservesV0Args"
-          }
-        }
-      ]
-    },
-    {
-      "name": "transferReservesNativeV0",
-      "accounts": [
-        {
-          "name": "common",
-          "accounts": [
-            {
-              "name": "tokenBonding",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "reserveAuthority",
-              "isMut": false,
-              "isSigner": true
-            },
-            {
-              "name": "baseMint",
-              "isMut": false,
-              "isSigner": false
-            },
-            {
-              "name": "baseStorage",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "tokenProgram",
-              "isMut": false,
-              "isSigner": false
-            }
-          ]
+          "writable": true
         },
         {
-          "name": "destination",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "state",
-          "isMut": false,
-          "isSigner": false
+          "name": "state"
         },
         {
           "name": "wrappedSolMint",
-          "isMut": true,
-          "isSigner": false
+          "writable": true
         },
         {
-          "name": "mintAuthority",
-          "isMut": false,
-          "isSigner": false
+          "name": "mintAuthority"
         },
         {
           "name": "solStorage",
-          "isMut": true,
-          "isSigner": false
+          "writable": true
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
+          "name": "systemProgram"
         }
       ],
       "args": [
         {
           "name": "args",
           "type": {
-            "defined": "TransferReservesV0Args"
-          }
-        }
-      ]
-    },
-    {
-      "name": "updateReserveAuthorityV0",
-      "accounts": [
-        {
-          "name": "tokenBonding",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "reserveAuthority",
-          "isMut": false,
-          "isSigner": true
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": "UpdateReserveAuthorityV0Args"
-          }
-        }
-      ]
-    },
-    {
-      "name": "updateCurveV0",
-      "accounts": [
-        {
-          "name": "tokenBonding",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "curveAuthority",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "curve",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": "UpdateCurveV0Args"
-          }
-        }
-      ]
-    },
-    {
-      "name": "updateTokenBondingV0",
-      "accounts": [
-        {
-          "name": "tokenBonding",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "generalAuthority",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "baseMint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "targetMint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "buyBaseRoyalties",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "buyTargetRoyalties",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "sellBaseRoyalties",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "sellTargetRoyalties",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": "UpdateTokenBondingV0Args"
-          }
-        }
-      ]
-    },
-    {
-      "name": "buyV1",
-      "accounts": [
-        {
-          "name": "common",
-          "accounts": [
-            {
-              "name": "tokenBonding",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "curve",
-              "isMut": false,
-              "isSigner": false
-            },
-            {
-              "name": "baseMint",
-              "isMut": false,
-              "isSigner": false
-            },
-            {
-              "name": "targetMint",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "baseStorage",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "buyBaseRoyalties",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "destination",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "buyTargetRoyalties",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "tokenProgram",
-              "isMut": false,
-              "isSigner": false
-            },
-            {
-              "name": "clock",
-              "isMut": false,
-              "isSigner": false
+            "defined": {
+              "name": "sellV0Args"
             }
-          ]
-        },
-        {
-          "name": "state",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "source",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "sourceAuthority",
-          "isMut": false,
-          "isSigner": true
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": "BuyV0Args"
-          }
-        }
-      ]
-    },
-    {
-      "name": "buyNativeV0",
-      "accounts": [
-        {
-          "name": "common",
-          "accounts": [
-            {
-              "name": "tokenBonding",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "curve",
-              "isMut": false,
-              "isSigner": false
-            },
-            {
-              "name": "baseMint",
-              "isMut": false,
-              "isSigner": false
-            },
-            {
-              "name": "targetMint",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "baseStorage",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "buyBaseRoyalties",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "destination",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "buyTargetRoyalties",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "tokenProgram",
-              "isMut": false,
-              "isSigner": false
-            },
-            {
-              "name": "clock",
-              "isMut": false,
-              "isSigner": false
-            }
-          ]
-        },
-        {
-          "name": "source",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "state",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "wrappedSolMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mintAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "solStorage",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": "BuyV0Args"
           }
         }
       ]
     },
     {
       "name": "sellV1",
+      "discriminator": [
+        19,
+        129,
+        236,
+        31,
+        99,
+        212,
+        19,
+        208
+      ],
       "accounts": [
         {
           "name": "common",
           "accounts": [
             {
               "name": "tokenBonding",
-              "isMut": true,
-              "isSigner": false
+              "writable": true
             },
             {
-              "name": "curve",
-              "isMut": false,
-              "isSigner": false
+              "name": "curve"
             },
             {
-              "name": "baseMint",
-              "isMut": false,
-              "isSigner": false
+              "name": "baseMint"
             },
             {
               "name": "targetMint",
-              "isMut": true,
-              "isSigner": false
+              "writable": true
             },
             {
               "name": "baseStorage",
-              "isMut": true,
-              "isSigner": false
+              "writable": true
             },
             {
               "name": "sellBaseRoyalties",
-              "isMut": true,
-              "isSigner": false
+              "writable": true
             },
             {
               "name": "source",
-              "isMut": true,
-              "isSigner": false
+              "writable": true
             },
             {
               "name": "sourceAuthority",
-              "isMut": false,
-              "isSigner": true
+              "signer": true
             },
             {
               "name": "sellTargetRoyalties",
-              "isMut": true,
-              "isSigner": false
+              "writable": true
             },
             {
-              "name": "tokenProgram",
-              "isMut": false,
-              "isSigner": false
+              "name": "tokenProgram"
             },
             {
-              "name": "clock",
-              "isMut": false,
-              "isSigner": false
+              "name": "clock"
             }
           ]
         },
         {
-          "name": "state",
-          "isMut": false,
-          "isSigner": false
+          "name": "state"
         },
         {
           "name": "destination",
-          "isMut": true,
-          "isSigner": false
+          "writable": true
         }
       ],
       "args": [
         {
           "name": "args",
           "type": {
-            "defined": "SellV0Args"
+            "defined": {
+              "name": "sellV0Args"
+            }
           }
         }
       ]
     },
     {
-      "name": "sellNativeV0",
+      "name": "sellWrappedSolV0",
+      "discriminator": [
+        121,
+        226,
+        81,
+        179,
+        229,
+        22,
+        180,
+        12
+      ],
       "accounts": [
         {
-          "name": "common",
-          "accounts": [
-            {
-              "name": "tokenBonding",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "curve",
-              "isMut": false,
-              "isSigner": false
-            },
-            {
-              "name": "baseMint",
-              "isMut": false,
-              "isSigner": false
-            },
-            {
-              "name": "targetMint",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "baseStorage",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "sellBaseRoyalties",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "source",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "sourceAuthority",
-              "isMut": false,
-              "isSigner": true
-            },
-            {
-              "name": "sellTargetRoyalties",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "tokenProgram",
-              "isMut": false,
-              "isSigner": false
-            },
-            {
-              "name": "clock",
-              "isMut": false,
-              "isSigner": false
-            }
-          ]
-        },
-        {
-          "name": "destination",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "state",
-          "isMut": false,
-          "isSigner": false
+          "name": "state"
         },
         {
           "name": "wrappedSolMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mintAuthority",
-          "isMut": false,
-          "isSigner": false
+          "writable": true
         },
         {
           "name": "solStorage",
-          "isMut": true,
-          "isSigner": false
+          "writable": true
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
+          "name": "source",
+          "writable": true
+        },
+        {
+          "name": "owner",
+          "signer": true
+        },
+        {
+          "name": "destination",
+          "writable": true
+        },
+        {
+          "name": "tokenProgram"
+        },
+        {
+          "name": "systemProgram"
         }
       ],
       "args": [
         {
           "name": "args",
           "type": {
-            "defined": "SellV0Args"
+            "defined": {
+              "name": "sellWrappedSolV0Args"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "setCommonLut",
+      "discriminator": [
+        246,
+        61,
+        227,
+        31,
+        125,
+        134,
+        108,
+        56
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mainState",
+          "writable": true
+        }
+      ],
+      "args": [
+        {
+          "name": "lut",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "transferReservesNativeV0",
+      "discriminator": [
+        182,
+        139,
+        99,
+        4,
+        205,
+        169,
+        172,
+        224
+      ],
+      "accounts": [
+        {
+          "name": "common",
+          "accounts": [
+            {
+              "name": "tokenBonding",
+              "writable": true
+            },
+            {
+              "name": "reserveAuthority",
+              "signer": true
+            },
+            {
+              "name": "baseMint"
+            },
+            {
+              "name": "baseStorage",
+              "writable": true
+            },
+            {
+              "name": "tokenProgram"
+            }
+          ]
+        },
+        {
+          "name": "destination",
+          "writable": true
+        },
+        {
+          "name": "state"
+        },
+        {
+          "name": "wrappedSolMint",
+          "writable": true
+        },
+        {
+          "name": "mintAuthority"
+        },
+        {
+          "name": "solStorage",
+          "writable": true
+        },
+        {
+          "name": "systemProgram"
+        }
+      ],
+      "args": [
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "transferReservesV0Args"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "transferReservesV0",
+      "discriminator": [
+        7,
+        142,
+        255,
+        166,
+        164,
+        247,
+        159,
+        157
+      ],
+      "accounts": [
+        {
+          "name": "common",
+          "accounts": [
+            {
+              "name": "tokenBonding",
+              "writable": true
+            },
+            {
+              "name": "reserveAuthority",
+              "signer": true
+            },
+            {
+              "name": "baseMint"
+            },
+            {
+              "name": "baseStorage",
+              "writable": true
+            },
+            {
+              "name": "tokenProgram"
+            }
+          ]
+        },
+        {
+          "name": "destination",
+          "writable": true
+        }
+      ],
+      "args": [
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "transferReservesV0Args"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "updateCurveV0",
+      "discriminator": [
+        71,
+        14,
+        111,
+        54,
+        161,
+        23,
+        97,
+        85
+      ],
+      "accounts": [
+        {
+          "name": "tokenBonding",
+          "writable": true
+        },
+        {
+          "name": "curveAuthority",
+          "signer": true
+        },
+        {
+          "name": "curve"
+        }
+      ],
+      "args": [
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "updateCurveV0Args"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "updateMainState",
+      "discriminator": [
+        169,
+        145,
+        9,
+        15,
+        95,
+        4,
+        126,
+        209
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mainState",
+          "writable": true
+        }
+      ],
+      "args": [
+        {
+          "name": "input",
+          "type": {
+            "defined": {
+              "name": "mainStateInput"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "updateMainStateOwner",
+      "discriminator": [
+        218,
+        24,
+        137,
+        215,
+        28,
+        41,
+        248,
+        42
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mainState",
+          "writable": true
+        }
+      ],
+      "args": [
+        {
+          "name": "newOwner",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "updateReserveAuthorityV0",
+      "discriminator": [
+        140,
+        105,
+        17,
+        234,
+        229,
+        79,
+        133,
+        150
+      ],
+      "accounts": [
+        {
+          "name": "tokenBonding",
+          "writable": true
+        },
+        {
+          "name": "reserveAuthority",
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "updateReserveAuthorityV0Args"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "updateTokenBondingV0",
+      "discriminator": [
+        10,
+        181,
+        83,
+        74,
+        124,
+        211,
+        123,
+        48
+      ],
+      "accounts": [
+        {
+          "name": "tokenBonding",
+          "writable": true
+        },
+        {
+          "name": "generalAuthority",
+          "signer": true
+        },
+        {
+          "name": "baseMint"
+        },
+        {
+          "name": "targetMint"
+        },
+        {
+          "name": "buyBaseRoyalties"
+        },
+        {
+          "name": "buyTargetRoyalties"
+        },
+        {
+          "name": "sellBaseRoyalties"
+        },
+        {
+          "name": "sellTargetRoyalties"
+        }
+      ],
+      "args": [
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "updateTokenBondingV0Args"
+            }
           }
         }
       ]
@@ -2448,17 +1981,500 @@ export type Mmoshforge = {
   ],
   "accounts": [
     {
+      "name": "activationTokenState",
+      "discriminator": [
+        142,
+        115,
+        218,
+        48,
+        17,
+        217,
+        56,
+        190
+      ]
+    },
+    {
+      "name": "collectionState",
+      "discriminator": [
+        228,
+        135,
+        148,
+        4,
+        244,
+        41,
+        118,
+        165
+      ]
+    },
+    {
+      "name": "curveV0",
+      "discriminator": [
+        77,
+        25,
+        232,
+        252,
+        138,
+        96,
+        1,
+        172
+      ]
+    },
+    {
+      "name": "mainState",
+      "discriminator": [
+        153,
+        79,
+        81,
+        109,
+        146,
+        220,
+        36,
+        182
+      ]
+    },
+    {
+      "name": "profileState",
+      "discriminator": [
+        189,
+        32,
+        28,
+        31,
+        131,
+        153,
+        194,
+        253
+      ]
+    },
+    {
+      "name": "programStateV0",
+      "discriminator": [
+        102,
+        65,
+        191,
+        196,
+        12,
+        36,
+        248,
+        123
+      ]
+    },
+    {
+      "name": "tokenBondingV0",
+      "discriminator": [
+        83,
+        36,
+        213,
+        250,
+        189,
+        200,
+        154,
+        127
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "noMintAuthority",
+      "msg": "Target mint must have an authority"
+    },
+    {
+      "code": 6001,
+      "name": "invalidMintAuthority",
+      "msg": "Target mint must have an authority that is a pda of this program"
+    },
+    {
+      "code": 6002,
+      "name": "invalidBaseStorageAuthority",
+      "msg": "Invalid base storage authority pda or seed did not match canonical seed for base storage authority"
+    },
+    {
+      "code": 6003,
+      "name": "noAuthority",
+      "msg": "Token bonding does not have an authority"
+    },
+    {
+      "code": 6004,
+      "name": "arithmeticError",
+      "msg": "Error in precise number arithmetic"
+    },
+    {
+      "code": 6005,
+      "name": "priceTooHigh",
+      "msg": "Buy price was higher than the maximum buy price. Try increasing max_price or slippage configuration"
+    },
+    {
+      "code": 6006,
+      "name": "priceTooLow",
+      "msg": "Sell price was lower than the minimum sell price. Try decreasing min_price or increasing slippage configuration"
+    },
+    {
+      "code": 6007,
+      "name": "mintSupplyTooLow",
+      "msg": "Cannot sell more than the target mint currently has in supply"
+    },
+    {
+      "code": 6008,
+      "name": "sellDisabled",
+      "msg": "Sell is not enabled on this bonding curve"
+    },
+    {
+      "code": 6009,
+      "name": "notLiveYet",
+      "msg": "This bonding curve is not live yet"
+    },
+    {
+      "code": 6010,
+      "name": "passedMintCap",
+      "msg": "Passed the mint cap"
+    },
+    {
+      "code": 6011,
+      "name": "overPurchaseCap",
+      "msg": "Cannot purchase that many tokens because of purchase cap"
+    },
+    {
+      "code": 6012,
+      "name": "buyFrozen",
+      "msg": "Buy is frozen on this bonding curve, purchases not allowed"
+    },
+    {
+      "code": 6013,
+      "name": "wrappedSolNotAllowed",
+      "msg": "Use token bonding wrapped sol via buy_wrapped_sol, sell_wrapped_sol commands. We may one day provide liquid staking rewards on this stored sol."
+    },
+    {
+      "code": 6014,
+      "name": "invalidCurve",
+      "msg": "The provided curve is invalid"
+    },
+    {
+      "code": 6015,
+      "name": "invalidMint",
+      "msg": "An account was provided that did not have the correct mint"
+    },
+    {
+      "code": 6016,
+      "name": "ignoreExternalV1Only",
+      "msg": "Ignoring external changes is only supported on v1 of buy and sell endpoints. Please upgrade your client"
+    },
+    {
+      "code": 6017,
+      "name": "invalidPad",
+      "msg": "Cannot pad token bonding without ignoring external reserve and supply changes. This is an advanced feature, incorrect use could lead to insufficient resreves to cover sells"
+    }
+  ],
+  "types": [
+    {
+      "name": "activationTokenState",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "parentProfile",
+            "type": "pubkey"
+          },
+          {
+            "name": "creator",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "buyTargetAmountV0Args",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "targetAmount",
+            "type": "u64"
+          },
+          {
+            "name": "maximumPrice",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "buyV0Args",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "buyWithBase",
+            "type": {
+              "option": {
+                "defined": {
+                  "name": "buyWithBaseV0Args"
+                }
+              }
+            }
+          },
+          {
+            "name": "buyTargetAmount",
+            "type": {
+              "option": {
+                "defined": {
+                  "name": "buyTargetAmountV0Args"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "buyWithBaseV0Args",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "baseAmount",
+            "type": "u64"
+          },
+          {
+            "name": "minimumTargetAmount",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "buyWrappedSolV0Args",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "amount",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "collectionState",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "genesisProfile",
+            "type": "pubkey"
+          },
+          {
+            "name": "collectionId",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "createCurveV0Args",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "definition",
+            "type": {
+              "defined": {
+                "name": "piecewiseCurve"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "curveV0",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "definition",
+            "type": {
+              "defined": {
+                "name": "piecewiseCurve"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "initializeSolStorageV0Args",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mintAuthorityBumpSeed",
+            "type": "u8"
+          },
+          {
+            "name": "solStorageBumpSeed",
+            "type": "u8"
+          },
+          {
+            "name": "bumpSeed",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "initializeTokenBondingV0Args",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "buyBaseRoyaltyPercentage",
+            "docs": [
+              "Percentage of purchases that go to the founder",
+              "Percentage Value is (founder_reward_percentage / u32.MAX_VALUE) * 100"
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "buyTargetRoyaltyPercentage",
+            "type": "u32"
+          },
+          {
+            "name": "sellBaseRoyaltyPercentage",
+            "type": "u32"
+          },
+          {
+            "name": "sellTargetRoyaltyPercentage",
+            "type": "u32"
+          },
+          {
+            "name": "goLiveUnixTime",
+            "type": "i64"
+          },
+          {
+            "name": "freezeBuyUnixTime",
+            "type": {
+              "option": "i64"
+            }
+          },
+          {
+            "name": "mintCap",
+            "type": {
+              "option": "u64"
+            }
+          },
+          {
+            "name": "purchaseCap",
+            "type": {
+              "option": "u64"
+            }
+          },
+          {
+            "name": "generalAuthority",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "reserveAuthority",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "curveAuthority",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "buyFrozen",
+            "type": "bool"
+          },
+          {
+            "name": "index",
+            "type": "u16"
+          },
+          {
+            "name": "bumpSeed",
+            "type": "u8"
+          },
+          {
+            "name": "sellFrozen",
+            "type": "bool"
+          },
+          {
+            "name": "ignoreExternalReserveChanges",
+            "docs": [
+              "Whether or not to ignore changes to base storage and target supply outside of the curve"
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "ignoreExternalSupplyChanges",
+            "type": "bool"
+          },
+          {
+            "name": "initialReservesPad",
+            "docs": [
+              "* Allow starting a curve from a later reserve/supply ratio of ignor reserve and supply changes.\n   *\n   * This allows for things like the LBC where you don't need to provide any initial liquidity"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "initialSupplyPad",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "lineageInfo",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "creator",
+            "type": "pubkey"
+          },
+          {
+            "name": "parent",
+            "type": "pubkey"
+          },
+          {
+            "name": "grandParent",
+            "type": "pubkey"
+          },
+          {
+            "name": "greatGrandParent",
+            "type": "pubkey"
+          },
+          {
+            "name": "ggreatGrandParent",
+            "type": "pubkey"
+          },
+          {
+            "name": "generation",
+            "type": "u64"
+          },
+          {
+            "name": "totalChild",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
       "name": "mainState",
       "type": {
         "kind": "struct",
         "fields": [
           {
             "name": "owner",
-            "type": "publicKey"
+            "type": "pubkey"
           },
           {
             "name": "oposToken",
-            "type": "publicKey"
+            "type": "pubkey"
           },
           {
             "name": "profileMintingCost",
@@ -2471,13 +2487,17 @@ export type Mmoshforge = {
           {
             "name": "mintingCostDistribution",
             "type": {
-              "defined": "MintingCostDistribution"
+              "defined": {
+                "name": "mintingCostDistribution"
+              }
             }
           },
           {
             "name": "tradingPriceDistribution",
             "type": {
-              "defined": "TradingPriceDistribution"
+              "defined": {
+                "name": "tradingPriceDistribution"
+              }
             }
           },
           {
@@ -2494,47 +2514,226 @@ export type Mmoshforge = {
           },
           {
             "name": "profileCollection",
-            "type": "publicKey"
+            "type": "pubkey"
           },
           {
             "name": "genesisProfile",
-            "type": "publicKey"
+            "type": "pubkey"
           },
           {
             "name": "commonLut",
-            "type": "publicKey"
+            "type": "pubkey"
           }
         ]
       }
     },
     {
-      "name": "activationTokenState",
+      "name": "mainStateInput",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "parentProfile",
-            "type": "publicKey"
+            "name": "profileMintingCost",
+            "type": "u64"
           },
           {
-            "name": "creator",
-            "type": "publicKey"
+            "name": "invitationMintingCost",
+            "type": "u64"
+          },
+          {
+            "name": "oposToken",
+            "type": "pubkey"
+          },
+          {
+            "name": "mintingCostDistribution",
+            "type": {
+              "defined": {
+                "name": "mintingCostDistribution"
+              }
+            }
+          },
+          {
+            "name": "tradingPriceDistribution",
+            "type": {
+              "defined": {
+                "name": "tradingPriceDistribution"
+              }
+            }
           }
         ]
       }
     },
     {
-      "name": "collectionState",
+      "name": "mintProfileByAdminInput",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "genesisProfile",
-            "type": "publicKey"
+            "name": "name",
+            "type": "string"
           },
           {
-            "name": "collectionId",
-            "type": "publicKey"
+            "name": "symbol",
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "type": "string"
+          },
+          {
+            "name": "lineage",
+            "type": {
+              "defined": {
+                "name": "lineageInfo"
+              }
+            }
+          },
+          {
+            "name": "parentMint",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "mintingCostDistribution",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "parent",
+            "type": "u16"
+          },
+          {
+            "name": "grandParent",
+            "type": "u16"
+          },
+          {
+            "name": "greatGrandParent",
+            "type": "u16"
+          },
+          {
+            "name": "ggreatGrandParent",
+            "type": "u16"
+          },
+          {
+            "name": "genesis",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "piecewiseCurve",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "timeV0",
+            "fields": [
+              {
+                "name": "curves",
+                "type": {
+                  "vec": {
+                    "defined": {
+                      "name": "timeCurveV0"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "primitiveCurve",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "exponentialCurveV0",
+            "fields": [
+              {
+                "name": "c",
+                "type": "u128"
+              },
+              {
+                "name": "b",
+                "type": "u128"
+              },
+              {
+                "name": "pow",
+                "type": "u8"
+              },
+              {
+                "name": "frac",
+                "type": "u8"
+              }
+            ]
+          },
+          {
+            "name": "timeDecayExponentialCurveV0",
+            "fields": [
+              {
+                "name": "c",
+                "type": "u128"
+              },
+              {
+                "name": "k1",
+                "type": "u128"
+              },
+              {
+                "name": "k0",
+                "type": "u128"
+              },
+              {
+                "name": "interval",
+                "type": "u32"
+              },
+              {
+                "name": "d",
+                "type": "u128"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "profileState",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "lineage",
+            "type": {
+              "defined": {
+                "name": "lineageInfo"
+              }
+            }
+          },
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "activationToken",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "totalMintedSft",
+            "type": "u64"
+          },
+          {
+            "name": "totalMintedOffers",
+            "type": "u64"
+          },
+          {
+            "name": "lut",
+            "type": "pubkey"
           }
         ]
       }
@@ -2546,11 +2745,11 @@ export type Mmoshforge = {
         "fields": [
           {
             "name": "wrappedSolMint",
-            "type": "publicKey"
+            "type": "pubkey"
           },
           {
             "name": "solStorage",
-            "type": "publicKey"
+            "type": "pubkey"
           },
           {
             "name": "mintAuthorityBumpSeed",
@@ -2568,14 +2767,72 @@ export type Mmoshforge = {
       }
     },
     {
-      "name": "curveV0",
+      "name": "sellV0Args",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "definition",
+            "name": "targetAmount",
+            "type": "u64"
+          },
+          {
+            "name": "minimumPrice",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "sellWrappedSolV0Args",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "all",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "timeCurveV0",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "offset",
+            "type": "i64"
+          },
+          {
+            "name": "curve",
             "type": {
-              "defined": "PiecewiseCurve"
+              "defined": {
+                "name": "primitiveCurve"
+              }
+            }
+          },
+          {
+            "name": "buyTransitionFees",
+            "type": {
+              "option": {
+                "defined": {
+                  "name": "transitionFeeV0"
+                }
+              }
+            }
+          },
+          {
+            "name": "sellTransitionFees",
+            "type": {
+              "option": {
+                "defined": {
+                  "name": "transitionFeeV0"
+                }
+              }
             }
           }
         ]
@@ -2588,49 +2845,49 @@ export type Mmoshforge = {
         "fields": [
           {
             "name": "baseMint",
-            "type": "publicKey"
+            "type": "pubkey"
           },
           {
             "name": "targetMint",
-            "type": "publicKey"
+            "type": "pubkey"
           },
           {
             "name": "generalAuthority",
             "type": {
-              "option": "publicKey"
+              "option": "pubkey"
             }
           },
           {
             "name": "reserveAuthority",
             "type": {
-              "option": "publicKey"
+              "option": "pubkey"
             }
           },
           {
             "name": "curveAuthority",
             "type": {
-              "option": "publicKey"
+              "option": "pubkey"
             }
           },
           {
             "name": "baseStorage",
-            "type": "publicKey"
+            "type": "pubkey"
           },
           {
             "name": "buyBaseRoyalties",
-            "type": "publicKey"
+            "type": "pubkey"
           },
           {
             "name": "buyTargetRoyalties",
-            "type": "publicKey"
+            "type": "pubkey"
           },
           {
             "name": "sellBaseRoyalties",
-            "type": "publicKey"
+            "type": "pubkey"
           },
           {
             "name": "sellTargetRoyalties",
-            "type": "publicKey"
+            "type": "pubkey"
           },
           {
             "name": "buyBaseRoyaltyPercentage",
@@ -2657,7 +2914,7 @@ export type Mmoshforge = {
             "docs": [
               "The bonding curve to use"
             ],
-            "type": "publicKey"
+            "type": "pubkey"
           },
           {
             "name": "mintCap",
@@ -2738,509 +2995,7 @@ export type Mmoshforge = {
       }
     },
     {
-      "name": "profileState",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "lineage",
-            "type": {
-              "defined": "LineageInfo"
-            }
-          },
-          {
-            "name": "mint",
-            "type": "publicKey"
-          },
-          {
-            "name": "activationToken",
-            "type": {
-              "option": "publicKey"
-            }
-          },
-          {
-            "name": "totalMintedSft",
-            "type": "u64"
-          },
-          {
-            "name": "totalMintedOffers",
-            "type": "u64"
-          },
-          {
-            "name": "lut",
-            "type": "publicKey"
-          }
-        ]
-      }
-    }
-  ],
-  "types": [
-    {
-      "name": "MainStateInput",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "profileMintingCost",
-            "type": "u64"
-          },
-          {
-            "name": "invitationMintingCost",
-            "type": "u64"
-          },
-          {
-            "name": "oposToken",
-            "type": "publicKey"
-          },
-          {
-            "name": "mintingCostDistribution",
-            "type": {
-              "defined": "MintingCostDistribution"
-            }
-          },
-          {
-            "name": "tradingPriceDistribution",
-            "type": {
-              "defined": "TradingPriceDistribution"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "BuyWithBaseV0Args",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "baseAmount",
-            "type": "u64"
-          },
-          {
-            "name": "minimumTargetAmount",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "BuyTargetAmountV0Args",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "targetAmount",
-            "type": "u64"
-          },
-          {
-            "name": "maximumPrice",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "BuyV0Args",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "buyWithBase",
-            "type": {
-              "option": {
-                "defined": "BuyWithBaseV0Args"
-              }
-            }
-          },
-          {
-            "name": "buyTargetAmount",
-            "type": {
-              "option": {
-                "defined": "BuyTargetAmountV0Args"
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "BuyWrappedSolV0Args",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "amount",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "CreateCurveV0Args",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "definition",
-            "type": {
-              "defined": "PiecewiseCurve"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "InitializeSolStorageV0Args",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "mintAuthorityBumpSeed",
-            "type": "u8"
-          },
-          {
-            "name": "solStorageBumpSeed",
-            "type": "u8"
-          },
-          {
-            "name": "bumpSeed",
-            "type": "u8"
-          }
-        ]
-      }
-    },
-    {
-      "name": "InitializeTokenBondingV0Args",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "buyBaseRoyaltyPercentage",
-            "docs": [
-              "Percentage of purchases that go to the founder",
-              "Percentage Value is (founder_reward_percentage / u32.MAX_VALUE) * 100"
-            ],
-            "type": "u32"
-          },
-          {
-            "name": "buyTargetRoyaltyPercentage",
-            "type": "u32"
-          },
-          {
-            "name": "sellBaseRoyaltyPercentage",
-            "type": "u32"
-          },
-          {
-            "name": "sellTargetRoyaltyPercentage",
-            "type": "u32"
-          },
-          {
-            "name": "goLiveUnixTime",
-            "type": "i64"
-          },
-          {
-            "name": "freezeBuyUnixTime",
-            "type": {
-              "option": "i64"
-            }
-          },
-          {
-            "name": "mintCap",
-            "type": {
-              "option": "u64"
-            }
-          },
-          {
-            "name": "purchaseCap",
-            "type": {
-              "option": "u64"
-            }
-          },
-          {
-            "name": "generalAuthority",
-            "type": {
-              "option": "publicKey"
-            }
-          },
-          {
-            "name": "reserveAuthority",
-            "type": {
-              "option": "publicKey"
-            }
-          },
-          {
-            "name": "curveAuthority",
-            "type": {
-              "option": "publicKey"
-            }
-          },
-          {
-            "name": "buyFrozen",
-            "type": "bool"
-          },
-          {
-            "name": "index",
-            "type": "u16"
-          },
-          {
-            "name": "bumpSeed",
-            "type": "u8"
-          },
-          {
-            "name": "sellFrozen",
-            "type": "bool"
-          },
-          {
-            "name": "ignoreExternalReserveChanges",
-            "docs": [
-              "Whether or not to ignore changes to base storage and target supply outside of the curve"
-            ],
-            "type": "bool"
-          },
-          {
-            "name": "ignoreExternalSupplyChanges",
-            "type": "bool"
-          },
-          {
-            "name": "initialReservesPad",
-            "docs": [
-              "* Allow starting a curve from a later reserve/supply ratio of ignor reserve and supply changes.\n   *\n   * This allows for things like the LBC where you don't need to provide any initial liquidity"
-            ],
-            "type": "u64"
-          },
-          {
-            "name": "initialSupplyPad",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "SellV0Args",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "targetAmount",
-            "type": "u64"
-          },
-          {
-            "name": "minimumPrice",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "SellWrappedSolV0Args",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "amount",
-            "type": "u64"
-          },
-          {
-            "name": "all",
-            "type": "bool"
-          }
-        ]
-      }
-    },
-    {
-      "name": "TransferReservesV0Args",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "amount",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "UpdateCurveV0Args",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "curveAuthority",
-            "type": {
-              "option": "publicKey"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "UpdateReserveAuthorityV0Args",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "newReserveAuthority",
-            "type": {
-              "option": "publicKey"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "UpdateTokenBondingV0Args",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "generalAuthority",
-            "type": {
-              "option": "publicKey"
-            }
-          },
-          {
-            "name": "buyBaseRoyaltyPercentage",
-            "docs": [
-              "Percentage of purchases that go to the founder",
-              "Percentage Value is (founder_reward_percentage / u32.MAX_VALUE) * 100"
-            ],
-            "type": "u32"
-          },
-          {
-            "name": "buyTargetRoyaltyPercentage",
-            "type": "u32"
-          },
-          {
-            "name": "sellBaseRoyaltyPercentage",
-            "type": "u32"
-          },
-          {
-            "name": "sellTargetRoyaltyPercentage",
-            "type": "u32"
-          },
-          {
-            "name": "buyFrozen",
-            "type": "bool"
-          }
-        ]
-      }
-    },
-    {
-      "name": "TimeCurveV0",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "offset",
-            "type": "i64"
-          },
-          {
-            "name": "curve",
-            "type": {
-              "defined": "PrimitiveCurve"
-            }
-          },
-          {
-            "name": "buyTransitionFees",
-            "type": {
-              "option": {
-                "defined": "TransitionFeeV0"
-              }
-            }
-          },
-          {
-            "name": "sellTransitionFees",
-            "type": {
-              "option": {
-                "defined": "TransitionFeeV0"
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "TransitionFeeV0",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "percentage",
-            "type": "u32"
-          },
-          {
-            "name": "interval",
-            "type": "u32"
-          }
-        ]
-      }
-    },
-    {
-      "name": "LineageInfo",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "creator",
-            "type": "publicKey"
-          },
-          {
-            "name": "parent",
-            "type": "publicKey"
-          },
-          {
-            "name": "grandParent",
-            "type": "publicKey"
-          },
-          {
-            "name": "greatGrandParent",
-            "type": "publicKey"
-          },
-          {
-            "name": "ggreatGrandParent",
-            "type": "publicKey"
-          },
-          {
-            "name": "generation",
-            "type": "u64"
-          },
-          {
-            "name": "totalChild",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "MintingCostDistribution",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "parent",
-            "type": "u16"
-          },
-          {
-            "name": "grandParent",
-            "type": "u16"
-          },
-          {
-            "name": "greatGrandParent",
-            "type": "u16"
-          },
-          {
-            "name": "ggreatGrandParent",
-            "type": "u16"
-          },
-          {
-            "name": "genesis",
-            "type": "u16"
-          }
-        ]
-      }
-    },
-    {
-      "name": "TradingPriceDistribution",
+      "name": "tradingPriceDistribution",
       "type": {
         "kind": "struct",
         "fields": [
@@ -3268,3160 +3023,7 @@ export type Mmoshforge = {
       }
     },
     {
-      "name": "MintProfileByAdminInput",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "name": "symbol",
-            "type": "string"
-          },
-          {
-            "name": "uri",
-            "type": "string"
-          },
-          {
-            "name": "lineage",
-            "type": {
-              "defined": "LineageInfo"
-            }
-          },
-          {
-            "name": "parentMint",
-            "type": "publicKey"
-          }
-        ]
-      }
-    },
-    {
-      "name": "MintPassByAtInput",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "name": "symbol",
-            "type": "string"
-          },
-          {
-            "name": "uriHash",
-            "type": "string"
-          }
-        ]
-      }
-    },
-    {
-      "name": "MintProfileByAtInput",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "name": "symbol",
-            "type": "string"
-          },
-          {
-            "name": "uriHash",
-            "type": "string"
-          }
-        ]
-      }
-    },
-    {
-      "name": "PrimitiveCurve",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "ExponentialCurveV0",
-            "fields": [
-              {
-                "name": "c",
-                "type": "u128"
-              },
-              {
-                "name": "b",
-                "type": "u128"
-              },
-              {
-                "name": "pow",
-                "type": "u8"
-              },
-              {
-                "name": "frac",
-                "type": "u8"
-              }
-            ]
-          },
-          {
-            "name": "TimeDecayExponentialCurveV0",
-            "fields": [
-              {
-                "name": "c",
-                "type": "u128"
-              },
-              {
-                "name": "k1",
-                "type": "u128"
-              },
-              {
-                "name": "k0",
-                "type": "u128"
-              },
-              {
-                "name": "interval",
-                "type": "u32"
-              },
-              {
-                "name": "d",
-                "type": "u128"
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "name": "PiecewiseCurve",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "TimeV0",
-            "fields": [
-              {
-                "name": "curves",
-                "type": {
-                  "vec": {
-                    "defined": "TimeCurveV0"
-                  }
-                }
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "name": "MyError",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "FirstError"
-          },
-          {
-            "name": "AlreadySet"
-          },
-          {
-            "name": "OnlyOwnerCanCall"
-          },
-          {
-            "name": "UnknownNft"
-          },
-          {
-            "name": "InvalidNftHolder"
-          },
-          {
-            "name": "GenesisNftAlreadyMinted"
-          },
-          {
-            "name": "ActivationTokenNotFound"
-          },
-          {
-            "name": "ActivationTokenAlreadyInitialize"
-          },
-          {
-            "name": "OnlyProfileHolderAllow"
-          },
-          {
-            "name": "NotEnoughTokenToMint"
-          },
-          {
-            "name": "ProfileIdMissMatch"
-          }
-        ]
-      }
-    },
-    {
-      "name": "InnerUint",
-      "type": {
-        "kind": "alias",
-        "value": "u128"
-      }
-    }
-  ],
-  "errors": [
-    {
-      "code": 6000,
-      "name": "NoMintAuthority",
-      "msg": "Target mint must have an authority"
-    },
-    {
-      "code": 6001,
-      "name": "InvalidMintAuthority",
-      "msg": "Target mint must have an authority that is a pda of this program"
-    },
-    {
-      "code": 6002,
-      "name": "InvalidBaseStorageAuthority",
-      "msg": "Invalid base storage authority pda or seed did not match canonical seed for base storage authority"
-    },
-    {
-      "code": 6003,
-      "name": "NoAuthority",
-      "msg": "Token bonding does not have an authority"
-    },
-    {
-      "code": 6004,
-      "name": "ArithmeticError",
-      "msg": "Error in precise number arithmetic"
-    },
-    {
-      "code": 6005,
-      "name": "PriceTooHigh",
-      "msg": "Buy price was higher than the maximum buy price. Try increasing max_price or slippage configuration"
-    },
-    {
-      "code": 6006,
-      "name": "PriceTooLow",
-      "msg": "Sell price was lower than the minimum sell price. Try decreasing min_price or increasing slippage configuration"
-    },
-    {
-      "code": 6007,
-      "name": "MintSupplyTooLow",
-      "msg": "Cannot sell more than the target mint currently has in supply"
-    },
-    {
-      "code": 6008,
-      "name": "SellDisabled",
-      "msg": "Sell is not enabled on this bonding curve"
-    },
-    {
-      "code": 6009,
-      "name": "NotLiveYet",
-      "msg": "This bonding curve is not live yet"
-    },
-    {
-      "code": 6010,
-      "name": "PassedMintCap",
-      "msg": "Passed the mint cap"
-    },
-    {
-      "code": 6011,
-      "name": "OverPurchaseCap",
-      "msg": "Cannot purchase that many tokens because of purchase cap"
-    },
-    {
-      "code": 6012,
-      "name": "BuyFrozen",
-      "msg": "Buy is frozen on this bonding curve, purchases not allowed"
-    },
-    {
-      "code": 6013,
-      "name": "WrappedSolNotAllowed",
-      "msg": "Use token bonding wrapped sol via buy_wrapped_sol, sell_wrapped_sol commands. We may one day provide liquid staking rewards on this stored sol."
-    },
-    {
-      "code": 6014,
-      "name": "InvalidCurve",
-      "msg": "The provided curve is invalid"
-    },
-    {
-      "code": 6015,
-      "name": "InvalidMint",
-      "msg": "An account was provided that did not have the correct mint"
-    },
-    {
-      "code": 6016,
-      "name": "IgnoreExternalV1Only",
-      "msg": "Ignoring external changes is only supported on v1 of buy and sell endpoints. Please upgrade your client"
-    },
-    {
-      "code": 6017,
-      "name": "InvalidPad",
-      "msg": "Cannot pad token bonding without ignoring external reserve and supply changes. This is an advanced feature, incorrect use could lead to insufficient resreves to cover sells"
-    }
-  ]
-};
-
-export const IDL: Mmoshforge = {
-  "version": "0.1.0",
-  "name": "mmoshforge",
-  "instructions": [
-    {
-      "name": "initMainState",
-      "accounts": [
-        {
-          "name": "owner",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "input",
-          "type": {
-            "defined": "MainStateInput"
-          }
-        }
-      ]
-    },
-    {
-      "name": "updateMainState",
-      "accounts": [
-        {
-          "name": "owner",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "input",
-          "type": {
-            "defined": "MainStateInput"
-          }
-        }
-      ]
-    },
-    {
-      "name": "updateMainStateOwner",
-      "accounts": [
-        {
-          "name": "owner",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "newOwner",
-          "type": "publicKey"
-        }
-      ]
-    },
-    {
-      "name": "setCommonLut",
-      "accounts": [
-        {
-          "name": "owner",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "lut",
-          "type": "publicKey"
-        }
-      ]
-    },
-    {
-      "name": "resetMain",
-      "accounts": [
-        {
-          "name": "owner",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "createCollection",
-      "accounts": [
-        {
-          "name": "admin",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collection",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "adminAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collectionState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collectionMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collectionEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collectionAuthorityRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "sysvarInstructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "parentCollection",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentCollectionMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentCollectionEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "name": "symbol",
-          "type": "string"
-        },
-        {
-          "name": "uri",
-          "type": "string"
-        },
-        {
-          "name": "collectionType",
-          "type": "string"
-        }
-      ]
-    },
-    {
-      "name": "updateCollection",
-      "accounts": [
-        {
-          "name": "admin",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collection",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collectionMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collectionEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "sysvarInstructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "parentCollection",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentCollectionMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentCollectionEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "name": "symbol",
-          "type": "string"
-        },
-        {
-          "name": "uri",
-          "type": "string"
-        }
-      ]
-    },
-    {
-      "name": "mintGenesisProfile",
-      "accounts": [
-        {
-          "name": "admin",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profile",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "adminAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collection",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collectionState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collectionMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collectionEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collectionAuthorityRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "subCollectionAuthorityRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "sysvarInstructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "input",
-          "type": {
-            "defined": "MintProfileByAdminInput"
-          }
-        }
-      ]
-    },
-    {
-      "name": "projectDistribution",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "oposToken",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "currentParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGreatGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGgreatGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGenesisProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "userOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "grandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "greatGrandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ggreatGrandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "genesisProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "passDistribution",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "project",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "oposToken",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "currentParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGreatGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGgreatGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGenesisProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "userOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "grandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "greatGrandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ggreatGrandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "genesisProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "profileDistribution",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "oposToken",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "currentParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGreatGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGgreatGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGenesisProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "userOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "grandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "greatGrandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ggreatGrandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "genesisProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "mintProfileByAt",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "oposToken",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "userActivationTokenAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "activationToken",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profile",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "userProfileAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentProfileState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collection",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collectionMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collectionEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "sysvarInstructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "parentProfile",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "name": "symbol",
-          "type": "string"
-        },
-        {
-          "name": "uriHash",
-          "type": "string"
-        }
-      ]
-    },
-    {
-      "name": "mintGenesisPass",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "profile",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentMainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userProfileAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collection",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collectionState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collectionMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collectionEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "sysvarInstructions",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "name": "symbol",
-          "type": "string"
-        },
-        {
-          "name": "uriHash",
-          "type": "string"
-        },
-        {
-          "name": "input",
-          "type": {
-            "defined": "MainStateInput"
-          }
-        }
-      ]
-    },
-    {
-      "name": "mintPassByAt",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "oposToken",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "userActivationTokenAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "project",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentMainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "activationToken",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profile",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "userProfileAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentProfileState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collection",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collectionMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collectionEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "sysvarInstructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "parentProfile",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "name": "symbol",
-          "type": "string"
-        },
-        {
-          "name": "uriHash",
-          "type": "string"
-        }
-      ]
-    },
-    {
-      "name": "initActivationToken",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "userProfileAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userActivationTokenAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "activationToken",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "activationTokenState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "activationTokenMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profile",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "profileState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileCollectionAuthorityRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentCollection",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentCollectionMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentCollectionEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "sysvarInstructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "name": "symbol",
-          "type": "string"
-        },
-        {
-          "name": "uri",
-          "type": "string"
-        }
-      ]
-    },
-    {
-      "name": "mintActivationToken",
-      "accounts": [
-        {
-          "name": "minter",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "minterProfileAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "receiverAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "activationToken",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "activationTokenState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profile",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "profileState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "parentProfile",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "grandParentProfile",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "greatGrandParentProfile",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "ggreateGrandParentProfile",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "genesisProfile",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "parentProfileState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "oposToken",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentParentProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGrandParentProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGreatGrandParentProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGgreatGrandParentProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGenesisProfileHolderAta",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGreatGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGgreatGrandParentProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentGenesisProfileHolder",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "userOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "grandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "greatGrandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ggreatGrandParentProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "genesisProfileHolderOposAta",
-          "isMut": true,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "amount",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "initPassToken",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "userProfileAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userActivationTokenAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "project",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentMainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "activationToken",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "activationTokenState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "activationTokenMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profile",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "profileState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profileCollectionAuthorityRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentCollection",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentCollectionMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "parentCollectionEdition",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "sysvarInstructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mplProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "name": "symbol",
-          "type": "string"
-        },
-        {
-          "name": "uri",
-          "type": "string"
-        }
-      ]
-    },
-    {
-      "name": "createPassToken",
-      "accounts": [
-        {
-          "name": "minter",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "minterProfileAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "receiverAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "project",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mainState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "activationToken",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "activationTokenState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "profile",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "profileState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "amount",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "initializeSolStorageV0",
-      "accounts": [
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "state",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "solStorage",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "wrappedSolMint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mintAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": "InitializeSolStorageV0Args"
-          }
-        }
-      ]
-    },
-    {
-      "name": "buyWrappedSolV0",
-      "accounts": [
-        {
-          "name": "state",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "wrappedSolMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mintAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "solStorage",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "source",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "destination",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": "BuyWrappedSolV0Args"
-          }
-        }
-      ]
-    },
-    {
-      "name": "sellWrappedSolV0",
-      "accounts": [
-        {
-          "name": "state",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "wrappedSolMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "solStorage",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "source",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "owner",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "destination",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": "SellWrappedSolV0Args"
-          }
-        }
-      ]
-    },
-    {
-      "name": "createCurveV0",
-      "accounts": [
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "curve",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": "CreateCurveV0Args"
-          }
-        }
-      ]
-    },
-    {
-      "name": "initializeTokenBondingV0",
-      "accounts": [
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "curve",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenBonding",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "baseMint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "targetMint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "baseStorage",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "buyBaseRoyalties",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "buyTargetRoyalties",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "sellBaseRoyalties",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "sellTargetRoyalties",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "clock",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": "InitializeTokenBondingV0Args"
-          }
-        }
-      ]
-    },
-    {
-      "name": "closeTokenBondingV0",
-      "accounts": [
-        {
-          "name": "refund",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenBonding",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "generalAuthority",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "targetMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "baseStorage",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "transferReservesV0",
-      "accounts": [
-        {
-          "name": "common",
-          "accounts": [
-            {
-              "name": "tokenBonding",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "reserveAuthority",
-              "isMut": false,
-              "isSigner": true
-            },
-            {
-              "name": "baseMint",
-              "isMut": false,
-              "isSigner": false
-            },
-            {
-              "name": "baseStorage",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "tokenProgram",
-              "isMut": false,
-              "isSigner": false
-            }
-          ]
-        },
-        {
-          "name": "destination",
-          "isMut": true,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": "TransferReservesV0Args"
-          }
-        }
-      ]
-    },
-    {
-      "name": "transferReservesNativeV0",
-      "accounts": [
-        {
-          "name": "common",
-          "accounts": [
-            {
-              "name": "tokenBonding",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "reserveAuthority",
-              "isMut": false,
-              "isSigner": true
-            },
-            {
-              "name": "baseMint",
-              "isMut": false,
-              "isSigner": false
-            },
-            {
-              "name": "baseStorage",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "tokenProgram",
-              "isMut": false,
-              "isSigner": false
-            }
-          ]
-        },
-        {
-          "name": "destination",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "state",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "wrappedSolMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mintAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "solStorage",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": "TransferReservesV0Args"
-          }
-        }
-      ]
-    },
-    {
-      "name": "updateReserveAuthorityV0",
-      "accounts": [
-        {
-          "name": "tokenBonding",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "reserveAuthority",
-          "isMut": false,
-          "isSigner": true
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": "UpdateReserveAuthorityV0Args"
-          }
-        }
-      ]
-    },
-    {
-      "name": "updateCurveV0",
-      "accounts": [
-        {
-          "name": "tokenBonding",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "curveAuthority",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "curve",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": "UpdateCurveV0Args"
-          }
-        }
-      ]
-    },
-    {
-      "name": "updateTokenBondingV0",
-      "accounts": [
-        {
-          "name": "tokenBonding",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "generalAuthority",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "baseMint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "targetMint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "buyBaseRoyalties",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "buyTargetRoyalties",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "sellBaseRoyalties",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "sellTargetRoyalties",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": "UpdateTokenBondingV0Args"
-          }
-        }
-      ]
-    },
-    {
-      "name": "buyV1",
-      "accounts": [
-        {
-          "name": "common",
-          "accounts": [
-            {
-              "name": "tokenBonding",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "curve",
-              "isMut": false,
-              "isSigner": false
-            },
-            {
-              "name": "baseMint",
-              "isMut": false,
-              "isSigner": false
-            },
-            {
-              "name": "targetMint",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "baseStorage",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "buyBaseRoyalties",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "destination",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "buyTargetRoyalties",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "tokenProgram",
-              "isMut": false,
-              "isSigner": false
-            },
-            {
-              "name": "clock",
-              "isMut": false,
-              "isSigner": false
-            }
-          ]
-        },
-        {
-          "name": "state",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "source",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "sourceAuthority",
-          "isMut": false,
-          "isSigner": true
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": "BuyV0Args"
-          }
-        }
-      ]
-    },
-    {
-      "name": "buyNativeV0",
-      "accounts": [
-        {
-          "name": "common",
-          "accounts": [
-            {
-              "name": "tokenBonding",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "curve",
-              "isMut": false,
-              "isSigner": false
-            },
-            {
-              "name": "baseMint",
-              "isMut": false,
-              "isSigner": false
-            },
-            {
-              "name": "targetMint",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "baseStorage",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "buyBaseRoyalties",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "destination",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "buyTargetRoyalties",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "tokenProgram",
-              "isMut": false,
-              "isSigner": false
-            },
-            {
-              "name": "clock",
-              "isMut": false,
-              "isSigner": false
-            }
-          ]
-        },
-        {
-          "name": "source",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "state",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "wrappedSolMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mintAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "solStorage",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": "BuyV0Args"
-          }
-        }
-      ]
-    },
-    {
-      "name": "sellV1",
-      "accounts": [
-        {
-          "name": "common",
-          "accounts": [
-            {
-              "name": "tokenBonding",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "curve",
-              "isMut": false,
-              "isSigner": false
-            },
-            {
-              "name": "baseMint",
-              "isMut": false,
-              "isSigner": false
-            },
-            {
-              "name": "targetMint",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "baseStorage",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "sellBaseRoyalties",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "source",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "sourceAuthority",
-              "isMut": false,
-              "isSigner": true
-            },
-            {
-              "name": "sellTargetRoyalties",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "tokenProgram",
-              "isMut": false,
-              "isSigner": false
-            },
-            {
-              "name": "clock",
-              "isMut": false,
-              "isSigner": false
-            }
-          ]
-        },
-        {
-          "name": "state",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "destination",
-          "isMut": true,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": "SellV0Args"
-          }
-        }
-      ]
-    },
-    {
-      "name": "sellNativeV0",
-      "accounts": [
-        {
-          "name": "common",
-          "accounts": [
-            {
-              "name": "tokenBonding",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "curve",
-              "isMut": false,
-              "isSigner": false
-            },
-            {
-              "name": "baseMint",
-              "isMut": false,
-              "isSigner": false
-            },
-            {
-              "name": "targetMint",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "baseStorage",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "sellBaseRoyalties",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "source",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "sourceAuthority",
-              "isMut": false,
-              "isSigner": true
-            },
-            {
-              "name": "sellTargetRoyalties",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "tokenProgram",
-              "isMut": false,
-              "isSigner": false
-            },
-            {
-              "name": "clock",
-              "isMut": false,
-              "isSigner": false
-            }
-          ]
-        },
-        {
-          "name": "destination",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "state",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "wrappedSolMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mintAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "solStorage",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": "SellV0Args"
-          }
-        }
-      ]
-    }
-  ],
-  "accounts": [
-    {
-      "name": "mainState",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "owner",
-            "type": "publicKey"
-          },
-          {
-            "name": "oposToken",
-            "type": "publicKey"
-          },
-          {
-            "name": "profileMintingCost",
-            "type": "u64"
-          },
-          {
-            "name": "invitationMintingCost",
-            "type": "u64"
-          },
-          {
-            "name": "mintingCostDistribution",
-            "type": {
-              "defined": "MintingCostDistribution"
-            }
-          },
-          {
-            "name": "tradingPriceDistribution",
-            "type": {
-              "defined": "TradingPriceDistribution"
-            }
-          },
-          {
-            "name": "sellerFeeBasisPoints",
-            "type": "u16"
-          },
-          {
-            "name": "bump",
-            "type": "u8"
-          },
-          {
-            "name": "totalMintedProfile",
-            "type": "u64"
-          },
-          {
-            "name": "profileCollection",
-            "type": "publicKey"
-          },
-          {
-            "name": "genesisProfile",
-            "type": "publicKey"
-          },
-          {
-            "name": "commonLut",
-            "type": "publicKey"
-          }
-        ]
-      }
-    },
-    {
-      "name": "activationTokenState",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "parentProfile",
-            "type": "publicKey"
-          },
-          {
-            "name": "creator",
-            "type": "publicKey"
-          }
-        ]
-      }
-    },
-    {
-      "name": "collectionState",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "genesisProfile",
-            "type": "publicKey"
-          },
-          {
-            "name": "collectionId",
-            "type": "publicKey"
-          }
-        ]
-      }
-    },
-    {
-      "name": "programStateV0",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "wrappedSolMint",
-            "type": "publicKey"
-          },
-          {
-            "name": "solStorage",
-            "type": "publicKey"
-          },
-          {
-            "name": "mintAuthorityBumpSeed",
-            "type": "u8"
-          },
-          {
-            "name": "solStorageBumpSeed",
-            "type": "u8"
-          },
-          {
-            "name": "bumpSeed",
-            "type": "u8"
-          }
-        ]
-      }
-    },
-    {
-      "name": "curveV0",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "definition",
-            "type": {
-              "defined": "PiecewiseCurve"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "tokenBondingV0",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "baseMint",
-            "type": "publicKey"
-          },
-          {
-            "name": "targetMint",
-            "type": "publicKey"
-          },
-          {
-            "name": "generalAuthority",
-            "type": {
-              "option": "publicKey"
-            }
-          },
-          {
-            "name": "reserveAuthority",
-            "type": {
-              "option": "publicKey"
-            }
-          },
-          {
-            "name": "curveAuthority",
-            "type": {
-              "option": "publicKey"
-            }
-          },
-          {
-            "name": "baseStorage",
-            "type": "publicKey"
-          },
-          {
-            "name": "buyBaseRoyalties",
-            "type": "publicKey"
-          },
-          {
-            "name": "buyTargetRoyalties",
-            "type": "publicKey"
-          },
-          {
-            "name": "sellBaseRoyalties",
-            "type": "publicKey"
-          },
-          {
-            "name": "sellTargetRoyalties",
-            "type": "publicKey"
-          },
-          {
-            "name": "buyBaseRoyaltyPercentage",
-            "docs": [
-              "Percentage of purchases that go to royalties",
-              "Percentage Value is (founder_reward_percentage / u32.MAX_VALUE) * 100"
-            ],
-            "type": "u32"
-          },
-          {
-            "name": "buyTargetRoyaltyPercentage",
-            "type": "u32"
-          },
-          {
-            "name": "sellBaseRoyaltyPercentage",
-            "type": "u32"
-          },
-          {
-            "name": "sellTargetRoyaltyPercentage",
-            "type": "u32"
-          },
-          {
-            "name": "curve",
-            "docs": [
-              "The bonding curve to use"
-            ],
-            "type": "publicKey"
-          },
-          {
-            "name": "mintCap",
-            "type": {
-              "option": "u64"
-            }
-          },
-          {
-            "name": "purchaseCap",
-            "type": {
-              "option": "u64"
-            }
-          },
-          {
-            "name": "goLiveUnixTime",
-            "type": "i64"
-          },
-          {
-            "name": "freezeBuyUnixTime",
-            "type": {
-              "option": "i64"
-            }
-          },
-          {
-            "name": "createdAtUnixTime",
-            "type": "i64"
-          },
-          {
-            "name": "buyFrozen",
-            "type": "bool"
-          },
-          {
-            "name": "sellFrozen",
-            "type": "bool"
-          },
-          {
-            "name": "index",
-            "type": "u16"
-          },
-          {
-            "name": "bumpSeed",
-            "type": "u8"
-          },
-          {
-            "name": "baseStorageBumpSeed",
-            "type": "u8"
-          },
-          {
-            "name": "targetMintAuthorityBumpSeed",
-            "type": "u8"
-          },
-          {
-            "name": "baseStorageAuthorityBumpSeed",
-            "type": {
-              "option": "u8"
-            }
-          },
-          {
-            "name": "reserveBalanceFromBonding",
-            "type": "u64"
-          },
-          {
-            "name": "supplyFromBonding",
-            "type": "u64"
-          },
-          {
-            "name": "ignoreExternalReserveChanges",
-            "docs": [
-              "Whether or not to ignore changes to base storage and target supply outside of the curve"
-            ],
-            "type": "bool"
-          },
-          {
-            "name": "ignoreExternalSupplyChanges",
-            "type": "bool"
-          }
-        ]
-      }
-    },
-    {
-      "name": "profileState",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "lineage",
-            "type": {
-              "defined": "LineageInfo"
-            }
-          },
-          {
-            "name": "mint",
-            "type": "publicKey"
-          },
-          {
-            "name": "activationToken",
-            "type": {
-              "option": "publicKey"
-            }
-          },
-          {
-            "name": "totalMintedSft",
-            "type": "u64"
-          },
-          {
-            "name": "totalMintedOffers",
-            "type": "u64"
-          },
-          {
-            "name": "lut",
-            "type": "publicKey"
-          }
-        ]
-      }
-    }
-  ],
-  "types": [
-    {
-      "name": "MainStateInput",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "profileMintingCost",
-            "type": "u64"
-          },
-          {
-            "name": "invitationMintingCost",
-            "type": "u64"
-          },
-          {
-            "name": "oposToken",
-            "type": "publicKey"
-          },
-          {
-            "name": "mintingCostDistribution",
-            "type": {
-              "defined": "MintingCostDistribution"
-            }
-          },
-          {
-            "name": "tradingPriceDistribution",
-            "type": {
-              "defined": "TradingPriceDistribution"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "BuyWithBaseV0Args",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "baseAmount",
-            "type": "u64"
-          },
-          {
-            "name": "minimumTargetAmount",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "BuyTargetAmountV0Args",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "targetAmount",
-            "type": "u64"
-          },
-          {
-            "name": "maximumPrice",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "BuyV0Args",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "buyWithBase",
-            "type": {
-              "option": {
-                "defined": "BuyWithBaseV0Args"
-              }
-            }
-          },
-          {
-            "name": "buyTargetAmount",
-            "type": {
-              "option": {
-                "defined": "BuyTargetAmountV0Args"
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "BuyWrappedSolV0Args",
+      "name": "transferReservesV0Args",
       "type": {
         "kind": "struct",
         "fields": [
@@ -6433,291 +3035,7 @@ export const IDL: Mmoshforge = {
       }
     },
     {
-      "name": "CreateCurveV0Args",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "definition",
-            "type": {
-              "defined": "PiecewiseCurve"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "InitializeSolStorageV0Args",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "mintAuthorityBumpSeed",
-            "type": "u8"
-          },
-          {
-            "name": "solStorageBumpSeed",
-            "type": "u8"
-          },
-          {
-            "name": "bumpSeed",
-            "type": "u8"
-          }
-        ]
-      }
-    },
-    {
-      "name": "InitializeTokenBondingV0Args",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "buyBaseRoyaltyPercentage",
-            "docs": [
-              "Percentage of purchases that go to the founder",
-              "Percentage Value is (founder_reward_percentage / u32.MAX_VALUE) * 100"
-            ],
-            "type": "u32"
-          },
-          {
-            "name": "buyTargetRoyaltyPercentage",
-            "type": "u32"
-          },
-          {
-            "name": "sellBaseRoyaltyPercentage",
-            "type": "u32"
-          },
-          {
-            "name": "sellTargetRoyaltyPercentage",
-            "type": "u32"
-          },
-          {
-            "name": "goLiveUnixTime",
-            "type": "i64"
-          },
-          {
-            "name": "freezeBuyUnixTime",
-            "type": {
-              "option": "i64"
-            }
-          },
-          {
-            "name": "mintCap",
-            "type": {
-              "option": "u64"
-            }
-          },
-          {
-            "name": "purchaseCap",
-            "type": {
-              "option": "u64"
-            }
-          },
-          {
-            "name": "generalAuthority",
-            "type": {
-              "option": "publicKey"
-            }
-          },
-          {
-            "name": "reserveAuthority",
-            "type": {
-              "option": "publicKey"
-            }
-          },
-          {
-            "name": "curveAuthority",
-            "type": {
-              "option": "publicKey"
-            }
-          },
-          {
-            "name": "buyFrozen",
-            "type": "bool"
-          },
-          {
-            "name": "index",
-            "type": "u16"
-          },
-          {
-            "name": "bumpSeed",
-            "type": "u8"
-          },
-          {
-            "name": "sellFrozen",
-            "type": "bool"
-          },
-          {
-            "name": "ignoreExternalReserveChanges",
-            "docs": [
-              "Whether or not to ignore changes to base storage and target supply outside of the curve"
-            ],
-            "type": "bool"
-          },
-          {
-            "name": "ignoreExternalSupplyChanges",
-            "type": "bool"
-          },
-          {
-            "name": "initialReservesPad",
-            "docs": [
-              "* Allow starting a curve from a later reserve/supply ratio of ignor reserve and supply changes.\n   *\n   * This allows for things like the LBC where you don't need to provide any initial liquidity"
-            ],
-            "type": "u64"
-          },
-          {
-            "name": "initialSupplyPad",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "SellV0Args",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "targetAmount",
-            "type": "u64"
-          },
-          {
-            "name": "minimumPrice",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "SellWrappedSolV0Args",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "amount",
-            "type": "u64"
-          },
-          {
-            "name": "all",
-            "type": "bool"
-          }
-        ]
-      }
-    },
-    {
-      "name": "TransferReservesV0Args",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "amount",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "UpdateCurveV0Args",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "curveAuthority",
-            "type": {
-              "option": "publicKey"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "UpdateReserveAuthorityV0Args",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "newReserveAuthority",
-            "type": {
-              "option": "publicKey"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "UpdateTokenBondingV0Args",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "generalAuthority",
-            "type": {
-              "option": "publicKey"
-            }
-          },
-          {
-            "name": "buyBaseRoyaltyPercentage",
-            "docs": [
-              "Percentage of purchases that go to the founder",
-              "Percentage Value is (founder_reward_percentage / u32.MAX_VALUE) * 100"
-            ],
-            "type": "u32"
-          },
-          {
-            "name": "buyTargetRoyaltyPercentage",
-            "type": "u32"
-          },
-          {
-            "name": "sellBaseRoyaltyPercentage",
-            "type": "u32"
-          },
-          {
-            "name": "sellTargetRoyaltyPercentage",
-            "type": "u32"
-          },
-          {
-            "name": "buyFrozen",
-            "type": "bool"
-          }
-        ]
-      }
-    },
-    {
-      "name": "TimeCurveV0",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "offset",
-            "type": "i64"
-          },
-          {
-            "name": "curve",
-            "type": {
-              "defined": "PrimitiveCurve"
-            }
-          },
-          {
-            "name": "buyTransitionFees",
-            "type": {
-              "option": {
-                "defined": "TransitionFeeV0"
-              }
-            }
-          },
-          {
-            "name": "sellTransitionFees",
-            "type": {
-              "option": {
-                "defined": "TransitionFeeV0"
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "TransitionFeeV0",
+      "name": "transitionFeeV0",
       "type": {
         "kind": "struct",
         "fields": [
@@ -6733,381 +3051,70 @@ export const IDL: Mmoshforge = {
       }
     },
     {
-      "name": "LineageInfo",
+      "name": "updateCurveV0Args",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "creator",
-            "type": "publicKey"
-          },
-          {
-            "name": "parent",
-            "type": "publicKey"
-          },
-          {
-            "name": "grandParent",
-            "type": "publicKey"
-          },
-          {
-            "name": "greatGrandParent",
-            "type": "publicKey"
-          },
-          {
-            "name": "ggreatGrandParent",
-            "type": "publicKey"
-          },
-          {
-            "name": "generation",
-            "type": "u64"
-          },
-          {
-            "name": "totalChild",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "MintingCostDistribution",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "parent",
-            "type": "u16"
-          },
-          {
-            "name": "grandParent",
-            "type": "u16"
-          },
-          {
-            "name": "greatGrandParent",
-            "type": "u16"
-          },
-          {
-            "name": "ggreatGrandParent",
-            "type": "u16"
-          },
-          {
-            "name": "genesis",
-            "type": "u16"
-          }
-        ]
-      }
-    },
-    {
-      "name": "TradingPriceDistribution",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "seller",
-            "type": "u16"
-          },
-          {
-            "name": "parent",
-            "type": "u16"
-          },
-          {
-            "name": "grandParent",
-            "type": "u16"
-          },
-          {
-            "name": "greatGrandParent",
-            "type": "u16"
-          },
-          {
-            "name": "genesis",
-            "type": "u16"
-          }
-        ]
-      }
-    },
-    {
-      "name": "MintProfileByAdminInput",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "name": "symbol",
-            "type": "string"
-          },
-          {
-            "name": "uri",
-            "type": "string"
-          },
-          {
-            "name": "lineage",
+            "name": "curveAuthority",
             "type": {
-              "defined": "LineageInfo"
+              "option": "pubkey"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "updateReserveAuthorityV0Args",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "newReserveAuthority",
+            "type": {
+              "option": "pubkey"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "updateTokenBondingV0Args",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "generalAuthority",
+            "type": {
+              "option": "pubkey"
             }
           },
           {
-            "name": "parentMint",
-            "type": "publicKey"
+            "name": "buyBaseRoyaltyPercentage",
+            "docs": [
+              "Percentage of purchases that go to the founder",
+              "Percentage Value is (founder_reward_percentage / u32.MAX_VALUE) * 100"
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "buyTargetRoyaltyPercentage",
+            "type": "u32"
+          },
+          {
+            "name": "sellBaseRoyaltyPercentage",
+            "type": "u32"
+          },
+          {
+            "name": "sellTargetRoyaltyPercentage",
+            "type": "u32"
+          },
+          {
+            "name": "buyFrozen",
+            "type": "bool"
           }
         ]
       }
-    },
-    {
-      "name": "MintPassByAtInput",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "name": "symbol",
-            "type": "string"
-          },
-          {
-            "name": "uriHash",
-            "type": "string"
-          }
-        ]
-      }
-    },
-    {
-      "name": "MintProfileByAtInput",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "name": "symbol",
-            "type": "string"
-          },
-          {
-            "name": "uriHash",
-            "type": "string"
-          }
-        ]
-      }
-    },
-    {
-      "name": "PrimitiveCurve",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "ExponentialCurveV0",
-            "fields": [
-              {
-                "name": "c",
-                "type": "u128"
-              },
-              {
-                "name": "b",
-                "type": "u128"
-              },
-              {
-                "name": "pow",
-                "type": "u8"
-              },
-              {
-                "name": "frac",
-                "type": "u8"
-              }
-            ]
-          },
-          {
-            "name": "TimeDecayExponentialCurveV0",
-            "fields": [
-              {
-                "name": "c",
-                "type": "u128"
-              },
-              {
-                "name": "k1",
-                "type": "u128"
-              },
-              {
-                "name": "k0",
-                "type": "u128"
-              },
-              {
-                "name": "interval",
-                "type": "u32"
-              },
-              {
-                "name": "d",
-                "type": "u128"
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "name": "PiecewiseCurve",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "TimeV0",
-            "fields": [
-              {
-                "name": "curves",
-                "type": {
-                  "vec": {
-                    "defined": "TimeCurveV0"
-                  }
-                }
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "name": "MyError",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "FirstError"
-          },
-          {
-            "name": "AlreadySet"
-          },
-          {
-            "name": "OnlyOwnerCanCall"
-          },
-          {
-            "name": "UnknownNft"
-          },
-          {
-            "name": "InvalidNftHolder"
-          },
-          {
-            "name": "GenesisNftAlreadyMinted"
-          },
-          {
-            "name": "ActivationTokenNotFound"
-          },
-          {
-            "name": "ActivationTokenAlreadyInitialize"
-          },
-          {
-            "name": "OnlyProfileHolderAllow"
-          },
-          {
-            "name": "NotEnoughTokenToMint"
-          },
-          {
-            "name": "ProfileIdMissMatch"
-          }
-        ]
-      }
-    },
-    {
-      "name": "InnerUint",
-      "type": {
-        "kind": "alias",
-        "value": "u128"
-      }
-    }
-  ],
-  "errors": [
-    {
-      "code": 6000,
-      "name": "NoMintAuthority",
-      "msg": "Target mint must have an authority"
-    },
-    {
-      "code": 6001,
-      "name": "InvalidMintAuthority",
-      "msg": "Target mint must have an authority that is a pda of this program"
-    },
-    {
-      "code": 6002,
-      "name": "InvalidBaseStorageAuthority",
-      "msg": "Invalid base storage authority pda or seed did not match canonical seed for base storage authority"
-    },
-    {
-      "code": 6003,
-      "name": "NoAuthority",
-      "msg": "Token bonding does not have an authority"
-    },
-    {
-      "code": 6004,
-      "name": "ArithmeticError",
-      "msg": "Error in precise number arithmetic"
-    },
-    {
-      "code": 6005,
-      "name": "PriceTooHigh",
-      "msg": "Buy price was higher than the maximum buy price. Try increasing max_price or slippage configuration"
-    },
-    {
-      "code": 6006,
-      "name": "PriceTooLow",
-      "msg": "Sell price was lower than the minimum sell price. Try decreasing min_price or increasing slippage configuration"
-    },
-    {
-      "code": 6007,
-      "name": "MintSupplyTooLow",
-      "msg": "Cannot sell more than the target mint currently has in supply"
-    },
-    {
-      "code": 6008,
-      "name": "SellDisabled",
-      "msg": "Sell is not enabled on this bonding curve"
-    },
-    {
-      "code": 6009,
-      "name": "NotLiveYet",
-      "msg": "This bonding curve is not live yet"
-    },
-    {
-      "code": 6010,
-      "name": "PassedMintCap",
-      "msg": "Passed the mint cap"
-    },
-    {
-      "code": 6011,
-      "name": "OverPurchaseCap",
-      "msg": "Cannot purchase that many tokens because of purchase cap"
-    },
-    {
-      "code": 6012,
-      "name": "BuyFrozen",
-      "msg": "Buy is frozen on this bonding curve, purchases not allowed"
-    },
-    {
-      "code": 6013,
-      "name": "WrappedSolNotAllowed",
-      "msg": "Use token bonding wrapped sol via buy_wrapped_sol, sell_wrapped_sol commands. We may one day provide liquid staking rewards on this stored sol."
-    },
-    {
-      "code": 6014,
-      "name": "InvalidCurve",
-      "msg": "The provided curve is invalid"
-    },
-    {
-      "code": 6015,
-      "name": "InvalidMint",
-      "msg": "An account was provided that did not have the correct mint"
-    },
-    {
-      "code": 6016,
-      "name": "IgnoreExternalV1Only",
-      "msg": "Ignoring external changes is only supported on v1 of buy and sell endpoints. Please upgrade your client"
-    },
-    {
-      "code": 6017,
-      "name": "InvalidPad",
-      "msg": "Cannot pad token bonding without ignoring external reserve and supply changes. This is an advanced feature, incorrect use could lead to insufficient resreves to cover sells"
     }
   ]
 };

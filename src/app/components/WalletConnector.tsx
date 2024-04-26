@@ -25,8 +25,8 @@ const WalletConnector = ({ children, session }: { children: React.ReactNode, ses
 
   const wallets = useMemo(
     () => [
-      new PhantomWalletAdapter({network: WalletAdapterNetwork.Devnet }),
-      new SolflareWalletAdapter({ network: WalletAdapterNetwork.Devnet}),
+      new PhantomWalletAdapter({network: WalletAdapterNetwork.Mainnet }),
+      new SolflareWalletAdapter({ network: WalletAdapterNetwork.Mainnet}),
       new TorusWalletAdapter(),
     ],
     [solNetwork],

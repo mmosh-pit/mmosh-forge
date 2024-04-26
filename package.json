@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@coral-xyz/anchor": "^0.29.0",
+    "@coral-xyz/anchor": "^0.30.0",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@metaplex-foundation/js": "^0.20.1",

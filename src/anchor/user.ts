@@ -2,7 +2,8 @@ import * as anchor from "@coral-xyz/anchor";
 import { AnchorProvider, Program, web3, BN } from "@coral-xyz/anchor";
 import { bs58 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
 import { TOKEN_PROGRAM_ID } from "@coral-xyz/anchor/dist/cjs/utils/token";
-import { IDL, Mmoshforge } from "./mmoshforge";
+import { Mmoshforge } from "./mmoshforge";
+import IDL from "./mmoshforge.json";
 import {
   LineageInfo,
   Result,
@@ -53,7 +54,7 @@ export class Connectivity {
     this.provider = provider;
     this.connection = provider.connection;
     this.programId = programId;
-    this.program = new Program(IDL, programId, this.provider);
+    this.program = new Program(IDL as Mmoshforge, this.provider);
     this.metaplex = new Metaplex(this.connection);
     this.baseSpl = new BaseSpl(this.connection);
     this.mainState = web3.PublicKey.findProgramAddressSync(
