@@ -392,7 +392,7 @@ export default function Swap() {
         
                                         {(connectionStatus == "connected" && swapSubmit) &&
                                             <Button variant="primary" size="lg">
-                                                    Swaping Token...
+                                                    Swapping Token...
                                             </Button>
                                         }
         

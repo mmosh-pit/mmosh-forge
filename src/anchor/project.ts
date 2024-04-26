@@ -278,33 +278,56 @@ export class Connectivity {
             this.programId,
           )[0]
 
-          const ix = await this.program.methods
-          .projectDistribution()
-          .accounts({
-            user,
-            tokenProgram,
-            associatedTokenProgram,
-            systemProgram,
-            oposToken,
-            mainState:rootMainState,
-            //NOTE: Profile minting cost distributaion account
-            // profile owners
-            currentParentProfileHolder,
-            currentGrandParentProfileHolder,
-            currentGreatGrandParentProfileHolder,
-            currentGgreatGrandParentProfileHolder,
-            currentGenesisProfileHolder,
-            userOposAta,
-            // holder opos ata
-            parentProfileHolderOposAta,
-            grandParentProfileHolderOposAta,
-            greatGrandParentProfileHolderOposAta,
-            ggreatGrandParentProfileHolderOposAta,
-            genesisProfileHolderOposAta,
+          const rootMainStateInfo = await this.program.account.mainState.fetch(
+            rootMainState
+          );
+          let cost = 45000 * web3Consts.LAMPORTS_PER_OPOS;
 
+          let holdersfullInfo = [];
+
+          holdersfullInfo.push({
+             receiver: currentGenesisProfileHolder.toBase58(),
+             vallue: cost * ((rootMainStateInfo.mintingCostDistribution.genesis / 100) / 100)
           })
-          .instruction();
-        this.txis.push(ix);
+
+          holdersfullInfo.push({
+            receiver: currentParentProfileHolder.toBase58(),
+            vallue: cost * ((rootMainStateInfo.mintingCostDistribution.parent / 100) / 100)
+          })
+
+          holdersfullInfo.push({
+              receiver: currentGrandParentProfileHolder.toBase58(),
+              vallue: cost * ((rootMainStateInfo.mintingCostDistribution.grandParent / 100) / 100)
+          })
+
+          holdersfullInfo.push({
+            receiver: currentGreatGrandParentProfileHolder.toBase58(),
+            vallue: cost * ((rootMainStateInfo.mintingCostDistribution.greatGrandParent / 100) / 100)
+          })
+
+          holdersfullInfo.push({
+            receiver: currentGgreatGrandParentProfileHolder.toBase58(),
+            vallue: cost * ((rootMainStateInfo.mintingCostDistribution.ggreatGrandParent / 100) / 100)
+          })
+
+          var holdermap = [];
+          holdersfullInfo.reduce(function(res, value) {
+            if (!res[value.receiver]) {
+              res[value.receiver] = { receiver: value.receiver, vallue: 0 };
+              holdermap.push(res[value.receiver])
+            }
+            res[value.receiver].vallue += value.vallue;
+            return res;
+          }, {});
+ 
+          for (let index = 0; index < holdermap.length; index++) {
+              const element = holdermap[index];
+              let createShare:any =  await this.baseSpl.transfer_token_modified({ mint: rootMainStateInfo.oposToken, sender: user, receiver: new anchor.web3.PublicKey(element.receiver), init_if_needed: true, amount: element.vallue});
+              for (let index = 0; index < createShare.length; index++) {
+                  this.txis.push(createShare[index]);
+              }
+          }
+
   
         const tx = new web3.Transaction().add(...this.txis);
   
@@ -421,7 +444,7 @@ export class Connectivity {
 
   async mintPass(
     input: _MintProfileByAtInput,
-    profile: string
+    userProfile: string
   ): Promise<Result<TxPassType<{ profile: string }>, any>> {
     try {
       this.reinit();
@@ -492,14 +515,14 @@ export class Connectivity {
       );
 
 
-      let myProfile = new anchor.web3.PublicKey(profile)
+      let myProfile = new anchor.web3.PublicKey(userProfile)
       const myProfileState = this.__getProfileStateAccount(myProfile);
       let myProfileStateInfo =
         await this.program.account.profileState.fetch(myProfileState);
 
       const profileHolderInfo = await this.__getProfileHoldersInfo(
         myProfileStateInfo.lineage,
-        profile,
+        myProfile,
         web3Consts.genesisProfile,
         mainStateInfo.oposToken
       );
@@ -519,8 +542,6 @@ export class Connectivity {
           profile, // 1
           project: this.projectId,
           user, // 2
-          oposToken: mainStateInfo.oposToken, // 3
-          userOposAta, // 4
           userProfileAta, // 5
           mainState: this.mainState, // 6
           parentMainState,
@@ -539,19 +560,58 @@ export class Connectivity {
           userActivationTokenAta, // 19
           associatedTokenProgram, // 20
           parentProfile,
-          currentGenesisProfileHolder:profileHolderInfo.currentGenesisProfileHolder,
-          currentParentProfileHolder:profileHolderInfo.currentParentProfileHolder,
-          currentGrandParentProfileHolder:currentGenesisProfileHolder,
-          currentGreatGrandParentProfileHolder:currentParentProfileHolder,
-          currentGgreatGrandParentProfileHolder: currentGrandParentProfileHolder,
-          genesisProfileHolderOposAta:profileHolderInfo.currentGenesisProfileHolderAta,
-          parentProfileHolderOposAta:profileHolderInfo.parentProfileHolderOposAta,
-          grandParentProfileHolderOposAta:currentGenesisProfileHolderAta,
-          greatGrandParentProfileHolderOposAta:parentProfileHolderOposAta,
-          ggreatGrandParentProfileHolderOposAta:grandParentProfileHolderOposAta,
         })
         .instruction();
       this.txis.push(ix);
+
+      let cost = mainStateInfo.profileMintingCost.toNumber()
+
+      let holdersfullInfo = [];
+
+      holdersfullInfo.push({
+         receiver: profileHolderInfo.currentGenesisProfileHolder.toBase58(),
+         vallue: cost * ((mainStateInfo.mintingCostDistribution.genesis / 100) / 100)
+      })
+
+      holdersfullInfo.push({
+        receiver: profileHolderInfo.currentParentProfileHolder.toBase58(),
+        vallue: cost * ((mainStateInfo.mintingCostDistribution.parent / 100) / 100)
+      })
+
+      holdersfullInfo.push({
+        receiver: currentGenesisProfileHolder.toBase58(),
+        vallue: cost * ((mainStateInfo.mintingCostDistribution.grandParent / 100) / 100)
+     })
+
+     holdersfullInfo.push({
+      receiver: currentParentProfileHolder.toBase58(),
+      vallue: cost * ((mainStateInfo.mintingCostDistribution.greatGrandParent / 100) / 100)
+     })
+
+     holdersfullInfo.push({
+      receiver: currentGrandParentProfileHolder.toBase58(),
+      vallue: cost * ((mainStateInfo.mintingCostDistribution.ggreatGrandParent / 100) / 100)
+     })
+
+     var holdermap = [];
+     holdersfullInfo.reduce(function(res, value) {
+       if (!res[value.receiver]) {
+         res[value.receiver] = { receiver: value.receiver, vallue: 0 };
+         holdermap.push(res[value.receiver])
+       }
+       res[value.receiver].vallue += value.vallue;
+       return res;
+     }, {});
+
+     for (let index = 0; index < holdermap.length; index++) {
+         const element = holdermap[index];
+         let createShare:any =  await this.baseSpl.transfer_token_modified({ mint: mainStateInfo.oposToken, sender: user, receiver: new anchor.web3.PublicKey(element.receiver), init_if_needed: true, amount: element.vallue});
+         for (let index = 0; index < createShare.length; index++) {
+             this.txis.push(createShare[index]);
+         }
+     }
+
+     
       console.log("mint pass 10", commonLut)
       const commonLutInfo = await (
         await this.connection.getAddressLookupTable(new anchor.web3.PublicKey(commonLut))
