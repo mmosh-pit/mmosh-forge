@@ -3,6 +3,7 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from "@sentry/nextjs";
+import { captureConsoleIntegration } from "@sentry/integrations";
 
 Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
@@ -26,5 +27,6 @@ Sentry.init({
       maskAllText: true,
       blockAllMedia: true,
     }),
+    captureConsoleIntegration()
   ],
 });

@@ -83,18 +83,26 @@ For Devnet
 
 ## Devnet Program configuration
 
+<<<<<<< HEAD
 go to src/anchor/web3Consts.ts and update variable with given value
 
+=======
+create .env and update variable with given value
+
+> > > > > > > f5bf2a3623eaaa4117cb48ca3210c4d085bee4ce
+
 ```ini
-  oposToken: new web3.PublicKey("6vgT7gxtF8Jdu7foPDZzdHxkwYFX9Y1jvgpxP8vH2Apw"),
-  rootProfile: new web3.PublicKey(
-    "85YaBFhbwuqPiRVNrXdMJwdt1qjdxbtypGcFBc6Tp7qA",
-  ),
-  genesisProfile: new web3.PublicKey(
-    "J2tFYfnM4t8XMcaMsR2WyUhaNrkJ26pwKZGq2J9T7rQL",
-  ),
-  badgeCollection: new web3.PublicKey("147m8aw1hcmyBduQvSJoXCFaLb8wQSe9DNxWVsLTfqec"),
-  rootCollection: new web3.PublicKey("9h9c4idX2UnGhFa266dQxMGD5kMk9pigumRAV2x9Hbk2"),
+NEXT_PUBLIC_OPOS_TOKEN=6vgT7gxtF8Jdu7foPDZzdHxkwYFX9Y1jvgpxP8vH2Apw
+NEXT_PUBLIC_ROOT_PROFILE=DA8ZEAcwZdzBzqrcr5N9vEvvSbBhmrdvpp6V4wksM6eG
+NEXT_PUBLIC_GENESIS_PROFILE=EF3i2vbtTfCCezvWV6zFrjXMC9WfxHbsvLxd4gs288Pt
+NEXT_PUBLIC_ROOT_COLLECTION=F3kdMzMSfgKoSJgtCqJrFQNhmtSQtPBJ8t3uxWKxmayi
+NEXT_PUBLIC_APP_PROFILE_COLLECTION=DwzoFFz2PVuJ3NtsCWYn1Kwwbxf5VfbTtxZfTMt2cDLx
+NEXT_PUBLIC_BADGE_COLLECTION=75WUuYaA9rwpkmGfsC4c26E4CqvDu1DiLcG7NTZyHLpm
+NEXT_PUBLIC_PASS_COLLECTION=5qLuvrfiJoDAR4DnJV62HPvPpMjZxwuBU4BZLvUrfTUh
+NEXT_PUBLIC_APP_COMMON_LUT=8MykuxNrQe1aukV7V2YcqMHGT3RDKqGkCwjQWdzZqkdj
+
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=a62a0519097b7ef3ea1de11c29aafeabc7c2243a68be2fabf2454360833308d3
 
 ```
 
@@ -103,16 +111,14 @@ go to src/anchor/web3Consts.ts and update variable with given value
 Go to src/anchor/web3Consts.ts and update variable with given value
 
 ```ini
-  oposToken: new web3.PublicKey("FwfrwnNVLGyS8ucVjWvyoRdFDpTY8w6ACMAxJ4rqGUSS"),
-  rootProfile: new web3.PublicKey(
-    "85YaBFhbwuqPiRVNrXdMJwdt1qjdxbtypGcFBc6Tp7qA",
-  ),
-  genesisProfile: new web3.PublicKey(
-    "HLU5hoeXDqn9QSL6qFsPqi2dHXsTmsioYcuNd1CWbedB",
-  ),
-  commonLut: new web3.PublicKey("A1y1BoDXB5bph8nkiD1oBQb1BksxtSCbzxjH8gwuFf2Q"),
-  badgeCollection: new web3.PublicKey("GX2AC9XPza59gUL7mEeCnLPeD6o7bjRbS8xP2S1hgYjp"),
-  rootCollection: new web3.PublicKey("2YsiCzmKFS6QfNL88goG22qbhzxNM7EhrUD4ghWTTYhS"),
+  NEXT_PUBLIC_OPOS_TOKEN=FwfrwnNVLGyS8ucVjWvyoRdFDpTY8w6ACMAxJ4rqGUSS
+  NEXT_PUBLIC_ROOT_PROFILE=DA8ZEAcwZdzBzqrcr5N9vEvvSbBhmrdvpp6V4wksM6eG
+  NEXT_PUBLIC_GENESIS_PROFILE=5hZvipJh93EimpyipmhuvFPTMVGcgj2rJks5cDDu48ts
+  NEXT_PUBLIC_ROOT_COLLECTION=8rKVgAH9DsQcumJrfLYotCDj8EP4VL5JAFNBrQHMDozh
+  NEXT_PUBLIC_APP_PROFILE_COLLECTION=2QfznyyKJWvLnLienCeFW4wZxRb6Mx2ByhRdgZGQCp9u
+  NEXT_PUBLIC_BADGE_COLLECTION=4HLgkPg5hsoW2Yymv3PXhQhjZRBcovwTZCaiFe4ZHUoA
+  NEXT_PUBLIC_PASS_COLLECTION=8UhitpWzAvjefzbnE5KReCnMNqeYFCxw3gn8VYHqAJxk
+  NEXT_PUBLIC_APP_COMMON_LUT=AA9yA5hFkmALURXB8ESB288fAkxmEzs6n5QfvYr3hxty
 
 ```
 

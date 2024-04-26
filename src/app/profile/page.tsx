@@ -22,9 +22,13 @@ export default function Profile() {
   const [generation, setGeneration] = useState("0");
   const [profileLineage, setProfileLineage] = useState({
     promoter: "",
+    promoterprofile:"",
     scout: "",
+    scoutprofile:"",
     recruiter: "",
+    recruiterprofile:"",
     originator: "",
+    originatorprofile:""
   });
   const connection = useConnection();
   const wallet: any = useAnchorWallet();
@@ -145,7 +149,7 @@ export default function Profile() {
       return false;
     }
 
-    if (solBalance == 0) {
+    if (solBalance < 0.04) {
       createMessage(
         <p>
           Hey! We checked your wallet and you don’t have enough SOL for the gas
@@ -209,16 +213,16 @@ export default function Profile() {
       description: desc,
       image: "",
       enternal_url: process.env.NEXT_PUBLIC_APP_MAIN_URL + "/" + userName,
-      family: "MMOSH Pit",
-      collection: "Moral Panic",
+      family: "MMOSH",
+      collection: "MMOSH Profile Collection",
       attributes: [
         {
           trait_type: "Primitive",
           value: "Profile",
         },
         {
-          trait_type: "MMOSH",
-          value: "Moral Panic",
+          trait_type: "Ecosystem",
+          value: "Genesis MMOSH",
         },
         {
           trait_type: "Gen",
@@ -253,18 +257,31 @@ export default function Profile() {
 
     // get promoter name
     if (profileLineage.promoter.length > 0) {
+
       let promoter: any = await getUserName(profileLineage.promoter);
       if (promoter != "") {
+        body.attributes.push({
+          trait_type: "Source",
+          value: promoter,
+        });
         body.attributes.push({
           trait_type: "Promoter",
           value: promoter,
         });
       } else {
         body.attributes.push({
+          trait_type: "Source",
+          value: profileLineage.promoter,
+        });
+        body.attributes.push({
           trait_type: "Promoter",
           value: profileLineage.promoter,
         });
       }
+      body.attributes.push({
+        trait_type: "Promoter_Profile",
+        value: profileLineage.promoterprofile,
+      });
     }
 
     // get scout name
@@ -281,6 +298,10 @@ export default function Profile() {
           value: profileLineage.scout,
         });
       }
+      body.attributes.push({
+        trait_type: "Scout_Profile",
+        value: profileLineage.scoutprofile,
+      });
     }
 
     // get recruiter name
@@ -297,6 +318,10 @@ export default function Profile() {
           value: profileLineage.recruiter,
         });
       }
+      body.attributes.push({
+        trait_type: "Recruiter_Profile",
+        value: profileLineage.recruiterprofile,
+      });
     }
 
     // get originator name
@@ -313,7 +338,13 @@ export default function Profile() {
           value: profileLineage.originator,
         });
       }
+      body.attributes.push({
+        trait_type: "Originator_Profile",
+        value: profileLineage.originatorprofile,
+      });
     }
+
+
 
     if (imageFile[0].file != null) {
       const imageUri = await pinImageToShadowDrive(imageFile[0].file);
@@ -347,6 +378,7 @@ export default function Profile() {
         uriHash: shadowHash,
         activationToken,
         genesisProfile,
+        commonLut: web3Consts.commonLut 
       });
 
       if (res.Ok) {
@@ -379,6 +411,12 @@ export default function Profile() {
         );
       }
       setIsSubmit(false);
+
+
+      setTimeout(async() => {
+
+      }, 5000);
+
     } catch (error) {
       createMessage(error, "danger-container");
       setIsSubmit(false);
@@ -569,10 +607,6 @@ export default function Profile() {
       </div>
       {!isLoading && (
         <div className="profile-container-action">
-          <p>
-            First transaction distributes MMOSH, second gets NFT. To mint your
-            Profile you will need to accept BOTH transactions.
-          </p>
           {isSubmit && (
             <Button variant="primary" size="lg">
               Minting Your Profile...
@@ -586,9 +620,7 @@ export default function Profile() {
           <div className="price-details">
             <p>Price: 20000 MMOSH</p>
             <label>
-              Plus at least 0.03 SOL in fees. Note: this amount will be reduced
-              when the protocol is optimized. Sorry for the temporary
-              inconvenience.
+               Plus at least 0.04 SOL in fees. Note: this amount is reduced when the protocol is optimized. sorry for the temporary inconvenience
             </label>
           </div>
           <div className="balance-details">

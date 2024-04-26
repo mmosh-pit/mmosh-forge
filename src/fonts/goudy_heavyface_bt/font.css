@@ -1,0 +1,8 @@
+@font-face {
+    font-family: 'goudyhvyface_btregular';
+    src: url('./goudy_heavyface_bt-webfont.woff2') format('woff2'),
+         url('./goudy_heavyface_bt.ttf')  format('truetype'), /* Safari, Android, iOS */
+         url('./goudy_heavyface_bt-webfont.woff') format('woff'); /* Modern Browsers */
+    font-weight: normal;
+    font-style: normal;
+}

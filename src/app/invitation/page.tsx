@@ -17,6 +17,7 @@ import { ForgeContext } from "../context/ForgeContext";
 import Config from "./../../anchor/web3Config.json";
 
 export default function Invitation() {
+  const navigate = useRouter();
   const forgeContext = React.useContext(ForgeContext);
   const [solBalance, setSolBalance] = useState(0);
   const [tokBalance, setTokBalance] = useState(0);
@@ -39,6 +40,8 @@ export default function Invitation() {
     recruiter: "",
     originator: "",
   });
+  const [profileImage, setProfileImage] = useState("");
+
 
   useEffect(() => {
     if (wallet?.publicKey) {
@@ -69,6 +72,7 @@ export default function Invitation() {
     setActBalance(parseInt(profileInfo.activationTokenBalance) + profileInfo.totalChild);
     setProfileLineage(profileInfo.profilelineage);
     setGeneration(profileInfo.generation);
+    setProfileImage(profileInfo.profiles[0].userinfo.image)
     const totalMints = profileInfo.totalChild;
     if (profileInfo.activationTokens.length > 0) {
       if(profileInfo.activationTokens[0].activation != "") {
@@ -171,11 +175,6 @@ export default function Invitation() {
       }
 
       attributes.push({
-        trait_type: "MMOSH",
-        value: "Charlie the Cybernatural Owl #0",
-      });
-
-      attributes.push({
         trait_type: "Gen",
         value: generation,
       });
@@ -225,16 +224,35 @@ export default function Invitation() {
 
       console.log("first time invitation result ", res)
 
-      const res1 = await userConn.mintSubscriptionToken({
-        amount: inputValue,
-        subscriptionToken: res.Ok.info.subscriptionToken,
-      });
+      setTimeout(async() => {
+        const res1 = await userConn.mintSubscriptionToken({
+          amount: inputValue,
+          subscriptionToken: res.Ok.info.subscriptionToken,
+        });
+  
+        console.log("first time invitation result1 ", res1)
+        if (res1.Ok) {
+          isSuccess = true;
+        }
 
-      console.log("first time invitation result1 ", res1)
+        if (isSuccess) {
+          createMessage(
+            "Congrats! You have minted your Invitation(s) successfully.",
+            "success-container",
+          );
+        } else {
+          createMessage(
+            "We’re sorry, there was an error while trying to mint your Invitation Badge(s). Check your wallet and try again.",
+            "danger-container",
+          );
+        }
+    
+        setButtonText("Mint");
+        getProfileInfo();
+      }, 15000);
 
-      if (res1.Ok) {
-        isSuccess = true;
-      }
+
+  
     } else {
       const res = await userConn.initSubscriptionBadge({
         name: "Invitation",
@@ -249,28 +267,28 @@ export default function Invitation() {
         subscriptionToken: res.Ok.info.subscriptionToken,
       });
 
-
-
       console.log("invitation result1 ", res1)
 
       if (res1.Ok) {
         isSuccess = true;
       }
-    }
-    if (isSuccess) {
-      createMessage(
-        "Congrats! You have minted your Invitation(s) successfully.",
-        "success-container",
-      );
-    } else {
-      createMessage(
-        "We’re sorry, there was an error while trying to mint your Invitation Badge(s). Check your wallet and try again.",
-        "danger-container",
-      );
+
+      if (isSuccess) {
+        createMessage(
+          "Congrats! You have minted your Invitation(s) successfully.",
+          "success-container",
+        );
+      } else {
+        createMessage(
+          "We’re sorry, there was an error while trying to mint your Invitation Badge(s). Check your wallet and try again.",
+          "danger-container",
+        );
+      }
+  
+      setButtonText("Mint");
+      getProfileInfo();
     }
 
-    setButtonText("Mint");
-    getProfileInfo();
   };
 
   const getUserName = async (pubKey: any) => {
@@ -344,14 +362,31 @@ export default function Invitation() {
         uri,
       });
       console.log("invitation gensis 1 ", res);
-      const res1 = await userConn.mintActivationToken(
-        inputValue,
-        wallet.publicKey,
-      );
-      console.log("invitation gensis 2 ", res1);
-      if (res1.Ok) {
-        isSuccess = true;
-      }
+      setTimeout(async() => {
+        const res1 = await userConn.mintActivationToken(
+          inputValue,
+          wallet.publicKey,
+        );
+        console.log("invitation gensis 2 ", res1);
+        if (res1.Ok) {
+          isSuccess = true;
+        }
+        if (isSuccess) {
+          createMessage(
+            "Congrats! You have minted your Invitation(s) successfully.",
+            "success-container",
+          );
+        } else {
+          createMessage(
+            "We’re sorry, there was an error while trying to mint your Invitation Badge(s). Check your wallet and try again.",
+            "danger-container",
+          );
+        }
+    
+        setButtonText("Mint");
+        getProfileInfo();
+      }, 15000);
+
     } else {
       const res1 = await userConn.mintActivationToken(
         inputValue,
@@ -361,21 +396,23 @@ export default function Invitation() {
       if (res1.Ok) {
         isSuccess = true;
       }
-    }
-    if (isSuccess) {
-      createMessage(
-        "Congrats! You have minted your Invitation(s) successfully.",
-        "success-container",
-      );
-    } else {
-      createMessage(
-        "We’re sorry, there was an error while trying to mint your Invitation Badge(s). Check your wallet and try again.",
-        "danger-container",
-      );
+
+      if (isSuccess) {
+        createMessage(
+          "Congrats! You have minted your Invitation(s) successfully.",
+          "success-container",
+        );
+      } else {
+        createMessage(
+          "We’re sorry, there was an error while trying to mint your Invitation Badge(s). Check your wallet and try again.",
+          "danger-container",
+        );
+      }
+  
+      setButtonText("Mint");
+      getProfileInfo();
     }
 
-    setButtonText("Mint");
-    getProfileInfo();
   };
 
   const calcNonDecimalValue = (value: number, decimals: number) => {
@@ -469,6 +506,15 @@ export default function Invitation() {
     // const res5 = await userConn.provider.sendAndConfirm(tx3);
     userConn.txis = [];
   };
+
+  const registerAction = async () => {
+    const env = new anchor.AnchorProvider(connection.connection, wallet, {
+      preflightCommitment: "processed",
+    });
+    anchor.setProvider(env);
+    let userConn: UserConn = new UserConn(env, web3Consts.programID);
+    await userConn.registerCommonLut()
+  }
 
   const mintInvitationAction = () => {
     if (solBalance == 0) {
@@ -616,7 +662,7 @@ export default function Invitation() {
 
               {inputValue == 0 && <p>Price: 0 $MMOSH</p>}
 
-              <p className="small">Plus at least 0.03 SOL in fees. Note: this amount will be reduced when the protocol is optimized. Sorry for the temporary inconvenience.</p>
+              <p className="small">Plus a small amount of SOL for transaction fees</p>
               <p>Current Balance: {tokBalance} MMOSH</p>
               <p>Current Balance: {solBalance} SOL</p>
             </div>
@@ -637,6 +683,55 @@ export default function Invitation() {
           </div>
         </div>
       </div>
+ 
+      <div className="container invitation-grid-container">
+          <div className="row">
+              <div className="col-md-4">
+                  <div className="invitation-grid">
+                  {profileImage != "" &&
+                    <div className="invitation-create-grid">
+                      <div className="invitation-create-grid-left">
+                            <img src={profileImage} alt="profile" />
+                      </div>
+                      <div className="invitation-create-grid-right">
+                          <h3>Create a New Coin</h3>
+                          <p>With your own Coin, you can build community to launch and scale your own projects. Get started now!</p>
+                          <div className="invitation-action-container">
+                            <Button variant="primary" size="sm" onClick={()=>{navigate.push("/create-a-coin")}}>
+                              Create a Coin!
+                            </Button>
+                          </div>
+                      </div>
+                    </div>
+                  }
+                  </div>
+              </div>
+              <div className="col-md-4">
+                  <div className="invitation-grid">
+                  {profileImage != "" &&
+                    <div className="invitation-create-grid">
+                      <div className="invitation-create-grid-left">
+                            <img src={profileImage} alt="profile" />
+                      </div>
+                      <div className="invitation-create-grid-right">
+                          <h3>Create a Community</h3>
+                          <p>With your own Project, you can build community to launch and scale your own community. Get started now!</p>
+                          <div className="invitation-action-container">
+                            <Button className="project-btn" variant="primary" size="sm" onClick={()=>{navigate.push("/communities")}}>
+                              Communities
+                            </Button>
+                            <Button variant="primary" size="sm" onClick={()=>{navigate.push("/community/create/step1")}}>
+                              Create
+                            </Button>
+                          </div>
+                      </div>
+                    </div>
+                  }
+                  </div>
+              </div>
+          </div>
+      </div>
+
     </div>
   );
 }

@@ -1,18 +1,10 @@
-import { AnchorProvider, BN, Program, web3 } from "@project-serum/anchor";
-import { utf8 } from "@project-serum/anchor/dist/cjs/utils/bytes";
+import { AnchorProvider, BN, Program, web3 } from "@coral-xyz/anchor";
+import { utf8 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
 // import { WalletContextState } from "@solana/wallet-adapter-react";
 import { BaseSpl } from "./baseSpl";
 import Config from "./../web3Config.json";
-// import { Uses } from "@metaplex-foundation/js/node_modules/@metaplex-foundation/mpl-token-metadata";
 import {
-  Uses,
   PROGRAM_ID as MPL_ID,
-  TokenStandard,
-  BurnEditionNftInstructionAccounts,
-  createBurnInstruction,
-  BurnInstructionArgs,
-  BurnNftInstructionAccounts,
-  BurnInstructionAccounts,
 } from "@metaplex-foundation/mpl-token-metadata";
 
 import {
@@ -23,11 +15,6 @@ import {
   VerifyNftCollectionBuilderParams,
   CreateNftBuilderParams,
 } from "@metaplex-foundation/js";
-
-import {
-  getAssociatedTokenAddressSync,
-  TOKEN_PROGRAM_ID,
-} from "@solana/spl-token";
 
 const log = console.log;
 
@@ -59,7 +46,6 @@ export class BaseMpl {
   reinit(): void {
     // const user = this.wallet.publicKey;
     //   this.metaplex.identity().setDriver({
-    //     publicKey: user,
     //     signMessage: this.wallet.signMessage,
     //     signTransaction: this.wallet.signTransaction,
     //     signAllTransactions: this.wallet.signAllTransactions,
@@ -104,66 +90,4 @@ export class BaseMpl {
     )[0];
   }
 
-  // async __createNft(
-  //   input: CreateNftBuilderParams,
-  //   collectionVerifictionInfo: { collectionId: web3.PublicKey } = null
-  // ) {
-  //   const nftKeypair = web3.Keypair.generate();
-  //   input.useNewMint = nftKeypair;
-  //
-  //   const txBuilder = await this.metaplex.nfts().builders().create(input);
-  //
-  //   if (collectionVerifictionInfo) {
-  //     txBuilder.add(
-  //       await this.metaplex.nfts().builders().verifyCollection({
-  //         mintAddress: nftKeypair.publicKey,
-  //         collectionMintAddress: collectionVerifictionInfo.collectionId,
-  //       })
-  //     );
-  //   }
-  //
-  //   const res = await txBuilder.sendAndConfirm(this.metaplex);
-  //
-  //   log({ res });
-
-  // const tx = new web3.Transaction().add(...ixs);
-  // const res = await this.wallet.sendTransaction(tx, this.connection, {
-  //   signers: [nftKeypair],
-  // });
-  // }
-
-  // async __burnNft(mint: web3.PublicKey) {
-  //   this.reinit();
-  //   const user = this.wallet.publicKey;
-  //   const user_ata = getAssociatedTokenAddressSync(mint, user);
-  //   const metadata = BaseMpl.getMetadataAccount(mint);
-  //   const edition = BaseMpl.getEditionAccount(mint);
-  //
-  //   const ix = createBurnInstruction(
-  //     {
-  //       mint,
-  //       metadata,
-  //       edition,
-  //       token: user_ata,
-  //       splTokenProgram: TOKEN_PROGRAM_ID,
-  //       authority: user,
-  //       sysvarInstructions: web3.SYSVAR_INSTRUCTIONS_PUBKEY,
-  //     },
-  //     { burnArgs: { __kind: "V1", amount: 1 } }
-  //   );
-  //
-  //   const tx = new web3.Transaction().add(ix);
-  //   const res = await this.wallet.sendTransaction(tx, this.connection);
-  //   log({ res });
-  // }
-  //
-  // async verifyCollectionItem(input: VerifyNftCollectionBuilderParams) {
-  //   const ixs = this.metaplex
-  //     .nfts()
-  //     .builders()
-  //     .verifyCollection(input)
-  //     .getInstructions();
-  //   const tx = new web3.Transaction().add(...ixs);
-  //   return { tx };
-  // }
 }

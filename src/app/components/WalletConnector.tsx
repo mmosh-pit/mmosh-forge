@@ -14,29 +14,45 @@ import { useMemo } from "react";
 import HeaderVW from "./headervw";
 import { ForgeProvider } from "../context/ForgeContext";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
+import { usePathname } from "next/navigation";
+import { SessionProvider } from "next-auth/react";
+import { Session } from "next-auth";
 
-const WalletConnector = ({ children }: { children: React.ReactNode }) => {
+const WalletConnector = ({ children, session }: { children: React.ReactNode, session:Session }) => {
   const solNetwork = Config.rpcURL;
   const endpoint = useMemo(() => solNetwork, [solNetwork]);
+  const pathname = usePathname()
 
   const wallets = useMemo(
     () => [
-      new PhantomWalletAdapter({ network: WalletAdapterNetwork.Mainnet }),
-      new SolflareWalletAdapter({ network: WalletAdapterNetwork.Mainnet }),
+      new PhantomWalletAdapter({network: WalletAdapterNetwork.Mainnet }),
+      new SolflareWalletAdapter({ network: WalletAdapterNetwork.Mainnet}),
       new TorusWalletAdapter(),
     ],
     [solNetwork],
   );
+
+  const isProjectPages = () => {
+    if(pathname == "/community/step1" || pathname == "/community/step2" || pathname == "/community/step3" || pathname == "/community/step4") {
+      return false
+    }
+    if(pathname.substring(0,8) == "/communi") {
+      return true
+    }
+    return false
+  }
 
   return (
     <ForgeProvider>
       <ConnectionProvider endpoint={endpoint} config={{confirmTransactionInitialTimeout:120000}}>
         <WalletProvider wallets={wallets}>
           <WalletModalProvider>
-            <div className="root-container">
+          <SessionProvider session={session} refetchInterval={0}>
+            <div className={isProjectPages ? "project-root-container root-container" : "root-container"}>
               <HeaderVW />
               <div className="content-container">{children}</div>
             </div>
+            </SessionProvider>
           </WalletModalProvider>
         </WalletProvider>
       </ConnectionProvider>

@@ -1,9 +1,10 @@
 import * as anchor from "@coral-xyz/anchor";
-import { AnchorProvider, Program, web3, BN } from "@project-serum/anchor";
-import { Wallet } from "@project-serum/anchor/dist/cjs/provider";
+import { AnchorProvider, Program, web3, BN } from "@coral-xyz/anchor";
+import { Wallet } from "@coral-xyz/anchor/dist/cjs/provider";
 import { bs58, utf8 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
 import { TOKEN_PROGRAM_ID } from "@coral-xyz/anchor/dist/cjs/utils/token";
-import { IDL, Sop } from "./sop";
+import { Mmoshforge } from "./mmoshforge";
+import IDL from "./mmoshforge.json";
 import {
   LineageInfo,
   MainState,
@@ -15,9 +16,8 @@ import {
 import Config from "./web3Config.json";
 import {
   getAssociatedTokenAddressSync,
-  getNonTransferable,
   unpackAccount,
-} from "@solana/spl-token";
+} from "forge-spl-token";
 import { BaseMpl } from "./base/baseMpl";
 import { web3Consts } from "./web3Consts";
 import { BaseSpl } from "./base/baseSpl";
@@ -44,7 +44,7 @@ export class Connectivity {
   txis: web3.TransactionInstruction[] = [];
   extraSigns: web3.Keypair[] = [];
   multiSignInfo: any[] = [];
-  program: Program<Sop>;
+  program: Program<Mmoshforge>;
   owner: web3.PublicKey;
   mainState: web3.PublicKey;
   connection: web3.Connection;
@@ -61,7 +61,7 @@ export class Connectivity {
     this.connection = provider.connection;
 
     this.programId = programId;
-    this.program = new Program(IDL, programId, this.provider);
+    this.program = new Program(IDL as Mmoshforge, this.provider);
     this.owner = this.provider.publicKey;
     this.metaplex = new Metaplex(this.connection);
     this.mainState = web3.PublicKey.findProgramAddressSync(
@@ -241,72 +241,6 @@ export class Connectivity {
           parentCollection: rootCollection,
           parentCollectionEdition: parentCollectionEdition,
           parentCollectionMetadata: parentCollectionMetadata,
-          mplProgram,
-          tokenProgram,
-          systemProgram,
-          sysvarInstructions,
-        })
-        .instruction();
-      this.txis.push(ix);
-
-      const tx = new web3.Transaction().add(...this.txis);
-      this.txis = [];
-      const signature = await this.provider.sendAndConfirm(tx);
-
-      return {
-        Ok: { signature, info: { collection: mint.toBase58() } },
-      };
-    } catch (e) {
-      log({ error: e });
-      return { Err: e };
-    }
-  }
-
-  async updateCollection(input: {
-    name?: string;
-    symbol?: string;
-    uri?: string;
-    mint?: web3.PublicKey;
-    parrentCollection?: web3.PublicKey;
-  }): Promise<Result<TxPassType<{ collection: string }>, any>> {
-    try {
-      this.reinit();
-      let { name, symbol, uri, mint, parrentCollection } = input;
-      name = name ?? "";
-      symbol = symbol ?? "";
-      uri = uri ?? "";
-      const admin = this.provider.publicKey;
-      if (!admin) throw "Wallet not found";
-
-      const adminAta = getAssociatedTokenAddressSync(mint, admin);
-      const metadata = BaseMpl.getMetadataAccount(mint);
-      const edition = BaseMpl.getEditionAccount(mint);
-      const collectionAuthorityRecord =
-        BaseMpl.getCollectionAuthorityRecordAccount(mint, this.mainState);
-      const collectionState = this.__getCollectionStateAccount(mint);
-
-      const rootCollection = parrentCollection ? parrentCollection : mint;
-      const parentCollectionMetadata =
-        BaseMpl.getMetadataAccount(rootCollection);
-      const parentCollectionEdition = BaseMpl.getEditionAccount(rootCollection);
-
-      const cuBudgetIncIx = web3.ComputeBudgetProgram.setComputeUnitLimit({
-        units: 3000_00,
-      });
-      this.txis.push(cuBudgetIncIx);
-
-      const ix = await this.program.methods
-        .updateCollection(name, symbol, uri)
-        .accounts({
-          admin,
-          mainState: this.mainState,
-          associatedTokenProgram,
-          collection: mint,
-          collectionEdition: edition,
-          collectionMetadata: metadata,
-          parentCollection: rootCollection,
-          parentCollectionEdition,
-          parentCollectionMetadata,
           mplProgram,
           tokenProgram,
           systemProgram,

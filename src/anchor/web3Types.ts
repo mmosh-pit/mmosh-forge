@@ -1,19 +1,19 @@
 import { IdlAccounts, IdlTypes } from "@coral-xyz/anchor";
-import { web3 } from '@project-serum/anchor';
-import { Sop } from "./sop";
+import { web3 } from '@coral-xyz/anchor';
+import { Mmoshforge } from "./mmoshforge";
 
 const mainStateTypeName = "mainState";
 const profileStateTypeName = "profileState";
-const lineageTypeName = "LineageInfo";
+const lineageTypeName = "lineageInfo";
 
-export type MainState = IdlAccounts<Sop>[typeof mainStateTypeName];
-export type ProfileState = IdlAccounts<Sop>[typeof profileStateTypeName];
-export type LineageInfo = IdlTypes<Sop>[typeof lineageTypeName];
+export type MainState = IdlAccounts<Mmoshforge>[typeof mainStateTypeName];
+export type ProfileState = IdlAccounts<Mmoshforge>[typeof profileStateTypeName];
+export type LineageInfo = IdlTypes<Mmoshforge>[typeof lineageTypeName];
 
-const mainStateInputTypeName = "MainStateInput";
-const mintProfileByAdminInput = "MintProfileByAdminInput"
-export type MainStateInput = IdlTypes<Sop>[typeof mainStateInputTypeName];
-export type MintProfileByAdminInput = IdlTypes<Sop>[typeof mintProfileByAdminInput];
+const mainStateInputTypeName = "mainStateInput";
+const mintProfileByAdminInput = "mintProfileByAdminInput"
+export type MainStateInput = IdlTypes<Mmoshforge>[typeof mainStateInputTypeName];
+export type MintProfileByAdminInput = IdlTypes<Mmoshforge>[typeof mintProfileByAdminInput];
 
 
 //EXTRA (Out of IDL)
@@ -22,6 +22,14 @@ export type Result<T, E> = {
   Err?: E;
 };
 export type TxPassType<Info> = { signature: string, info?: Info };
+
+export type _MintGensisInput = {
+  name?: string,
+  symbol?: string,
+  uri?: string,
+  mintKp: web3.Keypair,
+  input: MainStateInput,
+}
 
 export type _MintProfileInput = {
   name?: string,
@@ -36,7 +44,14 @@ export type _MintProfileByAtInput = {
   uriHash?: string,
   activationToken: string | web3.PublicKey
   genesisProfile: string | web3.PublicKey
+  commonLut: web3.PublicKey
 }
+
+export type _RegisterCommonLut = {
+  activationToken: string | web3.PublicKey
+  genesisProfile: string | web3.PublicKey
+}
+
 
 export type _MintSubscriptionToken = {
   parentProfile?: web3.PublicKey | string,

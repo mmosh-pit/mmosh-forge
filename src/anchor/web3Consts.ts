@@ -1,9 +1,9 @@
 import { utf8 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
-import { web3 } from "@project-serum/anchor";
+import { web3 } from "@coral-xyz/anchor";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 
 export const web3Consts = {
-  programID: new web3.PublicKey("62toyp2z8hsx3xj1Mx2vHMdsXMfgxTCvJ1tT6BehXpxF"),
+  programID: new web3.PublicKey("GQJBSNqckwApKwrjHMgvhhFtwZFxb3YCoDFFcLmYCnEA"),
   systemProgram: web3.SystemProgram.programId,
   sysvarInstructions: web3.SYSVAR_INSTRUCTIONS_PUBKEY,
   tokenProgram: TOKEN_PROGRAM_ID,
@@ -14,14 +14,14 @@ export const web3Consts = {
   addressLookupTableProgram: web3.AddressLookupTableProgram.programId,
   oposToken: new web3.PublicKey(process.env.NEXT_PUBLIC_OPOS_TOKEN!),
   rootProfile: new web3.PublicKey(process.env.NEXT_PUBLIC_ROOT_PROFILE!),
+  profileCollection: new web3.PublicKey(process.env.NEXT_PUBLIC_APP_PROFILE_COLLECTION!),
   genesisProfile: new web3.PublicKey(process.env.NEXT_PUBLIC_GENESIS_PROFILE!),
-  commonLut: new web3.PublicKey(process.env.NEXT_PUBLIC_COMMON_LUT!),
-
+  commonLut: new web3.PublicKey(process.env.NEXT_PUBLIC_APP_COMMON_LUT!),
   badgeCollection: new web3.PublicKey(
     process.env.NEXT_PUBLIC_BADGE_COLLECTION!,
   ),
   rootCollection: new web3.PublicKey(process.env.NEXT_PUBLIC_ROOT_COLLECTION!),
-
+  passCollection: new web3.PublicKey(process.env.NEXT_PUBLIC_PASS_COLLECTION!),
   LAMPORTS_PER_OPOS: 1000_000_000,
   Seeds: {
     mainState: utf8.encode("main_state4"),

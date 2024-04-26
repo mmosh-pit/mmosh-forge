@@ -1,5 +1,6 @@
 "use client";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { getCsrfToken, signIn, signOut, useSession } from "next-auth/react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { Button } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
@@ -23,6 +24,8 @@ import Link from "next/link";
 import { ForgeContext } from "../context/ForgeContext";
 import { Connectivity as UserConn } from "../../anchor/user";
 import { web3Consts } from "@/anchor/web3Consts";
+import { SigninMessage } from "../lib/SigninMessage";
+import { bs58 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
 
 export default function HeaderVW() {
   const forgeContext = React.useContext(ForgeContext);
@@ -38,6 +41,7 @@ export default function HeaderVW() {
   const [menuData, setMenuData] = useState<any>([]);
   const [mainUrl, setMainUrl] = useState("");
   const [currentLocation, setCurrentLocation] = useState("");
+  const { data: session, status } = useSession();
 
   useEffect(() => {
     const mainUrl: any = process.env.NEXT_PUBLIC_APP_MAIN_URL;
@@ -49,35 +53,43 @@ export default function HeaderVW() {
   }, []);
 
   useEffect(() => {
-    if (wallet?.publicKey) {
-      if (name == "") {
-        getProfileInfo();
+    if(pathname !=="/swap") {
+      if (wallet?.publicKey) {
+        if(status === "unauthenticated") {
+            handleSignIn();
+        } else {
+          if (name == "") {
+            getProfileInfo();
+          }
+        }
+      } else {
+        forgeContext.setLoading(false);
+        forgeContext.setConnected(false);
+        forgeContext.setUserData({
+          _id: "",
+          wallet: "",
+          username: "",
+          bio: "",
+          pronouns: "",
+          name: "",
+          image: "",
+          descriptor: "",
+          nouns: "",
+          seniority: "",
+        });
+        setName("");
+        navigate.push("/");
       }
-    } else {
-      forgeContext.setLoading(false);
-      forgeContext.setConnected(false);
-      forgeContext.setUserData({
-        _id: "",
-        wallet: "",
-        username: "",
-        bio: "",
-        pronouns: "",
-        name: "",
-        image: "",
-        descriptor: "",
-        nouns: "",
-        seniority: "",
-      });
-      setName("");
-      navigate.push("/");
     }
   }, [wallet.publicKey]);
 
   useEffect(() => {
-    if (pathname == "/" && wallet.publicKey) {
-      navigate.push("/dashboard");
-    } else if (pathname != "/" && !wallet.publicKey) {
-      navigate.push("/");
+    if(pathname !== "/swap") {
+      if (pathname == "/" && wallet.publicKey) {
+        navigate.push("/dashboard");
+      } else if (pathname != "/" && !wallet.publicKey) {
+        navigate.push("/");
+      }
     }
     setCurrentLocation(pathname);
   }, [pathname]);
@@ -174,157 +186,288 @@ export default function HeaderVW() {
     }
   };
 
+  const isProjectPages = () => {
+    if(currentLocation == "/community/step1" || currentLocation == "/community/step2" || currentLocation == "/community/step3" || pathname == "/community/step4") {
+      return false
+    }
+    if(currentLocation.substring(0,8) == "/communi") {
+      return true
+    }
+    return false
+  }
+
+  const handleSignIn = async () => {
+    try {
+      const csrf = await getCsrfToken();
+      if (!wallet.publicKey || !csrf || !wallet.signMessage) return;
+
+      const message = new SigninMessage({
+        domain: window.location.host,
+        publicKey: wallet.publicKey?.toBase58(),
+        statement: `Sign this message to sign in to the app.`,
+        nonce: csrf,
+      });
+
+      const data = new TextEncoder().encode(message.prepare());
+      const signature = await wallet.signMessage(data);
+      const serializedSignature = bs58.encode(signature);
+
+      await signIn("credentials", {
+        message: JSON.stringify(message),
+        redirect: false,
+        signature: serializedSignature,
+      });
+      if(name == "") {
+         getProfileInfo();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
-      {forgeContext.connected && (
-        <>
-          <div className="header">
-            <div
-              className={
-                offset === 0 ? "header-container" : "header-container active"
-              }
-            >
-              <IconButton onClick={handleDrawerOpen} className="menu-button">
-                <MenuIcon />
-              </IconButton>
-              <h1>
-                <Link href="javascript:void(0)">
-                  <img
-                    src="/images/logo.png"
-                    alt="Forge MMOSH"
-                    key={"Forge MMOSH"}
-                  />
-                </Link>
-              </h1>
-              <div className="forge-menu">
-                <ul>
-                  {menuData.map((menuDataItem: any, index: any) => (
-                    <li key={index}>
-                      <a href={menuDataItem.link} target="_blank">
-                        {menuDataItem.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="connect-action">
-                <div className="connect-action-item">
-                  <Button variant="primary" size="lg" className="setting-btn">
-                    <span>Coming soon</span>
-                    Settings
-                  </Button>
-                </div>
-                <div className="connect-action-item">
-                  {wallet.publicKey && <WalletMultiButton />}
-                </div>
-              </div>
-            </div>
-
-            <div className="banner-container">
-              <div className="banner-container-inner">
-                {name !== "" && currentLocation == "/dashboard" && (
-                  <div className="banner-container-inner-item">
-                    <p>
-                      Hey {capitalizeString(name)}, you’ll need an invitation to
-                      mint your Profile and become a MMOSH DAO member
-                    </p>
-                    <p>
-                      You can get an invitation from a current member.{" "}
-                      <Link href={mainUrl}>
-                        Find one in the Membership Directory
-                      </Link>{" "}
-                      or ask in our main telegram group for guests
-                    </p>
-                    <a
-                      type="button"
-                      href="https://t.me/mmoshpit"
-                      target="_blank"
-                    >
-                      <Button variant="primary" size="lg">
-                        Go to Telegram Group
+    {currentLocation !== "/swap"&&
+      <>
+        {forgeContext.connected && (
+            <>
+              <div className="header">
+                <div
+                  className={
+                    offset === 0 ? "header-container" : "header-container active"
+                  }
+                >
+                  <IconButton onClick={handleDrawerOpen} className="menu-button">
+                    <MenuIcon />
+                  </IconButton>
+                  <h1>
+                    <Link href="javascript:void(0)">
+                      <img
+                        src="/images/logo.png"
+                        alt="Forge MMOSH"
+                        key={"Forge MMOSH"}
+                      />
+                    </Link>
+                  </h1>
+                  <div className="forge-menu">
+                    <ul>
+                      {menuData.map((menuDataItem: any, index: any) => (
+                        <li key={index}>
+                          <a href={menuDataItem.link} target="_blank">
+                            {menuDataItem.name}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="connect-action">
+                    <div className="connect-action-item">
+                      <Button variant="primary" size="lg" className="setting-btn">
+                        <span>Coming soon</span>
+                        Settings
                       </Button>
-                    </a>
+                    </div>
+                    <div className="connect-action-item">
+                      {wallet.publicKey && <WalletMultiButton />}
+                    </div>
                   </div>
-                )}
-
-                {name === "" && currentLocation == "/dashboard" && (
-                  <div className="banner-container-inner-item no-account-banner">
-                    <h2>Howdy Stranger</h2>
-                    <p>The Forge is only for MMOSH Members and their Guests.</p>
-                    <p>
-                      Please connect the wallet you used to register, create a
-                      new account for this wallet address.
-                    </p>
-                    <Button variant="primary" size="lg" href={mainUrl}>
-                      Create an Account
-                    </Button>
-                  </div>
-                )}
-
-                <div className="banner-container-inner-item">
-                  <img
-                    src={
-                      location.pathname == "/dashboard"
-                        ? "/images/headerlogo.png"
-                        : "/images/headerlogo1.png"
-                    }
-                    alt="banner"
-                    key={"banner"}
-                  />
                 </div>
+                {(currentLocation != "/community/create/step1" && currentLocation != "/community/create/step2" && currentLocation != "/community/create/step3" && currentLocation != "/community/create/step4" && !isProjectPages()) &&
+                  <div className="banner-container">
+                    <div className="banner-container-inner">
+                      {name !== "" && currentLocation == "/dashboard" && (
+                        <div className="banner-container-inner-item">
+                          <p>
+                            Hey {capitalizeString(name)}, you’ll need an invitation to
+                            mint your Profile and become a MMOSH DAO member
+                          </p>
+                          <p>
+                            You can get an invitation from a current member.{" "}
+                            <Link href={mainUrl}>
+                              Find one in the Membership Directory
+                            </Link>{" "}
+                            or ask in our main telegram group for guests
+                          </p>
+                          <a
+                            type="button"
+                            href="https://t.me/mmoshpit"
+                            target="_blank"
+                          >
+                            <Button variant="primary" size="lg">
+                              Go to Telegram Group
+                            </Button>
+                          </a>
+                        </div>
+                      )}
+      
+                      {name === "" && currentLocation == "/dashboard" && (
+                        <div className="banner-container-inner-item no-account-banner">
+                          <h2>Howdy Stranger</h2>
+                          <p>The Forge is only for MMOSH Members and their Guests.</p>
+                          <p>
+                            Please connect the wallet you used to register, create a
+                            new account for this wallet address.
+                          </p>
+                          <Button variant="primary" size="lg" href={mainUrl}>
+                            Create an Account
+                          </Button>
+                        </div>
+                      )}
+                      
+                      <div className="banner-container-inner-item">
+                        <img
+                          src={
+                            location.pathname == "/dashboard"
+                              ? "/images/headerlogo.png"
+                              : "/images/headerlogo1.png"
+                          }
+                          alt="banner"
+                          key={"banner"}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                }
+
+                {currentLocation == "/communities" &&
+                  <div className="project-banner-container">
+                  </div>
+                }
+
+
+
+              </div>
+              <Drawer
+                sx={{
+                  width: 240,
+                  flexShrink: 0,
+                  "& .MuiDrawer-paper": {
+                    width: 240,
+                    boxSizing: "border-box",
+                  },
+                }}
+                variant="persistent"
+                anchor="left"
+                open={open}
+              >
+                <DrawerHeader>
+                  <IconButton onClick={handleDrawerClose}>
+                    <ChevronRightIcon />
+                  </IconButton>
+                </DrawerHeader>
+                <Divider />
+                <List>
+                  {menuData.map((menuDataItem: any, index: any) => (
+                    <ListItem key={menuDataItem.name} disablePadding>
+                      <ListItemButton href={menuDataItem.link} target="_blank">
+                        <ListItemIcon>
+                          {index % 2 === 0 ? <HomeIcon /> : <WebIcon />}
+                        </ListItemIcon>
+                        <ListItemText primary={menuDataItem.name} />
+                      </ListItemButton>
+                    </ListItem>
+                  ))}
+                </List>
+              </Drawer>
+            </>
+          )}
+    
+          {!forgeContext.connected && (
+            <div className="header">
+              <div className="guest-header-container header-container">
+                <h1>
+                  <a href="javascript:void(0)">
+                    <img
+                      src="/images/logo.png"
+                      alt="Forge MMOSH"
+                      key={"Forge MMOSH"}
+                    />
+                  </a>
+                </h1>
               </div>
             </div>
-          </div>
-          <Drawer
-            sx={{
-              width: 240,
-              flexShrink: 0,
-              "& .MuiDrawer-paper": {
-                width: 240,
-                boxSizing: "border-box",
-              },
-            }}
-            variant="persistent"
-            anchor="left"
-            open={open}
-          >
-            <DrawerHeader>
-              <IconButton onClick={handleDrawerClose}>
-                <ChevronRightIcon />
-              </IconButton>
-            </DrawerHeader>
-            <Divider />
-            <List>
-              {menuData.map((menuDataItem: any, index: any) => (
-                <ListItem key={menuDataItem.name} disablePadding>
-                  <ListItemButton href={menuDataItem.link} target="_blank">
-                    <ListItemIcon>
-                      {index % 2 === 0 ? <HomeIcon /> : <WebIcon />}
-                    </ListItemIcon>
-                    <ListItemText primary={menuDataItem.name} />
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </List>
-          </Drawer>
-        </>
-      )}
-
-      {!forgeContext.connected && (
+          )}
+      </>
+    }
+    {currentLocation === "/swap"&&
+      <>
         <div className="header">
-          <div className="guest-header-container header-container">
+          <div
+            className={
+              offset === 0 ? "header-container" : "header-container active"
+            }
+          >
+            <IconButton onClick={handleDrawerOpen} className="menu-button">
+              <MenuIcon />
+            </IconButton>
             <h1>
-              <a href="javascript:void(0)">
+              <Link href="javascript:void(0)">
                 <img
                   src="/images/logo.png"
                   alt="Forge MMOSH"
                   key={"Forge MMOSH"}
                 />
-              </a>
+              </Link>
             </h1>
+            <div className="forge-menu">
+              <ul>
+                {menuData.map((menuDataItem: any, index: any) => (
+                  <li key={index}>
+                    <a href={menuDataItem.link} target="_blank">
+                      {menuDataItem.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="connect-action" style={{"visibility":"hidden"}}>
+                    <div className="connect-action-item">
+                      <Button variant="primary" size="lg" className="setting-btn">
+                        <span>Coming soon</span>
+                        Settings
+                      </Button>
+                    </div>
+                    <div className="connect-action-item">
+                      {wallet.publicKey && <WalletMultiButton />}
+                    </div>
+                  </div>
           </div>
         </div>
-      )}
+        <Drawer
+                sx={{
+                  width: 240,
+                  flexShrink: 0,
+                  "& .MuiDrawer-paper": {
+                    width: 240,
+                    boxSizing: "border-box",
+                  },
+                }}
+                variant="persistent"
+                anchor="left"
+                open={open}
+              >
+                <DrawerHeader>
+                  <IconButton onClick={handleDrawerClose}>
+                    <ChevronRightIcon />
+                  </IconButton>
+                </DrawerHeader>
+                <Divider />
+                <List>
+                  {menuData.map((menuDataItem: any, index: any) => (
+                    <ListItem key={menuDataItem.name} disablePadding>
+                      <ListItemButton href={menuDataItem.link} target="_blank">
+                        <ListItemIcon>
+                          {index % 2 === 0 ? <HomeIcon /> : <WebIcon />}
+                        </ListItemIcon>
+                        <ListItemText primary={menuDataItem.name} />
+                      </ListItemButton>
+                    </ListItem>
+                  ))}
+                </List>
+              </Drawer>
+      </>
+    }
+
     </>
   );
 }
