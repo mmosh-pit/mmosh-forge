@@ -65,7 +65,7 @@ export default function Invitation() {
 
     const profileInfo = await userConn.getUserInfo();
     const fullname = profileInfo.profiles[0].userinfo.name.split(" ");
-    setName(fullname[0]);
+    setName(profileInfo.profiles[0].userinfo.name);
     setProfile(profileInfo.profiles[0].address);
     setSolBalance(profileInfo.solBalance);
     setTokBalance(profileInfo.oposTokenBalance);

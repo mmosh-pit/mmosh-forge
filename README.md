@@ -100,15 +100,15 @@ NEXTAUTH_SECRET=a62a0519097b7ef3ea1de11c29aafeabc7c2243a68be2fabf2454360833308d3
 
 Go to src/anchor/web3Consts.ts and update variable with given value
 ```ini
-  oposToken: new web3.PublicKey("FwfrwnNVLGyS8ucVjWvyoRdFDpTY8w6ACMAxJ4rqGUSS"),
-  rootProfile: new web3.PublicKey(
-    "85YaBFhbwuqPiRVNrXdMJwdt1qjdxbtypGcFBc6Tp7qA",
-  ),
-  genesisProfile: new web3.PublicKey(
-    "HLU5hoeXDqn9QSL6qFsPqi2dHXsTmsioYcuNd1CWbedB",
-  ),
-  commonLut: new web3.PublicKey("A1y1BoDXB5bph8nkiD1oBQb1BksxtSCbzxjH8gwuFf2Q"),
-  badgeCollection: new web3.PublicKey("GX2AC9XPza59gUL7mEeCnLPeD6o7bjRbS8xP2S1hgYjp"),
-  rootCollection: new web3.PublicKey("2YsiCzmKFS6QfNL88goG22qbhzxNM7EhrUD4ghWTTYhS"),
+NEXT_PUBLIC_OPOS_TOKEN=FwfrwnNVLGyS8ucVjWvyoRdFDpTY8w6ACMAxJ4rqGUSS
+NEXT_PUBLIC_ROOT_PROFILE=DA8ZEAcwZdzBzqrcr5N9vEvvSbBhmrdvpp6V4wksM6eG
+NEXT_PUBLIC_GENESIS_PROFILE=5hZvipJh93EimpyipmhuvFPTMVGcgj2rJks5cDDu48ts
+NEXT_PUBLIC_ROOT_COLLECTION=8rKVgAH9DsQcumJrfLYotCDj8EP4VL5JAFNBrQHMDozh
+NEXT_PUBLIC_APP_PROFILE_COLLECTION=2QfznyyKJWvLnLienCeFW4wZxRb6Mx2ByhRdgZGQCp9u
+NEXT_PUBLIC_BADGE_COLLECTION=4HLgkPg5hsoW2Yymv3PXhQhjZRBcovwTZCaiFe4ZHUoA
+NEXT_PUBLIC_PASS_COLLECTION=8UhitpWzAvjefzbnE5KReCnMNqeYFCxw3gn8VYHqAJxk
+NEXT_PUBLIC_APP_COMMON_LUT=AA9yA5hFkmALURXB8ESB288fAkxmEzs6n5QfvYr3hxty
 
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=a62a0519097b7ef3ea1de11c29aafeabc7c2243a68be2fabf2454360833308d3
 ```

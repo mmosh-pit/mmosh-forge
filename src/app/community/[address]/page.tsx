@@ -431,7 +431,7 @@ export default function ProjectDetail({ params }: { params: { address: string } 
                 name: forgeContext.userData.name != "" ? "Invitation from " + capitalizeString(projectDetail.name) : "Invitation",
                 symbol: projectDetail.symbol,
                 description: desc,
-                image: projectDetail.image,
+                image: projectDetail.inviteimg,
                 external_url: process.env.NEXT_PUBLIC_APP_MAIN_URL,
                 minter: forgeContext.userData.name,
                 attributes: attributes,

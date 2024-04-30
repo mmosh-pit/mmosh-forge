@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
       status: 200,
     });
   }
-  const { name, symbol, coinimage, desc, image, project, tokenaddress, lut, seniority, telegram  } = await req.json();
+  const { name, symbol, coinimage, desc, image, passimg, inviteimg, project, tokenaddress, lut, seniority, telegram  } = await req.json();
 
   const projectDetail = await projectCollection.findOne({
     project: project,
@@ -27,6 +27,8 @@ export async function POST(req: NextRequest) {
         desc,
         image,
         coinimage,
+        passimg,
+        inviteimg,
         token: tokenaddress,
         project,
         lut,
