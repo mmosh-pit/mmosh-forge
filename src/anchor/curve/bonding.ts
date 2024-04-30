@@ -1,6 +1,6 @@
 import * as anchor from "@coral-xyz/anchor";
-import { AnchorProvider, Program, web3, BN } from "@project-serum/anchor";
-import { Wallet } from "@project-serum/anchor/dist/cjs/provider";
+import { AnchorProvider, Program, web3, BN } from "@coral-xyz/anchor";
+import { Wallet } from "@coral-xyz/anchor/dist/cjs/provider";
 import { bs58, utf8 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
 import { TOKEN_PROGRAM_ID } from "@coral-xyz/anchor/dist/cjs/utils/token";
 import { IDL, Mmoshforge } from "../mmoshforge";
@@ -32,7 +32,7 @@ import {
   percent,
   toBN,
 } from "@strata-foundation/spl-utils";
-import { IdlAccounts, Idl } from "@project-serum/anchor";
+import { IdlAccounts, Idl } from "@coral-xyz/anchor";
 
 import { Token } from "./spl-token-curve/index";
 import { BondingHierarchy } from "./bondingHierarchy";
@@ -57,6 +57,7 @@ import {
   unpackAccount,
 } from "forge-spl-token";
 import { web3Consts } from "../web3Consts";
+import { BaseSpl } from "../base/baseSpl";
 
 export type ProgramStateV0 = IdlAccounts<Mmoshforge>["programStateV0"];
 export type CurveV0 = IdlAccounts<Mmoshforge>["curveV0"];
@@ -84,6 +85,7 @@ export class Connectivity {
   mainState: web3.PublicKey;
   connection: web3.Connection;
   metaplex: Metaplex;
+  baseSpl: BaseSpl;
   state: IProgramState | undefined;
   account;
 
@@ -109,6 +111,7 @@ export class Connectivity {
     this.programId = programId;
     this.program = new Program(IDL, programId, this.provider);
     this.metaplex = new Metaplex(this.connection);
+    this.baseSpl = new BaseSpl(this.connection);
     this.account = this.program.account;
   }
 
@@ -985,7 +988,10 @@ export class Connectivity {
       tokenBondingAcct.goLiveUnixTime.toNumber(),
     );
 
-    const instructions: anchor.web3.TransactionInstruction[] = [];
+    const instructions: anchor.web3.TransactionInstruction[] = this.txis;
+    console.log("buy instruction is ", instructions)
+
+    this.txis = []
     // let req = ComputeBudgetProgram.setComputeUnitLimit({units: 400000});
     // instructions.push(req);
 
@@ -1146,23 +1152,29 @@ export class Connectivity {
   }
 
   async sell(args: ISellArgs): Promise<string> {
-    const tokenObj = await this.sellInstructions(args);
-    const tx = new web3.Transaction().add(...tokenObj.instructions);
-    const feeEstimate = await this.getPriorityFeeEstimate(tx);
-    let feeIns;
-    if (feeEstimate > 0) {
-      feeIns = web3.ComputeBudgetProgram.setComputeUnitPrice({
-        microLamports: feeEstimate,
-      });
-    } else {
-      feeIns = web3.ComputeBudgetProgram.setComputeUnitLimit({
-        units: 1_400_000,
-      });
+    try {
+      const tokenObj = await this.sellInstructions(args);
+      const tx = new web3.Transaction().add(...tokenObj.instructions);
+      const feeEstimate = await this.getPriorityFeeEstimate(tx);
+      let feeIns;
+      if (feeEstimate > 0) {
+        feeIns = web3.ComputeBudgetProgram.setComputeUnitPrice({
+          microLamports: feeEstimate,
+        });
+      } else {
+        feeIns = web3.ComputeBudgetProgram.setComputeUnitLimit({
+          units: 1_400_000,
+        });
+      }
+      tx.add(feeIns);
+      const signature = await this.provider.sendAndConfirm(tx, tokenObj.signers);
+      console.log("sell ", signature);
+      return signature;
+    } catch (error) {
+      console.log("error is", error)
+      return "";
     }
-    tx.add(feeIns);
-    const signature = await this.provider.sendAndConfirm(tx, tokenObj.signers);
-    console.log("sell ", signature);
-    return signature;
+
   }
 
   /**
@@ -1222,7 +1234,10 @@ export class Connectivity {
       tokenBondingAcct.goLiveUnixTime.toNumber(),
     );
 
-    const instructions: anchor.web3.TransactionInstruction[] = [];
+    const instructions: anchor.web3.TransactionInstruction[] = this.txis;
+    console.log("sell instruction is ", instructions)
+    this.txis = [];
+    
     // let req = ComputeBudgetProgram.setComputeUnitLimit({units: 350000});
     // instructions.push(req);
     if (!source) {
@@ -1302,6 +1317,7 @@ export class Connectivity {
       tokenProgram: TOKEN_PROGRAM_ID,
       clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
     };
+
     if (isNative) {
       instructions.push(
         await this.program.methods
@@ -1320,6 +1336,22 @@ export class Connectivity {
           .instruction(),
       );
     } else {
+      console.log("sell instruction args minimumPrice", args.minimumPrice.toNumber())
+      console.log("sell instruction args targetAmount", args.targetAmount.toNumber())
+      console.log("sell instruction args  common",{
+      tokenBonding: tokenBonding.toBase58(),
+      // @ts-ignore
+      curve: tokenBondingAcct.curve.toBase58(),
+      baseMint: tokenBondingAcct.baseMint.toBase58(),
+      targetMint: tokenBondingAcct.targetMint.toBase58(),
+      baseStorage: tokenBondingAcct.baseStorage.toBase58(),
+      sellBaseRoyalties: tokenBondingAcct.sellBaseRoyalties.toBase58(),
+      sellTargetRoyalties: tokenBondingAcct.sellTargetRoyalties.toBase58(),
+      source: source.toBase58(),
+      sourceAuthority: sourceAuthority.toBase58(),
+      tokenProgram: TOKEN_PROGRAM_ID,
+      clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+    })
       instructions.push(
         await this.program.methods
           .sellV1(args)
@@ -1330,6 +1362,7 @@ export class Connectivity {
           })
           .instruction(),
       );
+    
     }
 
     return {

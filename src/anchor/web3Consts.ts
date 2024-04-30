@@ -1,9 +1,9 @@
 import { utf8 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
-import { web3 } from "@project-serum/anchor";
+import { web3 } from "@coral-xyz/anchor";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 
 export const web3Consts = {
-  programID: new web3.PublicKey("DCy6L7FGjNZr6oYLZsojS9aC9LJ2XniiTiF7qhkEfBme"),
+  programID: new web3.PublicKey("GQJBSNqckwApKwrjHMgvhhFtwZFxb3YCoDFFcLmYCnEA"),
   systemProgram: web3.SystemProgram.programId,
   sysvarInstructions: web3.SYSVAR_INSTRUCTIONS_PUBKEY,
   tokenProgram: TOKEN_PROGRAM_ID,

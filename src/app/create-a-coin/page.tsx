@@ -214,7 +214,7 @@ export default function CreateCoin() {
         console.log("createTokenBonding",res)
     
 
-        setMintingStatus("Swaping Token...")
+        setMintingStatus("Swapping Token...")
         await delay(15000)
         const buyres = await curveConn.buy({
           tokenBonding: res.tokenBonding,

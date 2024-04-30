@@ -926,6 +926,14 @@ input[type="number"] {
   margin: 20px 0 0;
 }
 
+.swap-page-container-inner  .swap-info {
+  font-size: 8px;
+  color: rgba(218, 218, 218, 1);
+  text-align: left;
+  padding: 0;
+  margin: 20px 0 0;
+}
+
 .swap-page-container-inner button.nobalance {
   background: rgba(0,0,0,0.5);
   color: #666;
