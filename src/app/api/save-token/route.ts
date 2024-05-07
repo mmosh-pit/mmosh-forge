@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
       status: 200,
     });
   }
-  const { name, symbol, image, tokenaddress, bondingaddress } = await req.json();
+  const { name, symbol, desc, image, tokenaddress, bondingaddress } = await req.json();
 
   const token = await tokenCollection.findOne({
     token: tokenaddress,
@@ -24,6 +24,7 @@ export async function POST(req: NextRequest) {
         name,
         symbol: symbol.toLowerCase(),
         image,
+        desc,
         token: tokenaddress,
         bonding: bondingaddress,
         created_date: new Date(),

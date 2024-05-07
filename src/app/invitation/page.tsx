@@ -697,8 +697,11 @@ export default function Invitation() {
                           <h3>Create a New Coin</h3>
                           <p>With your own Coin, you can build community to launch and scale your own projects. Get started now!</p>
                           <div className="invitation-action-container">
-                            <Button variant="primary" size="sm" onClick={()=>{navigate.push("/create-a-coin")}}>
+                            <Button className="project-btn" variant="primary" size="sm" onClick={()=>{navigate.push("/create-a-coin")}}>
                               Create a Coin!
+                            </Button>
+                            <Button variant="primary" size="sm" onClick={()=>{navigate.push("/explore")}}>
+                              Explore
                             </Button>
                           </div>
                       </div>

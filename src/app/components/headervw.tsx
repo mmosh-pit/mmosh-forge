@@ -53,7 +53,7 @@ export default function HeaderVW() {
   }, []);
 
   useEffect(() => {
-    if(pathname !=="/swap") {
+    if(pathname !=="/swap" && !isExplorePages(pathname)) {
       if (wallet?.publicKey) {
         if(status === "unauthenticated") {
             handleSignIn();
@@ -84,7 +84,7 @@ export default function HeaderVW() {
   }, [wallet.publicKey]);
 
   useEffect(() => {
-    if(pathname !== "/swap") {
+    if(pathname !== "/swap" && !isExplorePages(pathname)) {
       if (pathname == "/" && wallet.publicKey) {
         navigate.push("/dashboard");
       } else if (pathname != "/" && !wallet.publicKey) {
@@ -190,11 +190,20 @@ export default function HeaderVW() {
     if(currentLocation == "/community/step1" || currentLocation == "/community/step2" || currentLocation == "/community/step3" || pathname == "/community/step4") {
       return false
     }
+    
     if(currentLocation.substring(0,8) == "/communi") {
       return true
     }
     return false
   }
+
+  const isExplorePages = (pathname:any) => {
+    if(pathname.substring(0,8) == "/explore") {
+      return true
+    }
+    return false
+  }
+
 
   const handleSignIn = async () => {
     try {
@@ -227,7 +236,7 @@ export default function HeaderVW() {
 
   return (
     <>
-    {currentLocation !== "/swap"&&
+    {(currentLocation !== "/swap" && !isExplorePages(currentLocation)) &&
       <>
         {forgeContext.connected && (
             <>
@@ -389,7 +398,7 @@ export default function HeaderVW() {
           )}
       </>
     }
-    {currentLocation === "/swap"&&
+    {(currentLocation === "/swap" || isExplorePages(currentLocation)) &&
       <>
         <div className="header">
           <div

@@ -36,6 +36,7 @@ const WalletConnector = ({ children, session }: { children: React.ReactNode, ses
     if(pathname == "/community/step1" || pathname == "/community/step2" || pathname == "/community/step3" || pathname == "/community/step4") {
       return false
     }
+    
     if(pathname.substring(0,8) == "/communi") {
       return true
     }

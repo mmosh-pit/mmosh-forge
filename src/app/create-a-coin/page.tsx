@@ -223,8 +223,26 @@ export default function CreateCoin() {
         });
   
         if (buyres) {
+
+          let params = {
+            basekey: web3Consts.oposToken.toBase58(),
+            basename:"MMOSH: The Stoked Token",
+            basesymbol:"MMOSH",
+            baseimg: "https://shdw-drive.genesysgo.net/7nPP797RprCMJaSXsyoTiFvMZVQ6y1dUgobvczdWGd35/MMoshCoin.png",
+            bonding: res.tokenBonding.toBase58(),
+            targetkey: targetMint,
+            targetname: name,
+            targetsymbol:symbol,
+            targetimg: body.image,
+            value: Number(supply),
+            price: curveConfig.current(),
+            type:"sell",
+            wallet:wallet.publicKey.toBase58()
+          }
+          await saveDirectory(params);
+
             setMintingStatus("Saving Token...")
-            await storeToken(name,symbol,body.image, res.targetMint.toBase58(),res.tokenBonding.toBase58());
+            await storeToken(name,symbol,desc,body.image, res.targetMint.toBase58(),res.tokenBonding.toBase58());
             createMessage(
               <p>Congrats! You coin is  minted and tradable in <a href="javascript:void(0)" onClick={()=>{navigate.push("/swap")}}>Swap</a></p>,
               "success-container",
@@ -251,6 +269,10 @@ export default function CreateCoin() {
 
 
    }
+
+   const saveDirectory = async (params) => {
+    await axios.post("/api/save-directory", params);
+  }
 
   const validateFields = () => {
     if (solBalance == 0) {
@@ -375,10 +397,11 @@ export default function CreateCoin() {
       return curveConfig.buyTargetAmount(Number(supply), percent(0), percent(0));
   }
 
-  const storeToken  = async(nameStr:any, symbolStr:any, imageuri:any, tokenaddress:any, bondingaddress:any) =>  {
+  const storeToken  = async(nameStr:any, symbolStr:any, descStr:any, imageuri:any, tokenaddress:any, bondingaddress:any) =>  {
     await axios.post("/api/save-token", {
       name: nameStr,
       symbol: symbolStr,
+      desc:descStr,
       image: imageuri,
       tokenaddress: tokenaddress,
       bondingaddress: bondingaddress

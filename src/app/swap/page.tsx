@@ -260,9 +260,9 @@ export default function Swap() {
         let curveConn: CurveConn = new CurveConn(env, web3Consts.programID);
         let userConn: UserConn = new UserConn(env, web3Consts.programID);
         const tokenBondingAcct = await curveConn.getTokenBonding(new anchor.web3.PublicKey(targeToken.bonding));
+
         const gensisUser = await userConn.getGensisProfileOwner();
         const ownerUser = await userConn.getNftProfileOwner(tokenBondingAcct.targetMint);
-
         console.log("my user", wallet.publicKey.toBase58())
         console.log("tokenBondingAcct ownerUser ",ownerUser.profileHolder.toBase58())
         console.log("owner user share", (targeToken.value * 0.03) * web3Consts.LAMPORTS_PER_OPOS)
@@ -303,6 +303,45 @@ export default function Swap() {
                 }
             }
 
+
+            let params;
+            if(targeToken.token == web3Consts.oposToken.toBase58()) {
+               // sell
+               params = {
+                basekey: targeToken.token,
+                basename:  targeToken.name,
+                basesymbol:  targeToken.symbol,
+                baseimg: targeToken.image,
+                bonding: targeToken.bonding,
+                targetkey: baseToken.token,
+                targetname: baseToken.name,
+                targetsymbol:baseToken.symbol,
+                targetimg: baseToken.image,
+                value: (targeToken.value - (targeToken.value * 0.06)),
+                price: baseToken.value / (targeToken.value - (targeToken.value * 0.06)),
+                type:"sell",
+                wallet:wallet.publicKey.toBase58()
+               }
+            } else {
+                params = {
+                    basekey: baseToken.token,
+                    basename: baseToken.name,
+                    basesymbol: baseToken.symbol,
+                    baseimg: baseToken.image,
+                    bonding: baseToken.bonding,
+                    targetkey: targeToken.token,
+                    targetname: targeToken.name,
+                    targetsymbol:targeToken.symbol,
+                    targetimg: targeToken.image,
+                    value: baseToken.value,
+                    price: (targeToken.value - (targeToken.value * 0.06)) / baseToken.value,
+                    type:"buy",
+                    wallet:wallet.publicKey.toBase58()
+                }
+            }
+            await saveDirectory(params);
+
+
             await userConn.storeRoyalty(wallet.publicKey.toBase58(), [
                 {
                   receiver: ownerUser.profileHolder.toBase58(),
@@ -338,6 +377,10 @@ export default function Swap() {
         }
     
 
+    }
+
+    const saveDirectory = async (params) => {
+        await axios.post("/api/save-directory", params);
     }
 
       
