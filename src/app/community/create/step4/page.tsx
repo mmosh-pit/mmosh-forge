@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useAnchorWallet, useConnection } from "@solana/wallet-adapter-react";
 import { useRouter } from "next/navigation";
 import { ArrowBackIos, CheckBox, CheckBoxOutlineBlank, Close, KeyboardArrowDown, Search} from "@mui/icons-material";
@@ -18,11 +18,14 @@ import { ForgeContext } from "@/app/context/ForgeContext";
 import { ShdwDrive } from "@shadow-drive/sdk";
 import Config from "./../../../../anchor/web3Config.json";
 import { v4 as uuidv4 } from "uuid";
-
+import { toBlob } from 'html-to-image';
+import { pinImageToShadowDrive } from "@/app/lib/pinImageToShadowDrive";
 let source;
 
 
 export default function ProjectStepFour() {
+    const passref = useRef<HTMLDivElement>(null)
+    const invitationref = useRef<HTMLDivElement>(null)
     const navigate = useRouter();
     const connection = useConnection();
     const wallet: any = useAnchorWallet();
@@ -193,14 +196,27 @@ export default function ProjectStepFour() {
             const profileMintingCost = new anchor.BN(calcNonDecimalValue(Number(price), 9))
             const invitationMintingCost = new anchor.BN(calcNonDecimalValue(invPrice, 9))
 
+            setMintingStatus("Preparing Pass Image...")
+            const passImage = await toBlob(passref.current, { cacheBust: true, });
+            const fileName = uuidv4() + ".png";
+            const file = new File([passImage], fileName, { type: "image/png" });
+            const passImageUri = await pinImageToShadowDrive(file);
+            console.log("pass image", passImageUri);
+
+            setMintingStatus("Preparing Invitation Image...")
+            const invitationImage = await toBlob(invitationref.current, { cacheBust: true, });
+            const invitationFileName = uuidv4() + ".png";
+            const invitationFile = new File([invitationImage], invitationFileName, { type: "image/png" });
+            const invitationImageUri = await pinImageToShadowDrive(invitationFile);
+            console.log("invitation image", invitationImageUri);
+
                     
             setMintingStatus("Preparing Metadata...")
-
             const body = {
                 name: name,
                 symbol: symbol,
                 description: description,
-                image: imageFile,
+                image: passImageUri,
                 enternal_url: process.env.NEXT_PUBLIC_APP_MAIN_URL,
                 family: "MMOSH",
                 collection: "MMOSH Pass Collection",
@@ -228,13 +244,23 @@ export default function ProjectStepFour() {
                 ],
             };
 
+            let duptopics = []
             for (let index = 0; index < topics.length; index++) {
+              if(!duptopics.includes(topics[index].header)) {
+                duptopics.push(topics[index].header)
                 body.attributes.push(
-                    {
-                        trait_type: "topics",
-                        value: topics[index].value
-                    }
+                  {
+                      trait_type: "Topic",
+                      value: topics[index].header
+                  }
                 )
+              }
+              body.attributes.push(
+                  {
+                      trait_type: "Interest",
+                      value: topics[index].value
+                  }
+              )
             }
 
             const shdwHash: any = await pinFileToShadowDrive(body);
@@ -318,7 +344,7 @@ export default function ProjectStepFour() {
                 name: name != "" ? "Invitation from join " +  name : "Invitation",
                 symbol: symbol,
                 description: desc,
-                image:imageFile,
+                image:invitationImageUri,
                 external_url: process.env.NEXT_PUBLIC_APP_MAIN_URL,
                 minter: username,
                 attributes: [
@@ -382,6 +408,8 @@ export default function ProjectStepFour() {
                 symbol,
                 desc: description,
                 image: imageFile,
+                passimg: passImageUri,
+                inviteimg: invitationImageUri,
                 coinimage: coin.image,
                 project: genesisProfileStr,
                 tokenaddress: coin.token,
@@ -398,6 +426,7 @@ export default function ProjectStepFour() {
                   <p>Congrats! Your community has been deployed to the Solana blockchain and your assets have been sent to your wallet.</p>,
                   "success-container",
               );
+              await delay(4000)
               navigate.replace("/communities");
             } else {
               createMessage(
@@ -523,7 +552,7 @@ export default function ProjectStepFour() {
                 <div className="project-step4-container">
                   <div className="project-pass-collage-container">
                         <h3>Genesis Pass</h3>
-                        <div className="project-pass-collage-image-decorated">
+                        <div className="project-pass-collage-image-decorated" ref={passref}>
                             <img src={imageFile} alt="project" className="project-pass-collage-image-decorated-main"/>
                             <div className="project-pass-collage-image-decorated-left">
                                 <img src="/images/access.png" />
@@ -552,7 +581,7 @@ export default function ProjectStepFour() {
                 <div className="project-step4-container">
                   <div className="project-pass-collage-container">
                         <h3>Invitation Badge</h3>
-                        <div className="project-pass-collage-image-decorated">
+                        <div className="project-pass-collage-image-decorated" ref={invitationref}>
                             <img src={imageFile} alt="project" className="project-pass-collage-image-decorated-main"/>
                             <div className="project-pass-collage-image-decorated-left">
                                 <img src="/images/access.png" />
