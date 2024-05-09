@@ -21,6 +21,34 @@ import { ExponentialCurve, ExponentialCurveConfig } from "@/anchor/curve/curves"
 import { percent } from "@strata-foundation/spl-utils";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { Bar, Line } from 'react-chartjs-2';
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  PointElement,
+  LineElement,
+  Filler,
+  Title,
+  Tooltip,
+  Legend
+);
+
+
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  PointElement,
+  LineElement,
+  Filler,
+  ChartOptions,
+} from 'chart.js';
+
 
 export default function CreateCoin() {
     const navigate = useRouter();
@@ -56,10 +84,49 @@ export default function CreateCoin() {
     const [symbol, setSymbol] = useState("")
     const [desc, setDesc] = useState("")
     const [supply, setSupply] = useState("")
+    const [type, setType] = useState("exponential")
+    const [multiplier, setMultiplier] = useState<any>(1)
+    const [initialPrice, setInitialPrice] = useState<any>(0)
+    const [coinPrice, setCoinPrice] = useState<any>(0)
     const [mintingStatus, setMintingStatus] = useState("Minting...")
 
     const [isSubmit, setIsSubmit] = useState(false);
     const delay = ms => new Promise(res => setTimeout(res, ms));
+
+    const [areaoptions] = useState<ChartOptions>({
+      responsive: true,
+      plugins: {
+        legend: {
+          display: false,
+        },
+        title: {
+          display: false,
+        }
+      },
+      scales: {
+        y: {
+          title: {
+            text: "Coin Supply",
+            display: true
+          },
+        },
+        x: {
+          title: {
+            text: "MMOSH Supply",
+            display: true
+          },
+        }
+     }
+    });
+    const [arealabels, setArealabels] = useState([]);
+    const [areadatasets, setAreadatasets] = useState([
+      {
+        fill: true,
+        data: [],
+        borderColor: '#0047FF',
+        backgroundColor: 'rgba(5, 77, 183, 0.5)',
+      },
+    ]) 
 
   useEffect(() => {
     if (wallet?.publicKey) {
@@ -104,6 +171,7 @@ export default function CreateCoin() {
       });
       anchor.setProvider(env);
       let curveConn: CurveConn = new CurveConn(env, web3Consts.programID);
+
 
       // first time need to execute
       // const initres = await curveConn.initializeSolStorage({
@@ -157,30 +225,34 @@ export default function CreateCoin() {
           );
           return;
         }
-        const intialPrice = 1000000000000;
-        const basePrice = calculatePrice(intialPrice);
-        const coinValue = Number(supply) / basePrice * intialPrice;
+        
 
+        const initPrice = 1000000000000;
+        const basePrice = calculatePrice(initPrice, supply, multiplier);
+        const coinValue = Number(supply) / basePrice * initPrice;
+  
        
         const curveConfig = new ExponentialCurve(
           {
-            c: new anchor.BN(coinValue), // c = 1
-            b: new anchor.BN(0),
+            c: new anchor.BN(type == "linear" ? 0 : coinValue), // c = 1
+            b: new anchor.BN(Number(initialPrice) * initPrice),
             // @ts-ignore
-            pow: 1,
+            pow: Number(multiplier),
             // @ts-ignore
             frac: 1,
           },
           0,
           0
         );
+
+        console.log("curve config ", curveConfig)
+
         
         setMintingStatus("Creating Curve Config...")
         let curve = await curveConn.initializeCurve({
           config: new ExponentialCurveConfig(curveConfig),
         });
 
-   
         
         setMintingStatus("Creating Token...")
         await delay(15000)
@@ -380,21 +452,67 @@ export default function CreateCoin() {
   };
 
 
-  const calculatePrice = (coinValue: any) => {
+  const calculatePrice = (coinValue: any, currentSupply:any, multiValue:any) => {
       const curveConfig = new ExponentialCurve(
         {
           c: new anchor.BN(coinValue), // c = 1
           b: new anchor.BN(0),
           // @ts-ignore
-          pow: 1,
+          pow: Number(multiValue),
           // @ts-ignore
           frac: 1,
         },
         0,
         0
       );
+      return curveConfig.buyTargetAmount(Number(currentSupply), percent(0), percent(0));
+  }
 
-      return curveConfig.buyTargetAmount(Number(supply), percent(0), percent(0));
+  const calculatePriceForCurve = (curveConfig:ExponentialCurve, coinSupply:any) => {
+      let labels = []
+      let datas = []
+      let totalSupply = Number(coinSupply) * 10;
+      let currentSupply = Number(coinSupply)
+
+      for (let index = currentSupply; index <= totalSupply; index = index + currentSupply) {
+          labels.push(index);
+          datas.push(curveConfig.buyWithBaseAmount(Number(index), percent(0), percent(0)))
+      }
+      setArealabels(labels);
+      setAreadatasets([
+        {
+          fill: true,
+          data: datas,
+          borderColor: '#0047FF',
+          backgroundColor: 'rgba(5, 77, 183, 0.5)',
+        },
+      ])
+      console.log("calculatePriceForCurve labels ",labels)
+      console.log("calculatePriceForCurve datas ",datas)
+  }
+
+  const getCoinPrice = (coinSupply:any, coinInitPrice:any, coinType: any, mulValue:any) => {
+    console.log("getCoinPrice multiplier", mulValue)
+    const initPrice = 1000000000000;
+    const basePrice = calculatePrice(initPrice, coinSupply, mulValue);
+    const coinValue = Number(coinSupply) / basePrice * initPrice;
+
+   
+    const curveConfig = new ExponentialCurve(
+      {
+        c: new anchor.BN(coinType == "linear" ? 0 : coinValue), // c = 1
+        b: new anchor.BN(Number(coinInitPrice.length > 0 ? coinInitPrice : (coinType == "linear" ? 1 : 0)) * initPrice),
+        // @ts-ignore
+        pow: Number(mulValue),
+        // @ts-ignore
+        frac: 1,
+      },
+      0,
+      0
+    );
+    console.log("getCoinPrice curveConfig ",curveConfig)
+    calculatePriceForCurve(curveConfig, coinSupply);
+    setCoinPrice(curveConfig.buyWithBaseAmount(Number(coinSupply), percent(0), percent(0)))
   }
 
   const storeToken  = async(nameStr:any, symbolStr:any, descStr:any, imageuri:any, tokenaddress:any, bondingaddress:any) =>  {
@@ -406,6 +524,20 @@ export default function CreateCoin() {
       tokenaddress: tokenaddress,
       bondingaddress: bondingaddress
     });
+  }
+
+  const onSelectType = (event:any) => {
+    if(event.target.value == "linear") {
+      setInitialPrice(1);
+      getCoinPrice(supply,1,event.target.value,0);
+      setMultiplier(0);
+    } else {
+      setInitialPrice(0);
+      setMultiplier(1);
+      getCoinPrice(supply,0,event.target.value,1);
+    }
+    setType(event.target.value);
+   
   }
 
   return (
@@ -421,10 +553,10 @@ export default function CreateCoin() {
 
        <div className="container">
            <div className="row justify-content-md-center">
-              <div className="col-xl-7">
+              <div className="col-xl-11">
                  <div className="create-coin-container">
                     <div className="row">
-                        <div className="col-xl-5">
+                        <div className="col-xl-3">
                             <div className="create-coin-left">
                                 {imageFile.length == 0 && 
                                    <img src="/images/upload.png" alt="coins" />
@@ -448,7 +580,7 @@ export default function CreateCoin() {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-xl-7">
+                        <div className="col-xl-4">
                             <div className="create-coin-right">
                                     <div className="profile-container-element">
                                             <label>Name your coin</label>
@@ -487,6 +619,45 @@ export default function CreateCoin() {
                                     </div>
 
                             </div>
+                        </div>
+                        <div className="col-xl-4">
+                          <div className="create-coin-right">
+                              <div className="profile-container-element">
+                                <label>Choose a Bonding Curve for your Coin</label>
+                                <Form.Select onChange={e => {onSelectType(e)}}>
+                                    <option value="exponential">Exponential</option>
+                                    <option value="linear">Linear</option>
+                                </Form.Select>
+                              </div>
+                              {type == "exponential" &&
+                                <div className="profile-container-element">
+                                    <label>Adjust the slope for your Bonding Curve by chaning the multiplier</label>
+                                    <Form.Control
+                                    type="number"
+                                    placeholder="Enter Multiplier"
+                                    onChange={(event) => {setMultiplier(event.target.value); getCoinPrice(supply,initialPrice,type,event.target.value)}}
+                                    value={multiplier}
+                                    />
+                                </div>
+                              }
+
+                              {type == "linear" &&
+                                <div className="profile-container-element">
+                                    <label>Enter MMOSH price</label>
+                                    <Form.Control
+                                    type="number"
+                                    placeholder="Enter Multiplier"
+                                    onChange={(event) => {setInitialPrice(event.target.value); getCoinPrice(supply,event.target.value,type,multiplier)}}
+                                    value={initialPrice}
+                                    />
+                                </div>
+                              }
+                              {supply != "" &&
+                                <div className="profile-container-element">
+                                      <Line options={areaoptions} data={{labels:arealabels,datasets: areadatasets}} />
+                                </div>
+                              }
+                          </div>
                         </div>
                     </div>
    
@@ -529,10 +700,10 @@ export default function CreateCoin() {
                            <Form.Control
                             type="number"
                             placeholder="0"
-                            onChange={(event) => setSupply(event.target.value)}
+                            onChange={(event) => {setSupply(event.target.value); getCoinPrice(event.target.value,initialPrice,type,multiplier);}}
                             value={supply}
                             />
-                          <p>$MMOSH for {supply=="" ? 0 : supply} $Coins </p>
+                          <p>$MMOSH for {coinPrice} $Coins </p>
                         </div>
                     }
                     {symbol != "" &&
@@ -541,13 +712,13 @@ export default function CreateCoin() {
                           <Form.Control
                           type="number"
                           placeholder=""
-                          onChange={(event) => setSupply(event.target.value)}
+                          onChange={(event) => {setSupply(event.target.value); getCoinPrice(event.target.value,initialPrice,type,multiplier)} }
                           value={supply}
                           />
-                        <p>$MMOSH for {supply=="" ? 0 : supply} ${symbol.toUpperCase()} </p>
+                        <p>$MMOSH for {coinPrice} ${symbol.toUpperCase()} </p>
                       </div>
                     }
-                    <p>Enter the amount of your initial swap. You will<br/> swap {supply=="" ? 0 : supply} MMOSH for {supply=="" ? 0 : supply} {symbol == "" ? "Coins" : symbol.toUpperCase()} and you<br/> will be charged small amount of SOL in<br/> transaction fees </p>
+                    <p>Enter the amount of your initial swap. You will<br/> swap {supply=="" ? 0 : supply} MMOSH for {coinPrice} {symbol == "" ? "Coins" : symbol.toUpperCase()} and you<br/> will be charged small amount of SOL in<br/> transaction fees </p>
                 </div>
                 <div className="coins-balance-details">
                     <div className="coins-balance-details-heading">

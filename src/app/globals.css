@@ -456,6 +456,8 @@ input[type="number"] {
 .profile-page textarea,
 .profile-page select,
 .create-coin-page input[type="text"],
+.create-coin-page .profile-container-element input[type="number"],
+.create-coin-page select,
 .create-coin-page textarea {
   border: 1px solid rgba(255, 255, 255, 0.22);
   background: rgba(32, 34, 99, 0.7);
@@ -466,6 +468,7 @@ input[type="number"] {
 .profile-page input[type="text"]:focus,
 .profile-page textarea:focus,
 .profile-page select:focus,
+.create-coin-page .profile-container-element input[type="number"]:focus,
 .create-coin-page input[type="text"]:focus,
 .create-coin-page textarea:focus {
   box-shadow: none;
@@ -476,6 +479,7 @@ input[type="number"] {
 
 .profile-page input[type="text"]::placeholder,
 .profile-page textarea::placeholder,
+.create-coin-page .profile-container-element input[type="number"]::placeholder,
 .create-coin-page input[type="text"]::placeholder,
 .create-coin-page textarea::placeholder,
 .project-share-container .form-control::placeholder {
@@ -484,6 +488,8 @@ input[type="number"] {
 
 .profile-page input[type="text"],
 .create-coin-page input[type="text"],
+.create-coin-page .profile-container-element input[type="number"],
+.create-coin-page select,
 .profile-page select {
   height: 40px;
 }
